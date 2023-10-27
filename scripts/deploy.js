@@ -5,24 +5,38 @@
 // will compile your contracts, add the Hardhat Runtime Environment's members to the
 // global scope, and execute the script.
 const hre = require("hardhat");
+const { upgrades } = require("hardhat");
 
+//npx hardhat compile --force
+//npx hardhat run --network bsctestnet scripts/deploy.js
+//npx hardhat verify --network bsctestnet 0x...
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
-
-  const lockedAmount = hre.ethers.parseEther("0.001");
-
-  const lock = await hre.ethers.deployContract("Lock", [unlockTime], {
-    value: lockedAmount,
-  });
-
-  await lock.waitForDeployment();
-
-  console.log(
-    `Lock with ${ethers.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.target}`
+  const [deployer] = await hre.ethers.getSigners();
+  console.log(`Deployer: ${deployer.address}`);
+  const Purse = await hre.ethers.getContractFactory("PurseTokenUpgradable");
+  const purse = await upgrades.deployProxy(
+    Purse,
+    [
+      "0x2027E055201E26b1bFE33Eb923b3fdb7E6f30807",
+      "0x2027E055201E26b1bFE33Eb923b3fdb7E6f30807",
+      0,
+      0,
+      0
+    ]
   );
+  await purse.waitForDeployment();
+  console.log("Purse deployed to: ", await purse.getAddress());
+
+  const PurseStaking = await hre.ethers.getContractFactory("PurseStakingV2");
+  const purseStaking = await upgrades.deployProxy(
+    PurseStaking,
+    [
+      await purse.getAddress()
+    ]
+  );
+  await purseStaking.waitForDeployment();
+  console.log("PurseStaking deployed to: ", await purseStaking.getAddress());
+
 }
 
 // We recommend this pattern to be able to use async/await everywhere

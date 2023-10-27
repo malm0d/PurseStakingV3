@@ -1,5 +1,8 @@
 require("@nomicfoundation/hardhat-toolbox");
+require('@openzeppelin/hardhat-upgrades');
 require("dotenv").config();
+
+const MNEMONIC = process.env.MNEMONIC;
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
