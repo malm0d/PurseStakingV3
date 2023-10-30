@@ -11,6 +11,7 @@ import "./@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 import { ReentrancyGuardUpgradeable } from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import { IRewardDistributor } from "./interfaces/IRewardDistributor.sol";
+import { ITreasury } from "./interfaces/ITreasury.sol";
 
 interface IPurseToken {
 
@@ -44,14 +45,16 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
     uint256 private _totalLockedAmount;
     uint256 public lockPeriod;
 
-    address public distributor;
     uint256 public cumulativeRewardPerToken;
+    address public distributor;
     address public treasury;
 
     //need to set distributor and treasury
-    function initialize(IPurseToken _purseToken) public initializer {
+    function initialize(IPurseToken _purseToken, address _distributor, address _treasury) public initializer {
         purseToken = _purseToken;
         name = "Purse Staking";
+        distributor = _distributor;
+        treasury = _treasury;
         __Pausable_init();
         __Ownable_init();
         __UUPSUpgradeable_init();
@@ -62,15 +65,16 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
     event Deposit(address indexed _from, uint256 _value);
     event WithdrawUnlockedStake(address indexed _from, uint256 _value);
     event WithdrawLockedStake(address indexed _from, uint256 _value);
-    event Claim(address indexed _receiver, uint256 indexed _value);
+    event UpdateClaim(address indexed _receiver, uint256 indexed _value);
     event DisributorChanged(address indexed _address);
+    event TreasuryChanged(address indexed _address);
 
     function enter(uint256 purseAmount) external whenNotPaused returns (bool success) {
         require(purseToken.balanceOf(msg.sender) >= purseAmount, "Insufficient Purse Token");
         
         //add stake function from stfxvault
         require(purseAmount > 0, "Amount must be greater than 0");
-        _claim(msg.sender, msg.sender);
+        _updateClaim(msg.sender, msg.sender);
 
         uint256 totalXPurse = totalReceiptSupply();
         uint256 totalPurse = availablePurseSupply();
@@ -199,17 +203,18 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
         _unpause();
     }
 
-    //new
-    //stake and unstake calls _claim
-    //_claim in turn calls _updateRewards
-    //no need _stake or _unstake (as they are only relevant to delegations)
+    /****************************************V3 new functions****************************************
+    //TO DO: stake and unstake calls _claim
 
     /**
-     * @notice Updates the claimable rewards for the given account
-     * @param _account address of the account to update rewards for
+     * @notice Updates the claimable rewards for the given account.
+     * @param _account address of the account to update rewards for.
      * @dev Calls the distributor contract to distribute rewards to the treasury.
-     * Then calcultates the cumulative reward per token by taking the current block rewards / total PURSE shares, 
-     * which is then used to calculate claimable rewards for the account.
+     * Next, calculates the cumulative reward per token by taking the current block 
+     * rewards / total PURSE shares. Then, calculates the account's claimable rewards 
+     * based on the account's shares and prev cumulated reward per token.
+     * If called by the distributor through updateRewards, only updates the cumulative 
+     * reward per token in the state.
      */
     function _updateRewards(address _account) private {
         uint256 blockRewards = IRewardDistributor(distributor).distribute();
@@ -226,50 +231,55 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
 
         if (_account != address(0)) {
             UserInfo storage user = userInfo[_account];
-            uint256 userRewards = user.receiptToken.mul(_cumulativeRewardPerToken.sub(user.previousCumulatedRewardPerToken)).div(1e18);
+            uint256 userRewards = userReceiptToken(_account).mul(_cumulativeRewardPerToken.sub(user.previousCumulatedRewardPerToken)).div(1e18);
             uint256 userClaimableReward = user.claimableReward.add(userRewards);
             user.claimableReward = userClaimableReward;
             user.previousCumulatedRewardPerToken = _cumulativeRewardPerToken;
         }
     }
-
-    function _claim(address _account, address _receiver) private returns (uint256) {
+    /**
+     * @notice Returns the claimable rewards for the given account.
+     * @param _account address of the account to get claimable rewards for.
+     * @param _receiver address of the account to receive the claimable rewards.
+     * @dev Calls _updateRewards to update the account's claimable rewards in the state.
+     * Then, extracts the account's claimable rewards from the state and if its more than zero,
+     * calls the treasury contract to update the account's claimable rewards in the treasury for 
+     * the user to claim from the treasury
+     */
+    function _updateClaim(address _account, address _receiver) private returns (uint256) {
         _updateRewards(_account);
         UserInfo storage user = userInfo[_account];
         uint256 tokenAmount = user.claimableReward;
         user.claimableReward = 0;
 
         if (tokenAmount > 0) {
-            //IERC20Upgradeable(rewardToken()).safeTransfer(_receiver, tokenAmount);
-
-            //this tokenAmount should be transfered to the recipient by the treasury contract
-            //as the block rewards are distributed there.
-            //This function should call should function in the treasury contract to update the claimable rewards
-            //for each user, as we are giving them the liberty to claim their rewards whenever they want.
-
-            emit Claim(_receiver, tokenAmount);
+            ITreasury(treasury).updateUserClaimableRewards(_receiver, tokenAmount);
+            emit UpdateClaim(_receiver, tokenAmount);
         }
         return tokenAmount;
     }
 
-    
-
+    /**
+     * @notice Called by the distributor when the tokens per interval is updated.
+     * @dev When called by the distributor, only updates the cumulative reward per token 
+     * in the state.
+     */
     function updateRewards() external {
         require(msg.sender == distributor, "PurseStakingV3: msg.sender is not the distributor");
         _updateRewards(address(0));
     }
 
-    function claim(address receiver) external returns (uint256) {
-        require(msg.sender == treasury, "PurseStakingV3: msg.sender is not the treasury");
-        return _claim(msg.sender, receiver);
+    function updateDistributor(address _distributor) external onlyOwner {
+        distributor = _distributor;
+        emit DisributorChanged(_distributor);
+    }
+
+    function updateTreasury(address _treasury) external onlyOwner {
+        treasury = _treasury;
+        emit TreasuryChanged(_treasury);
     }
 
     function rewardToken() public view returns (address) {
         return IRewardDistributor(distributor).rewardToken();
-    }
-
-    function updateDistributor(address _distributor) external onlyOwner {
-        distributor = _distributor;
-        emit DisributorChanged(_distributor);
     }
 }
