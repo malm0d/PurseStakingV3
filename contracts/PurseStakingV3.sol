@@ -66,6 +66,7 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
     event WithdrawUnlockedStake(address indexed _from, uint256 _value);
     event WithdrawLockedStake(address indexed _from, uint256 _value);
     event UpdateClaim(address indexed _receiver, uint256 indexed _value);
+    event UpdateUserClaimed(address indexed _address);
     event DisributorChanged(address indexed _address);
     event TreasuryChanged(address indexed _address);
 
@@ -91,6 +92,9 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
             userInfo[msg.sender].newReceiptToken += newReceipt;
             _totalReceiptSupply += newReceipt;
         }
+
+        //_updateClaim should be here?
+
         emit Deposit(msg.sender, purseAmount);
         return true;
     }
@@ -205,23 +209,27 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
 
     /****************************************V3 new functions****************************************
     //TO DO: stake and unstake calls _claim
+    //TO DO: add a rewardsPreview function to see how much rewards a user will get
+    //TO DO: Should the claimable rewards be based on shares or supply?
 
     /**
      * @notice Updates the claimable rewards for the given account.
      * @param _account address of the account to update rewards for.
      * @dev Calls the distributor contract to distribute rewards to the treasury.
      * Next, calculates the cumulative reward per token by taking the current block 
-     * rewards / total PURSE shares. Then, calculates the account's claimable rewards 
+     * rewards / available PURSE supply. Then, calculates the account's claimable rewards 
      * based on the account's shares and prev cumulated reward per token.
      * If called by the distributor through updateRewards, only updates the cumulative 
      * reward per token in the state.
      */
     function _updateRewards(address _account) private {
         uint256 blockRewards = IRewardDistributor(distributor).distribute();
-        uint256 receiptSupply = totalReceiptSupply();
+        uint256 supply = availablePurseSupply();
         uint256 _cumulativeRewardPerToken = cumulativeRewardPerToken;
-        if (receiptSupply > 0 && blockRewards > 0) {
-            _cumulativeRewardPerToken = _cumulativeRewardPerToken.add(blockRewards.mul(1e18).div(receiptSupply));
+        if (supply > 0 && blockRewards > 0) {
+            _cumulativeRewardPerToken = _cumulativeRewardPerToken.add(
+                blockRewards.mul(1e18).div(supply)
+            );
             cumulativeRewardPerToken = _cumulativeRewardPerToken;
         }
 
@@ -250,23 +258,39 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
         _updateRewards(_account);
         UserInfo storage user = userInfo[_account];
         uint256 tokenAmount = user.claimableReward;
-        user.claimableReward = 0;
+        //user.claimableReward = 0; //this will be done in the treasury when the user claims
 
         if (tokenAmount > 0) {
-            ITreasury(treasury).updateUserClaimableRewards(_receiver, tokenAmount);
+            ITreasury(treasury).updateUserAvailableRewards(_receiver, tokenAmount);
             emit UpdateClaim(_receiver, tokenAmount);
         }
         return tokenAmount;
     }
 
     /**
-     * @notice Called by the distributor when the tokens per interval is updated.
+     * @notice Called by the distributor when the tokens per interval is updated to update the cumulative
+     * reward per token in the state.
      * @dev When called by the distributor, only updates the cumulative reward per token 
      * in the state.
      */
     function updateRewards() external {
         require(msg.sender == distributor, "PurseStakingV3: msg.sender is not the distributor");
         _updateRewards(address(0));
+    }
+
+    /**
+     * @notice Called by the treasury when a user claims their rewards to reset their claimable rewards 
+     * to zero in the state.
+     * @param _account address of the account to update claimable rewards to zero.
+     * @dev When called by the treasury during a claimRewards call by a user, updates
+     * the user's claimable rewards to zero in the state.
+     */
+    function updateUserClaimed(address _account) external {
+        require(msg.sender == treasury, "PurseStakingV3: msg.sender is not the treasury");
+        UserInfo storage user = userInfo[_account];
+        user.claimableReward = 0;
+        
+        emit UpdateUserClaimed(_account);
     }
 
     function updateDistributor(address _distributor) external onlyOwner {
@@ -277,6 +301,30 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
     function updateTreasury(address _treasury) external onlyOwner {
         treasury = _treasury;
         emit TreasuryChanged(_treasury);
+    }
+
+    function previewClaimableRewards(address _address) external view returns (uint256) {
+        UserInfo storage user = userInfo[_address];
+        uint256 blockRewards = IRewardDistributor(distributor).previewDistribute();
+        uint256 supply = availablePurseSupply();
+        uint256 cumulativeRewardPerTokenSnap = cumulativeRewardPerToken;
+        if (supply > 0 && blockRewards > 0) {
+            cumulativeRewardPerTokenSnap = cumulativeRewardPerTokenSnap.add(
+                blockRewards.mul(1e18).div(supply)
+            );
+        }
+        uint256 userClaimableReward = user.claimableReward;
+        
+        if (userReceiptToken(_address) > 0) {
+            uint256 userRewards = userReceiptToken(_address).mul(cumulativeRewardPerTokenSnap.sub(user.previousCumulatedRewardPerToken)).div(1e18);
+            userClaimableReward = userClaimableReward.add(userRewards);
+        }
+        return userClaimableReward;
+    }
+
+    function getCumulativeRewardPerToken(address _address) external view returns (uint256, uint256) {
+        UserInfo storage user = userInfo[_address];
+        return (cumulativeRewardPerToken, user.previousCumulatedRewardPerToken);
     }
 
     function rewardToken() public view returns (address) {

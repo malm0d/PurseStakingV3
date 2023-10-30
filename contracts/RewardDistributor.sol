@@ -44,6 +44,8 @@ contract RewardDistributor is Initializable, UUPSUpgradeable, IRewardDistributor
         __UUPSUpgradeable_init();
     }
 
+    function _authorizeUpgrade(address) internal override onlyRole(OWNER_ROLE) {} 
+
     function distribute() external override returns (uint256) {
         require(msg.sender == rewardTracker, "RewardDistributor: msg.sender is not the rewardTracker");
         uint256 amount = pendingRewards();
@@ -86,5 +88,16 @@ contract RewardDistributor is Initializable, UUPSUpgradeable, IRewardDistributor
         IERC20Upgradeable(_token).safeTransfer(_recipient, _amount);
     }
 
-    function _authorizeUpgrade(address) internal override onlyRole(OWNER_ROLE) {} 
+    function previewDistribute() external view returns (uint256) {
+        uint256 amount = pendingRewards();
+        if (amount == 0) {
+            return 0;
+        }
+        uint256 balance = IERC20Upgradeable(rewardToken).balanceOf(address(this));
+        if (amount > balance) {
+            amount = balance;
+        }
+        return amount;
+    }
+    
 }

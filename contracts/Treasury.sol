@@ -8,6 +8,8 @@ import "./@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "./@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "./@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import { IPurseStakingV3 } from "./interfaces/IPurseStakingV3.sol";
+import { IRewardDistributor } from "./interfaces/IRewardDistributor.sol";
 
 contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, PausableUpgradeable {
     using SafeMath for uint256;
@@ -15,14 +17,16 @@ contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausabl
 
     address public constant PURSE = 0x29a63F4B209C29B4DC47f06FFA896F32667DAD2C;
     address public PURSE_STAKING;
-    mapping(address => uint256) public userClaimableRewards;
+    address public DISTRIBUTOR;
+    mapping(address => uint256) public userAvailableRewards;
 
-    event UpdateUserClaimableRewards(address indexed _address, uint256 indexed _amount, uint256 indexed _timestamp);
+    event UpdateUserAvailableRewards(address indexed _address, uint256 indexed _amount, uint256 indexed _timestamp);
     event Claimed(address indexed _address, uint256 indexed _amount, uint256 indexed _timestamp);
     event ReturnToken(address indexed _token, address indexed _to, uint256 indexed _amount);
 
-    function initialize(address _purseStaking) public initializer {
+    function initialize(address _purseStaking, address _distributor) public initializer {
         PURSE_STAKING = _purseStaking;
+        DISTRIBUTOR = _distributor;
         __Pausable_init();
         __Ownable_init();
         __UUPSUpgradeable_init();
@@ -35,20 +39,21 @@ contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausabl
         PURSE_STAKING = _address;
     }
 
-    function updateUserClaimableRewards(address _address, uint256 _amount) external {
+    function updateUserAvailableRewards(address _address, uint256 _amount) external {
         require(msg.sender == PURSE_STAKING, "Treasury: only PURSE_STAKING");
-        userClaimableRewards[_address] = userClaimableRewards[_address].add(_amount);
+        userAvailableRewards[_address] = _amount;
 
-        emit UpdateUserClaimableRewards(_address, _amount, block.timestamp);
+        emit UpdateUserAvailableRewards(_address, _amount, block.timestamp);
     }
 
     function claimRewards(address _address) external {
         require(_address != address(0), "Treasury: zero address");
 
-        uint256 userClaimableAmount = userClaimableRewards[_address];
-        require(userClaimableAmount > 0, "Treasury: User does not have claimable rewards");
+        uint256 userClaimableAmount = userAvailableRewards[_address];
+        require(userClaimableAmount > 0, "Treasury: User does not have available rewards");
 
-        userClaimableRewards[_address] = 0;
+        userAvailableRewards[_address] = 0;
+        IPurseStakingV3(PURSE_STAKING).updateUserClaimed(_address);
         IERC20Upgradeable(PURSE).safeTransfer(_address, userClaimableAmount);
 
         emit Claimed(_address, userClaimableAmount, block.timestamp);

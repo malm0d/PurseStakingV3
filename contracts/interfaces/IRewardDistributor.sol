@@ -7,4 +7,5 @@ interface IRewardDistributor {
     function tokensPerInterval() external view returns (uint256);
     function pendingRewards() external view returns (uint256);
     function distribute() external returns (uint256);
+    function previewDistribute() external view returns (uint256);
 }
