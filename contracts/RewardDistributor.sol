@@ -78,8 +78,8 @@ contract RewardDistributor is Initializable, UUPSUpgradeable, IRewardDistributor
 
     function setTokensPerInterval(uint256 _amount) external onlyRole(GOVERNOR_ROLE) {
         require(lastDistributionTime != 0, "RewardDistributor: lastDistributionTime is not set");
-        IPurseStakingV3(rewardTracker).updateRewards();
         tokensPerInterval = _amount;
+        IPurseStakingV3(rewardTracker).updateRewards();
         emit TokensPerIntervalChange(_amount);
     }
 
