@@ -6,7 +6,12 @@ require("dotenv").config();
 
 //npx hardhat test test/test.js --network bsctestnet
 describe("Test", function () {
-    const purseStakingAddress = "0x1e4Dc34f66Be83D863006086128B7259cf3AD0eD";
+    const PURSE_STAKING = "PurseStakingV3";
+    const PURSESTAKINGADDRESS = "0x1e4Dc34f66Be83D863006086128B7259cf3AD0eD";
+    const REWARD_DISTRIBUTOR = "RewardDistributor";
+    const DISTRIBUTORADDRESS = "0x95e71f6C7d8D3b32bd697A88dD6C37346130e67F";
+    const TREASURY = "Treasury";
+    const TREASURYADDRESS = "0x49e5eE0aF3Abf26f02c3107B99fc849acc40C3dF";
     let owner;
 
     beforeEach(async () => {
@@ -22,9 +27,15 @@ describe("Test", function () {
             owner
         );
 
+        rewardDistributor = await hre.ethers.getContractAt(
+            REWARD_DISTRIBUTOR,
+            DISTRIBUTORADDRESS,
+            owner
+        );
+
         purseStaking = await hre.ethers.getContractAt(
-            "PurseStakingV2",
-            purseStakingAddress,
+            PURSE_STAKING,
+            PURSESTAKINGADDRESS,
             owner
         );
         const info = await purseStaking.userInfo(owner.address);
@@ -49,7 +60,43 @@ describe("Test", function () {
         console.log("Total receiptSupply: " + totalReceiptSupply)
         console.log("Total locked amount: " + totalLockedAmount);
 
-        const balance = await token.balanceOf(purseStakingAddress)
+        const balance = await token.balanceOf(PURSESTAKINGADDRESS)
         console.log("Contract Balance: " + balance)
+
+        const CRPT = await purseStaking.cumulativeRewardPerToken();
+        console.log("Contract Cumulative Reward Per Token: " + CRPT);
+        const previewA = await purseStaking.previewClaimableRewards(
+            owner.address
+        );
+        const previewB = await purseStaking.previewClaimableRewards(
+            "0xAbCCf019ce52e7DEac396D1f1A1D9087EBF97966"
+        );
+        const previewC = await purseStaking.previewClaimableRewards(
+            "0x9d356F4DD857fFeF5B5d48DCf30eE4d9574d708D"
+        );
+
+        console.log("Preview claimable User A: " + previewA);
+        console.log("Preview claimable User B: " + previewB);
+        console.log("Preview claimable User C: " + previewC);
+
+        const lastDistribution = await rewardDistributor.lastDistributionTime();
+        const tokensPerInterval = await rewardDistributor.tokensPerInterval();
+        console.log("Distributor Last Distribution: " + lastDistribution);
+        console.log("Distributor Tokens Per Interval: " + tokensPerInterval + " (10 PURSE)");
+
+        const distributorBalance = await token.balanceOf(DISTRIBUTORADDRESS);
+        console.log("Distributor Balance: " + distributorBalance);
+        const treasuryBalance = await token.balanceOf(TREASURYADDRESS);
+        console.log("Treasury Balance: " + treasuryBalance);
+        const stakingBalance = await token.balanceOf(PURSESTAKINGADDRESS);
+        console.log("Staking balance: " + stakingBalance)
+
+        const distributeAmount = await rewardDistributor.previewDistribute();
+        console.log("Distribute Amount: " + distributeAmount);
+
+        const cumulative = await purseStaking.getCumulativeRewardPerToken(
+            "0x9d356F4DD857fFeF5B5d48DCf30eE4d9574d708D"
+        );
+        console.log("Cumulative: " + cumulative);
     })
 })
