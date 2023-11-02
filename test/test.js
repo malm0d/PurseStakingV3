@@ -7,29 +7,28 @@ require("dotenv").config();
 //npx hardhat test test/test.js --network bsctestnet
 describe("Test", function () {
     const PURSE_STAKING = "PurseStakingV3";
-    const PURSESTAKINGADDRESS = "0x1e4Dc34f66Be83D863006086128B7259cf3AD0eD";
     const REWARD_DISTRIBUTOR = "RewardDistributor";
-    const DISTRIBUTORADDRESS = "0x95e71f6C7d8D3b32bd697A88dD6C37346130e67F";
     const TREASURY = "Treasury";
-    const TREASURYADDRESS = "0x49e5eE0aF3Abf26f02c3107B99fc849acc40C3dF";
+
+    const PURSE = "0x9918ecEF43B9d09A9A0518518e6AB848748F1F2f";
+    const PURSESTAKINGADDRESS = "0x44922B579161dbe04D6D285F7b638c644ed79Aa6";
+    const DISTRIBUTORADDRESS = "0x4f39fA33010AA7C960cdF9bdC5843B1Ee5bD7C99";
+    const TREASURYADDRESS = "0x89eAC6a2978E83E135D9688c7F43d733C27EC7f7";
+
     let owner;
+    const userB = "0xAbCCf019ce52e7DEac396D1f1A1D9087EBF97966";
+    const userC = "0x9d356F4DD857fFeF5B5d48DCf30eE4d9574d708D";
 
     beforeEach(async () => {
         const signers = await hre.ethers.getSigners();
         owner = signers[0];
     });
 
-    it("PurseStakingV2", async () => {
+    it("PurseStaking", async () => {
 
         token = await hre.ethers.getContractAt(
             BEP20ABI,
-            "0xE81165fCDD0336A0f219cF8235D6287Bd0f9f752",
-            owner
-        );
-
-        rewardDistributor = await hre.ethers.getContractAt(
-            REWARD_DISTRIBUTOR,
-            DISTRIBUTORADDRESS,
+            PURSE,
             owner
         );
 
@@ -40,63 +39,69 @@ describe("Test", function () {
         );
         const info = await purseStaking.userInfo(owner.address);
         console.log("User A: " + info);
-        const info2 = await purseStaking.userInfo("0xAbCCf019ce52e7DEac396D1f1A1D9087EBF97966")
+        const info2 = await purseStaking.userInfo(userB)
         console.log("User B: " + info2);
-        const info3 = await purseStaking.userInfo("0x9d356F4DD857fFeF5B5d48DCf30eE4d9574d708D")
+        const info3 = await purseStaking.userInfo(userC)
         console.log("User C: " + info3);
 
         const rtA = await purseStaking.userReceiptToken(owner.address);
         console.log("User A Receipt Tokens: " + rtA);
-        const rtB = await purseStaking.userReceiptToken("0xAbCCf019ce52e7DEac396D1f1A1D9087EBF97966");
+        const rtB = await purseStaking.userReceiptToken(userB);
         console.log("User B Receipt Tokens: " + rtB);
-        const rtC = await purseStaking.userReceiptToken("0x9d356F4DD857fFeF5B5d48DCf30eE4d9574d708D");
+        const rtC = await purseStaking.userReceiptToken(userC);
         console.log("User C Receipt Tokens: " + rtC);
-
+        console.log();
 
         const availablePurseSupply = await purseStaking.availablePurseSupply();
         const totalReceiptSupply = await purseStaking.totalReceiptSupply();
         const totalLockedAmount = await purseStaking.totalLockedAmount();
-        console.log("Total Available Purse: " + availablePurseSupply)
-        console.log("Total receiptSupply: " + totalReceiptSupply)
+        console.log("Total Available Purse: " + availablePurseSupply);
+        console.log();
+        console.log("Total receiptSupply: " + totalReceiptSupply);
+        console.log();
         console.log("Total locked amount: " + totalLockedAmount);
 
         const balance = await token.balanceOf(PURSESTAKINGADDRESS)
-        console.log("Contract Balance: " + balance)
+        console.log("Staking Contract Balance: " + balance)
+        console.log();
+
+        //after upgrade
+        //Rmb to change PURSE_STAKING to PurseStakingV3
+        rewardDistributor = await hre.ethers.getContractAt(
+            REWARD_DISTRIBUTOR,
+            DISTRIBUTORADDRESS,
+            owner
+        );
 
         const CRPT = await purseStaking.cumulativeRewardPerToken();
-        console.log("Contract Cumulative Reward Per Token: " + CRPT);
+        console.log("Staking Contract Cumulative Reward Per Token: " + CRPT);
+        console.log();
         const previewA = await purseStaking.previewClaimableRewards(
             owner.address
         );
         const previewB = await purseStaking.previewClaimableRewards(
-            "0xAbCCf019ce52e7DEac396D1f1A1D9087EBF97966"
+            userB
         );
         const previewC = await purseStaking.previewClaimableRewards(
-            "0x9d356F4DD857fFeF5B5d48DCf30eE4d9574d708D"
+            userC
         );
+        const distributeAmount = await rewardDistributor.previewDistribute();
 
-        console.log("Preview claimable User A: " + previewA);
-        console.log("Preview claimable User B: " + previewB);
-        console.log("Preview claimable User C: " + previewC);
+        console.log("Preview Distribute Amount (Block rewards to add since last distribution): " + distributeAmount);
+        console.log("Preview claimable on next action User A: " + previewA);
+        console.log("Preview claimable on next action User B: " + previewB);
+        console.log("Preview claimable on next action User C: " + previewC);
+        console.log()
 
         const lastDistribution = await rewardDistributor.lastDistributionTime();
         const tokensPerInterval = await rewardDistributor.tokensPerInterval();
-        console.log("Distributor Last Distribution: " + lastDistribution);
-        console.log("Distributor Tokens Per Interval: " + tokensPerInterval + " (10 PURSE)");
+        console.log("Distributor Last Distribution Time: " + lastDistribution);
+        console.log("Distributor Tokens Per Interval: " + tokensPerInterval);
+        console.log()
 
         const distributorBalance = await token.balanceOf(DISTRIBUTORADDRESS);
         console.log("Distributor Balance: " + distributorBalance);
         const treasuryBalance = await token.balanceOf(TREASURYADDRESS);
         console.log("Treasury Balance: " + treasuryBalance);
-        const stakingBalance = await token.balanceOf(PURSESTAKINGADDRESS);
-        console.log("Staking balance: " + stakingBalance)
-
-        const distributeAmount = await rewardDistributor.previewDistribute();
-        console.log("Distribute Amount: " + distributeAmount);
-
-        const cumulative = await purseStaking.getCumulativeRewardPerToken(
-            "0x9d356F4DD857fFeF5B5d48DCf30eE4d9574d708D"
-        );
-        console.log("Cumulative: " + cumulative);
     })
 })

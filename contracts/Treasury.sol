@@ -15,7 +15,7 @@ contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausabl
     using SafeMath for uint256;
     using SafeERC20Upgradeable for IERC20Upgradeable;
     //0x29a63F4B209C29B4DC47f06FFA896F32667DAD2C
-    address public constant PURSE = 0xE81165fCDD0336A0f219cF8235D6287Bd0f9f752;
+    address public constant PURSE = 0x9918ecEF43B9d09A9A0518518e6AB848748F1F2f;
     address public PURSE_STAKING;
     address public DISTRIBUTOR;
     mapping(address => uint256) public userAvailableRewards;

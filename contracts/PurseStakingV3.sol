@@ -317,8 +317,9 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
     }
 
     /**
-     * @notice Previews the claimable rewards for the given address
+     * @notice Previews the claimable rewards for the given address on the next action.
      * @param _address address of the account to preview claimable rewards for.
+     * @dev The user's esitmated claimable rewards after the next stake/unstake
      */
     function previewClaimableRewards(address _address) external view returns (uint256) {
         UserInfo storage user = userInfo[_address];
