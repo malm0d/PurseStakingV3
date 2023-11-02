@@ -8,7 +8,7 @@ const hre = require("hardhat");
 const { upgrades } = require("hardhat");
 
 //npx hardhat compile --force
-//npx hardhat run --network bsctestnet scripts/deployV3.js
+//npx hardhat run --network bsctestnet scripts/upgrade.js
 //npx hardhat verify --network bsctestnet 0x...
 async function main() {
     const PROXY = "0x1e4Dc34f66Be83D863006086128B7259cf3AD0eD";
