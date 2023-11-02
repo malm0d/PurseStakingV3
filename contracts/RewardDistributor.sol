@@ -25,10 +25,6 @@ contract RewardDistributor is Initializable, UUPSUpgradeable, IRewardDistributor
     event Distribute(uint256 amount);
     event TokensPerIntervalChange(uint256 amount);
 
-    constructor() {
-        _disableInitializers();
-    }
-
     function initialize(
         address _rewardToken, 
         address _rewardTracker, 
@@ -46,6 +42,10 @@ contract RewardDistributor is Initializable, UUPSUpgradeable, IRewardDistributor
 
     function _authorizeUpgrade(address) internal override onlyRole(OWNER_ROLE) {} 
 
+    /**
+     * @notice Distribute block rewards to the treasury contract.
+     * @dev Only callable by the rewardTracker. Also returns the amount distributed.
+     */
     function distribute() external override returns (uint256) {
         require(msg.sender == rewardTracker, "RewardDistributor: msg.sender is not the rewardTracker");
         uint256 amount = pendingRewards();
@@ -64,6 +64,10 @@ contract RewardDistributor is Initializable, UUPSUpgradeable, IRewardDistributor
         return amount;
     }
 
+    /**
+     * @notice Calculates the amount of rewards that have accumulated since the 
+     * last distribution.
+     */
     function pendingRewards() public view override returns (uint256) {
         if (block.timestamp == lastDistributionTime) {
             return 0;
@@ -72,10 +76,18 @@ contract RewardDistributor is Initializable, UUPSUpgradeable, IRewardDistributor
         return tokensPerInterval.mul(timeDifference);
     }
 
+    /**
+     * @notice Updates the lastDistributionTime to the current block timestamp.
+     */
     function updateLastDistributionTime() external onlyRole(GOVERNOR_ROLE) {
         lastDistributionTime = block.timestamp;
     }
 
+    /**
+     * @notice Sets the amount of tokens to distribute per interval.
+     * @param _amount The amount (wei) of tokens to distribute per interval.
+     * @dev Only callable by the governor. is argument in wei or ether??????
+     */
     function setTokensPerInterval(uint256 _amount) external onlyRole(GOVERNOR_ROLE) {
         require(lastDistributionTime != 0, "RewardDistributor: lastDistributionTime is not set");
         tokensPerInterval = _amount;
@@ -83,11 +95,42 @@ contract RewardDistributor is Initializable, UUPSUpgradeable, IRewardDistributor
         emit TokensPerIntervalChange(_amount);
     }
 
+    /**
+     * @notice Recovers ERC20 tokens sent to this contract.
+     * @param _token The address of the token to recover.
+     * @param _amount The amount (wei) of tokens to recover.
+     * @param _recipient The address to send the tokens to.
+     * @dev Only callable by the owner. Amount is in wei.
+     */
     function recoverToken(address _token, uint256 _amount, address _recipient) external onlyRole(OWNER_ROLE) {
         require(_recipient != address(0), "RewardDistributor: Send to Zero Address");
         IERC20Upgradeable(_token).safeTransfer(_recipient, _amount);
     }
 
+    /**
+     * @notice Updates the treasury contract address.
+     * @param _treasury The address of the treasury contract.
+     * @dev Only callable by the owner.
+     */
+    function updateTreasury(address _treasury) external onlyRole(OWNER_ROLE) {
+        require(_treasury != address(0), "RewardDistributor: Zero Address");
+        treasury = _treasury;
+    }
+
+    /**
+     * @notice Updates the rewardTracker contract address.
+     * @param _rewardTracker The address of the rewardTracker contract.
+     * @dev Only callable by the owner. This should be the Purse Staking contract.
+     */
+    function updateRewardTracker(address _rewardTracker) external onlyRole(OWNER_ROLE) {
+        require(_rewardTracker != address(0), "RewardDistributor: Zero Address");
+        rewardTracker = _rewardTracker;
+    }
+
+    /**
+     * @notice Previews the amount of tokens that are available to be distributed
+     * when the next distribution is called by the rewardTracker contract.
+     */
     function previewDistribute() external view returns (uint256) {
         uint256 amount = pendingRewards();
         if (amount == 0) {

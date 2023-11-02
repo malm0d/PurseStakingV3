@@ -14,8 +14,8 @@ import { IRewardDistributor } from "./interfaces/IRewardDistributor.sol";
 contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, PausableUpgradeable {
     using SafeMath for uint256;
     using SafeERC20Upgradeable for IERC20Upgradeable;
-
-    address public constant PURSE = 0x29a63F4B209C29B4DC47f06FFA896F32667DAD2C;
+    //0x29a63F4B209C29B4DC47f06FFA896F32667DAD2C
+    address public constant PURSE = 0xE81165fCDD0336A0f219cF8235D6287Bd0f9f752;
     address public PURSE_STAKING;
     address public DISTRIBUTOR;
     mapping(address => uint256) public userAvailableRewards;
@@ -34,11 +34,32 @@ contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausabl
 
     function _authorizeUpgrade(address) internal override onlyOwner {}
 
+    /**
+     * @notice Updates the Purse Staking contract address.
+     * @param _address The address of the Purse Staking contract.
+     * @dev Only callable by the owner.
+     */
     function updatePurseStaking(address _address) external onlyOwner {
         require(_address != address(0), "Treasury: zero address");
         PURSE_STAKING = _address;
     }
 
+    /**
+     * @notice Updates the Reward Distributor contract address.
+     * @param _address The address of the Reward Distributor contract.
+     * @dev Only callable by the owner.
+     */
+    function updateDistributor(address _address) external onlyOwner {
+        require(_address != address(0), "Treasury: zero address");
+        DISTRIBUTOR = _address;
+    }
+
+    /**
+     * @notice Updates the available rewards for a user.
+     * @param _address The address of the user to update available rewards to claim.
+     * @param _amount The amount (wei) of rewards to update.
+     * @dev Only callable by the Purse Staking contract.
+     */
     function updateUserAvailableRewards(address _address, uint256 _amount) external {
         require(msg.sender == PURSE_STAKING, "Treasury: only PURSE_STAKING");
         userAvailableRewards[_address] = _amount;
@@ -46,6 +67,10 @@ contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausabl
         emit UpdateUserAvailableRewards(_address, _amount, block.timestamp);
     }
 
+    /**
+     * @notice Allows the user to claim their available rewards.
+     * @param _address The address of the user to claim rewards.
+     */
     function claimRewards(address _address) external {
         require(_address != address(0), "Treasury: zero address");
 
@@ -59,6 +84,12 @@ contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausabl
         emit Claimed(_address, userClaimableAmount, block.timestamp);
     }
 
+    /**
+     * @notice Recovers tokens from the contract.
+     * @param _token The address of the token to return.
+     * @param _to The address to return the tokens to.
+     * @param _amount The amount (wei) of tokens to return.
+     */
     function returnToken(address _token, address _to, uint256 _amount) external onlyOwner {
         require(_to != address(0), "Treasury: zero address");
         require(_amount > 0, "Treasury: zero amount");

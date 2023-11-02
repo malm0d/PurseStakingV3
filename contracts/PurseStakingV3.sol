@@ -77,10 +77,6 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
 
     function enter(uint256 purseAmount) external whenNotPaused returns (bool success) {
         require(purseToken.balanceOf(msg.sender) >= purseAmount, "Insufficient Purse Token");
-        
-        //add stake function from stfxvault
-        require(purseAmount > 0, "Amount must be greater than 0");
-        _updateClaim(msg.sender, msg.sender);
 
         uint256 totalXPurse = totalReceiptSupply();
         uint256 totalPurse = availablePurseSupply();
@@ -98,7 +94,7 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
             _totalReceiptSupply += newReceipt;
         }
 
-        //_updateClaim should be here?
+        _updateClaim(msg.sender, msg.sender);
 
         emit Deposit(msg.sender, purseAmount);
         return true;
@@ -138,7 +134,9 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
             purseToken.transfer(msg.sender, purseTransfer);
         }
         _totalReceiptSupply -= xPurseAmount;
-        //do some logic here to update the rewards when user unstakes
+        
+        _updateClaim(msg.sender, msg.sender);
+
         return true;
     }
 
@@ -213,22 +211,19 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
     }
 
     /****************************************V3 new functions****************************************
-    //TO DO: stake and unstake calls _claim
-    //TO DO: Should the claimable rewards be based on shares or supply?
 
     /**
      * @notice Updates the claimable rewards for the given account.
      * @param _account address of the account to update rewards for.
      * @dev Calls the distributor contract to distribute rewards to the treasury.
-     * Next, calculates the cumulative reward per token by taking the current block 
-     * rewards / available PURSE supply. Then, calculates the account's claimable rewards 
-     * based on the account's shares and prev cumulated reward per token.
-     * If called by the distributor through updateRewards, only updates the cumulative 
-     * reward per token in the state.
+     * Next, calculates the contract's cumulative reward per token and then,
+     * calculates the account's claimable rewards based on the account's shares
+     * and prev cumulated reward per token. If called by the distributor through
+     * updateRewards, only updates the cumulative reward per token in the state.
      */
     function _updateRewards(address _account) private {
         uint256 blockRewards = IRewardDistributor(distributor).distribute();
-        uint256 supply = availablePurseSupply();
+        uint256 supply = totalReceiptSupply();
         uint256 _cumulativeRewardPerToken = cumulativeRewardPerToken;
         if (supply > 0 && blockRewards > 0) {
             _cumulativeRewardPerToken = _cumulativeRewardPerToken.add(
@@ -254,12 +249,12 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
     }
     /**
      * @notice Updates the claimable rewards for the given account and updates the
-     * treasury with the given account's claimable rewards.
-     * @param _account address of the account to get claimable rewards for.
+     * treasury with the given account's available rewards to claim.
+     * @param _account address of the account to update claimable rewards.
      * @param _receiver address of the account to receive the claimable rewards.
      * @dev Calls _updateRewards to update the account's claimable rewards in the state.
      * Then, extracts the account's claimable rewards from the state and if its more than
-     * zero, calls the treasury contract to update the account's claimable rewards in the
+     * zero, calls the treasury contract to update the account's available rewards in the
      * treasury for the user to claim from the treasury
      */
     function _updateClaim(address _account, address _receiver) private returns (uint256) {
@@ -276,9 +271,9 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
     }
 
     /**
-     * @notice Called by the distributor when the tokens per interval is updated to update
-     * the cumulative reward per token in the state.
-     * @dev When called by the distributor, only updates the cumulative reward per token 
+     * @notice Called by the distributor contract when the tokens per interval is updated.
+     * @dev Only callable by the distributor. 
+     * When called by the distributor, only updates the cumulative reward per token 
      * in the state.
      */
     function updateRewards() external {
@@ -287,11 +282,11 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
     }
 
     /**
-     * @notice Called by the treasury when a user claims their rewards to reset their 
-     * claimable rewards to zero in the state.
+     * @notice Called by the treasury contract when a user claims their rewards.
      * @param _account address of the account to update claimable rewards to zero.
-     * @dev When called by the treasury during a claimRewards call by a user, updates
-     * the user's claimable rewards to zero in the state.
+     * @dev Only callable by the treasury. When called by the treasury during a 
+     * claimRewards call by a user, updates the user's claimable rewards to zero 
+     * in the state.
      */
     function updateUserClaimed(address _account) external {
         require(msg.sender == treasury, "PurseStakingV3: msg.sender is not the treasury");
@@ -301,11 +296,21 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
         emit UpdateUserClaimed(_account);
     }
 
+    /**
+     * @notice Updates the reward distributor contract address.
+     * @param _distributor address of the new reward distributor contract.
+     * @dev Only callable by the owner.
+     */
     function updateDistributor(address _distributor) external onlyOwner {
         distributor = _distributor;
         emit DisributorChanged(_distributor);
     }
 
+    /**
+     * @notice Updates the treasury contract address.
+     * @param _treasury address of the new treasury contract.
+     * @dev Only callable by the owner.
+     */
     function updateTreasury(address _treasury) external onlyOwner {
         treasury = _treasury;
         emit TreasuryChanged(_treasury);
@@ -318,7 +323,7 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
     function previewClaimableRewards(address _address) external view returns (uint256) {
         UserInfo storage user = userInfo[_address];
         uint256 blockRewards = IRewardDistributor(distributor).previewDistribute();
-        uint256 supply = availablePurseSupply();
+        uint256 supply = totalReceiptSupply();
         uint256 cumulativeRewardPerTokenSnap = cumulativeRewardPerToken;
         if (supply > 0 && blockRewards > 0) {
             cumulativeRewardPerTokenSnap = cumulativeRewardPerTokenSnap.add(
@@ -336,11 +341,19 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
         return userClaimableReward;
     }
 
+    /**
+     * @notice Previews the cumulative reward per token for the contract and the
+     * previous cumulated reward per token for given address
+     * @param _address The address of the account to preview for.
+     */
     function getCumulativeRewardPerToken(address _address) external view returns (uint256, uint256) {
         UserInfo storage user = userInfo[_address];
         return (cumulativeRewardPerToken, user.previousCumulatedRewardPerToken);
     }
 
+    /**
+     * @notice Gets the current reward token address.
+     */
     function rewardToken() public view returns (address) {
         return IRewardDistributor(distributor).rewardToken();
     }
