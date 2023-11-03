@@ -109,6 +109,8 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
         uint256 purseReward;
         require(userReceipt >= xPurseAmount, "Insufficient Receipt Token");
 
+        _updateClaim(msg.sender, msg.sender);
+
         if(user.receiptToken <= 0) {
             uint256 lockDuration = block.timestamp.sub(user.lockTime); 
             if (lockDuration >= lockPeriod && user.lockTime != 0) {
@@ -135,7 +137,7 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
         }
         _totalReceiptSupply -= xPurseAmount;
         
-        _updateClaim(msg.sender, msg.sender);
+        //_updateClaim(msg.sender, msg.sender);
 
         return true;
     }
