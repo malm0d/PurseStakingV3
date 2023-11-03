@@ -13,6 +13,7 @@ const { upgrades } = require("hardhat");
 async function main() {
   const [deployer] = await hre.ethers.getSigners();
   console.log(`Deployer: ${deployer.address}`);
+  console.log();
   const Purse = await hre.ethers.getContractFactory("PurseTokenUpgradable");
   const purse = await upgrades.deployProxy(
     Purse,
@@ -26,6 +27,7 @@ async function main() {
   );
   await purse.waitForDeployment();
   console.log("Purse deployed to: ", await purse.getAddress());
+  console.log();
 
   const PurseStaking = await hre.ethers.getContractFactory("PurseStakingV2");
   const purseStaking = await upgrades.deployProxy(
@@ -36,6 +38,7 @@ async function main() {
   );
   await purseStaking.waitForDeployment();
   console.log("PurseStakingV2 deployed to: ", await purseStaking.getAddress());
+  console.log();
 
 }
 
