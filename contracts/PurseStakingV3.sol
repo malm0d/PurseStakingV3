@@ -136,8 +136,6 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
             purseToken.transfer(msg.sender, purseTransfer);
         }
         _totalReceiptSupply -= xPurseAmount;
-        
-        //_updateClaim(msg.sender, msg.sender);
 
         return true;
     }
@@ -250,52 +248,46 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
         }
     }
     /**
-     * @notice Updates the claimable rewards for the given account and updates the
-     * treasury with the given account's available rewards to claim.
+     * @notice Updates the claimable rewards for the given account.
      * @param _account address of the account to update claimable rewards.
      * @param _receiver address of the account to receive the claimable rewards.
      * @dev Calls _updateRewards to update the account's claimable rewards in the state.
-     * Then, extracts the account's claimable rewards from the state and if its more than
-     * zero, calls the treasury contract to update the account's available rewards in the
-     * treasury for the user to claim from the treasury
+     * Then, extracts the account's claimable rewards from the state.
      */
     function _updateClaim(address _account, address _receiver) private returns (uint256) {
         _updateRewards(_account);
-        UserInfo storage user = userInfo[_account];
+        UserInfo memory user = userInfo[_account];
         uint256 tokenAmount = user.claimableReward;
-        //user.claimableReward = 0; //this will be done in the treasury when the user claims
-
         if (tokenAmount > 0) {
-            ITreasury(treasury).updateUserAvailableRewards(_receiver, tokenAmount);
             emit UpdateClaim(_receiver, tokenAmount);
         }
         return tokenAmount;
     }
 
     /**
+     * @notice Updates and returns the account's claimable rewards.
+     * @param _account address of the account to update and get claimable rewards for.
+     * @dev Calls _updateClaim to update and retrieve the account's claimable rewards.
+     * Only callable by the treasury contract. Resets the user's claimable rewards to 0.
+     */
+    function getUserClaimableRewards(address _account) external returns (uint256) {
+        require(msg.sender == treasury, "PurseStakingV3: msg.sender is not the treasury");
+        uint256 claimableAmount = _updateClaim(_account, _account);
+        UserInfo storage user = userInfo[_account];
+        user.claimableReward = 0;
+
+        emit UpdateUserClaimed(_account);
+        return claimableAmount;
+    }
+
+    /**
      * @notice Called by the distributor contract when the tokens per interval is updated.
-     * @dev Only callable by the distributor. 
-     * When called by the distributor, only updates the cumulative reward per token 
-     * in the state.
+     * @dev Only callable by the distributor. When called by the distributor, only updates 
+     * the cumulative reward per token in the state.
      */
     function updateRewards() external {
         require(msg.sender == distributor, "PurseStakingV3: msg.sender is not the distributor");
         _updateRewards(address(0));
-    }
-
-    /**
-     * @notice Called by the treasury contract when a user claims their rewards.
-     * @param _account address of the account to update claimable rewards to zero.
-     * @dev Only callable by the treasury. When called by the treasury during a 
-     * claimRewards call by a user, updates the user's claimable rewards to zero 
-     * in the state.
-     */
-    function updateUserClaimed(address _account) external {
-        require(msg.sender == treasury, "PurseStakingV3: msg.sender is not the treasury");
-        UserInfo storage user = userInfo[_account];
-        user.claimableReward = 0;
-        
-        emit UpdateUserClaimed(_account);
     }
 
     /**

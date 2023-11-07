@@ -18,7 +18,7 @@ contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausabl
     address public constant PURSE = 0xBbF6544495A2b7F4A1f2605826fEbb414AD5A019;
     address public PURSE_STAKING;
     address public DISTRIBUTOR;
-    mapping(address => uint256) public userAvailableRewards;
+    
 
     event UpdateUserAvailableRewards(address indexed _address, uint256 indexed _amount, uint256 indexed _timestamp);
     event Claimed(address indexed _address, uint256 indexed _amount, uint256 indexed _timestamp);
@@ -55,31 +55,25 @@ contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausabl
     }
 
     /**
-     * @notice Updates the available rewards for a user.
-     * @param _address The address of the user to update available rewards to claim.
-     * @param _amount The amount (wei) of rewards to update.
-     * @dev Only callable by the Purse Staking contract.
-     */
-    function updateUserAvailableRewards(address _address, uint256 _amount) external {
-        require(msg.sender == PURSE_STAKING, "Treasury: only PURSE_STAKING");
-        userAvailableRewards[_address] = _amount;
-
-        emit UpdateUserAvailableRewards(_address, _amount, block.timestamp);
-    }
-
-    /**
      * @notice Allows the user to claim their available rewards.
      * @param _address The address of the user to claim rewards.
+     * @dev Sends a call to the staking contract to get the user's available rewards
      */
     function claimRewards(address _address) external {
         require(_address != address(0), "Treasury: zero address");
+        uint256 treasuryBalance = IERC20Upgradeable(PURSE).balanceOf(address(this));
+        require(treasuryBalance > 0, "Treasury: no rewards available");
 
-        uint256 userClaimableAmount = userAvailableRewards[_address];
-        require(userClaimableAmount > 0, "Treasury: User does not have available rewards");
+        uint256 userClaimableAmount = IPurseStakingV3(PURSE_STAKING).getUserClaimableRewards(_address);
+        require(userClaimableAmount > 0, "Treasury: user does not have available rewards");
 
-        userAvailableRewards[_address] = 0;
-        IPurseStakingV3(PURSE_STAKING).updateUserClaimed(_address);
-        IERC20Upgradeable(PURSE).safeTransfer(_address, userClaimableAmount);
+        uint256 claimAmount;
+        if (userClaimableAmount > treasuryBalance) {
+            claimAmount = treasuryBalance;
+        } else {
+            claimAmount = userClaimableAmount;
+        }
+        IERC20Upgradeable(PURSE).safeTransfer(_address, claimAmount);
 
         emit Claimed(_address, userClaimableAmount, block.timestamp);
     }
