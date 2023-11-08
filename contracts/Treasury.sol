@@ -15,7 +15,7 @@ contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausabl
     using SafeMath for uint256;
     using SafeERC20Upgradeable for IERC20Upgradeable;
     //0x29a63F4B209C29B4DC47f06FFA896F32667DAD2C
-    address public constant PURSE = 0xBbF6544495A2b7F4A1f2605826fEbb414AD5A019;
+    address public constant PURSE = 0x5E329512a3a4Cf8aBc1a82Be60c7af180a4B68B7;
     address public PURSE_STAKING;
     address public DISTRIBUTOR;
     
@@ -59,7 +59,7 @@ contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausabl
      * @param _address The address of the user to claim rewards.
      * @dev Sends a call to the staking contract to get the user's available rewards
      */
-    function claimRewards(address _address) external {
+    function claimRewards(address _address) external whenNotPaused {
         require(_address != address(0), "Treasury: zero address");
         uint256 treasuryBalance = IERC20Upgradeable(PURSE).balanceOf(address(this));
         require(treasuryBalance > 0, "Treasury: no rewards available");
