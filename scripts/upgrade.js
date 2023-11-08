@@ -11,7 +11,7 @@ const { upgrades } = require("hardhat");
 //npx hardhat run --network bsctestnet scripts/upgrade.js
 //npx hardhat verify --network bsctestnet 0x...
 async function main() {
-    const PROXY = "0x7358DB4D2C2A849DF81274CFF8DBEFBa8385b486";
+    const PROXY = "0x31F967CaA09f527170a0071080d02F2fc8881611";
     const [deployer] = await hre.ethers.getSigners();
     console.log(`Deployer: ${deployer.address}`);
     console.log();
@@ -23,6 +23,17 @@ async function main() {
     )
 
     console.log("Upgraded");
+
+    // const treasuryProxy = "0xb643dF48cDe7456c19B4a8273E73564215ba9aBf";
+    // const [deployer] = await hre.ethers.getSigners();
+    // console.log(`Deployer: ${deployer.address}`);
+    // console.log();
+    // const TreasuryNew = await hre.ethers.getContractFactory("Treasury");
+    // const treasuryNew = await upgrades.upgradeProxy(
+    //     treasuryProxy,
+    //     TreasuryNew,
+    // )
+    // console.log("upgraded");
 }
 
 // We recommend this pattern to be able to use async/await everywhere
