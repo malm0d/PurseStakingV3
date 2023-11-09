@@ -11,8 +11,8 @@ const { upgrades } = require("hardhat");
 //npx hardhat run --network bsctestnet scripts/deployV3.js
 //npx hardhat verify --network bsctestnet 0x...
 async function main() {
-    const PURSE_TOKEN_ADDRESS = "0x5E329512a3a4Cf8aBc1a82Be60c7af180a4B68B7";
-    const PURSE_STAKING_PROXY_ADDRESS = "0x31F967CaA09f527170a0071080d02F2fc8881611";
+    const PURSE_TOKEN_ADDRESS = "0x8b9AF6F11b3A7Ad35F2FA4899c9Ce1d8F7cC9579";
+    const PURSE_STAKING_PROXY_ADDRESS = "0xeE8Ae6DEaD1812312293bF0A17550f81d650d498";
     const [deployer] = await hre.ethers.getSigners();
     console.log(`Deployer: ${deployer.address}`);
     console.log();
