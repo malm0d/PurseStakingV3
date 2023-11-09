@@ -19,11 +19,11 @@ contract RewardDistributor is Initializable, UUPSUpgradeable, IRewardDistributor
     address public override rewardToken;
     uint256 public override tokensPerInterval;
     uint256 public lastDistributionTime;
-    address public rewardTracker; //PurseStakingV3
+    address public rewardTracker;
     address public treasury;
 
-    event Distribute(uint256 amount);
-    event TokensPerIntervalChange(uint256 amount);
+    event Distribute(uint256 indexed amount);
+    event TokensPerIntervalChange(uint256 indexed amount);
 
     function initialize(
         address _rewardToken, 
@@ -66,7 +66,7 @@ contract RewardDistributor is Initializable, UUPSUpgradeable, IRewardDistributor
 
     /**
      * @notice Calculates the amount of rewards that have accumulated since the 
-     * last distribution.
+     * last distribution time.
      */
     function pendingRewards() public view override returns (uint256) {
         if (block.timestamp == lastDistributionTime) {
@@ -78,6 +78,7 @@ contract RewardDistributor is Initializable, UUPSUpgradeable, IRewardDistributor
 
     /**
      * @notice Updates the lastDistributionTime to the current block timestamp.
+     * @dev Only callable by the governor.
      */
     function updateLastDistributionTime() external onlyRole(GOVERNOR_ROLE) {
         lastDistributionTime = block.timestamp;
@@ -86,7 +87,7 @@ contract RewardDistributor is Initializable, UUPSUpgradeable, IRewardDistributor
     /**
      * @notice Sets the amount of tokens to distribute per interval.
      * @param _amount The amount (wei) of tokens to distribute per interval.
-     * @dev Only callable by the governor. is argument in wei or ether??????
+     * @dev Only callable by the governor.
      */
     function setTokensPerInterval(uint256 _amount) external onlyRole(GOVERNOR_ROLE) {
         require(lastDistributionTime != 0, "RewardDistributor: lastDistributionTime is not set");
@@ -98,9 +99,9 @@ contract RewardDistributor is Initializable, UUPSUpgradeable, IRewardDistributor
     /**
      * @notice Recovers ERC20 tokens sent to this contract.
      * @param _token The address of the token to recover.
-     * @param _amount The amount (wei) of tokens to recover.
+     * @param _amount The amount of tokens to recover.
      * @param _recipient The address to send the tokens to.
-     * @dev Only callable by the owner. Amount is in wei.
+     * @dev Only callable by the owner.
      */
     function recoverToken(address _token, uint256 _amount, address _recipient) external onlyRole(OWNER_ROLE) {
         require(_recipient != address(0), "RewardDistributor: Send to Zero Address");

@@ -57,23 +57,14 @@ contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausabl
     /**
      * @notice Allows the user to claim their available rewards.
      * @param _address The address of the user to claim rewards.
-     * @dev Sends a call to the staking contract to get the user's available rewards
+     * @dev Sends a call to the staking contract to get the user's available rewards.
+     * Reverts if the treasury has no rewards, the user does not have available
+     * rewards, the address is the zero address, when the contract is paused.
      */
     function claimRewards(address _address) external whenNotPaused {
         require(_address != address(0), "Treasury: zero address");
-        uint256 treasuryBalance = IERC20Upgradeable(PURSE).balanceOf(address(this));
-        require(treasuryBalance > 0, "Treasury: no rewards available");
-
         uint256 userClaimableAmount = IPurseStakingV3(PURSE_STAKING).getUserClaimableRewards(_address);
-        require(userClaimableAmount > 0, "Treasury: user does not have available rewards");
-
-        uint256 claimAmount;
-        if (userClaimableAmount > treasuryBalance) {
-            claimAmount = treasuryBalance;
-        } else {
-            claimAmount = userClaimableAmount;
-        }
-        IERC20Upgradeable(PURSE).safeTransfer(_address, claimAmount);
+        IERC20Upgradeable(PURSE).safeTransfer(_address, userClaimableAmount);
 
         emit Claimed(_address, userClaimableAmount, block.timestamp);
     }
@@ -82,7 +73,7 @@ contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausabl
      * @notice Recovers tokens from the contract.
      * @param _token The address of the token to return.
      * @param _to The address to return the tokens to.
-     * @param _amount The amount (wei) of tokens to return.
+     * @param _amount The amount of tokens to return.
      */
     function returnToken(address _token, address _to, uint256 _amount) external onlyOwner {
         require(_to != address(0), "Treasury: zero address");
