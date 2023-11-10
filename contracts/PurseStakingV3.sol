@@ -211,7 +211,7 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
      * @notice Updates the claimable rewards for the given account.
      * @param _account address of the account to update rewards for.
      * @dev Calls the distributor contract to distribute rewards to the treasury.
-     * Next, calculates the contract's cumulative reward per token and then,
+     * Then calculates the contract's cumulative reward per token, and
      * calculates the account's claimable rewards based on the account's shares
      * and prev cumulated reward per token. If called by the distributor through
      * updateRewards, only updates the cumulative reward per token in the state.
@@ -260,7 +260,7 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
     }
 
     /**
-     * @notice Updates and returns the account's claimable rewards.
+     * @notice Updates and returns the account's claimable rewards. Only treasury can call.
      * @param _account address of the account to update and get claimable rewards for.
      * @dev Calls _updateClaim to update and retrieve the account's claimable rewards.
      * Only callable by the treasury contract. Obtains the user's claimable rewards and
