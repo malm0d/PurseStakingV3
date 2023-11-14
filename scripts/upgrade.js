@@ -11,7 +11,7 @@ const { upgrades } = require("hardhat");
 //npx hardhat run --network bsctestnet scripts/upgrade.js
 //npx hardhat verify --network bsctestnet 0x...
 async function main() {
-    const PROXY = "0xCeF5fEbfC67ceB175560Dac99B05cDA951c10C26";
+    const PROXY = "0x8A6aFc7D27cDFf9FDC6b4efa63a757333eB58508";
     const [deployer] = await hre.ethers.getSigners();
     console.log(`Deployer: ${deployer.address}`);
     console.log();

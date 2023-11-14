@@ -15,7 +15,7 @@ contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausabl
     using SafeMath for uint256;
     using SafeERC20Upgradeable for IERC20Upgradeable;
     //0x29a63F4B209C29B4DC47f06FFA896F32667DAD2C
-    address public constant PURSE = 0x29a63F4B209C29B4DC47f06FFA896F32667DAD2C;
+    address public constant PURSE = 0xC1ba0436DACDa5aF5A061a57687c60eE478c4141;
     address public PURSE_STAKING;
     address public DISTRIBUTOR;
     
@@ -44,7 +44,7 @@ contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausabl
     function updatePurseStaking(address _address) external onlyOwner {
         require(_address != address(0), "Treasury: zero address");
         PURSE_STAKING = _address;
-        
+
         emit PurseStakingUpdated(_address);
     }
 
@@ -64,15 +64,17 @@ contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausabl
      * @notice Allows the user to claim their available rewards.
      * @param _address The address of the user to claim rewards.
      * @dev Sends a call to the staking contract to get the user's available rewards.
-     * Reverts if the treasury has no rewards, the user does not have available
+     * The `_address` input must match the msg.sender, otherwise the call will revert.
+     * Also reverts if the treasury has no rewards, the user does not have available
      * rewards, the address is the zero address, when the contract is paused.
      */
     function claimRewards(address _address) external whenNotPaused {
         require(_address != address(0), "Treasury: zero address");
-        uint256 userClaimableAmount = IPurseStakingV3(PURSE_STAKING).getUserClaimableRewards(_address);
-        IERC20Upgradeable(PURSE).safeTransfer(_address, userClaimableAmount);
+        require(msg.sender == _address, "Treasury: msg.sender does not match the address claiming rewards");
+        uint256 userClaimableAmount = IPurseStakingV3(PURSE_STAKING).updateClaim(msg.sender);
+        IERC20Upgradeable(PURSE).safeTransfer(msg.sender, userClaimableAmount);
 
-        emit Claimed(_address, userClaimableAmount, block.timestamp);
+        emit Claimed(msg.sender, userClaimableAmount, block.timestamp);
     }
 
     /**

@@ -9,7 +9,6 @@ import "./@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "./@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "./@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-import { ReentrancyGuardUpgradeable } from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import { IRewardDistributor } from "./interfaces/IRewardDistributor.sol";
 import { ITreasury } from "./interfaces/ITreasury.sol";
 
@@ -67,8 +66,7 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
         uint256 indexed _userRewards, 
         uint256 indexed _userClaimableRewards
     );
-    event UpdateClaim(address indexed _receiver, uint256 indexed _value);
-    event UpdateUserClaimed(address indexed _address);
+    event UpdateUserClaimed(address indexed _address, uint256 indexed _amount);
     event DisributorChanged(address indexed _address);
     event TreasuryChanged(address indexed _address);
 
@@ -78,7 +76,7 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
         uint256 totalXPurse = totalReceiptSupply();
         uint256 totalPurse = availablePurseSupply();
 
-        _updateClaim(msg.sender, msg.sender);
+        _updateRewards(msg.sender);
 
         purseToken.transferFrom(msg.sender, address(this), purseAmount);
 
@@ -106,7 +104,7 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
         uint256 purseReward;
         require(userReceipt >= xPurseAmount, "Insufficient Receipt Token");
 
-        _updateClaim(msg.sender, msg.sender);
+        _updateRewards(msg.sender);
 
         if(user.receiptToken <= 0) {
             uint256 lockDuration = block.timestamp.sub(user.lockTime); 
@@ -239,51 +237,36 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
             uint256 userClaimableReward = user.claimableReward.add(userRewards);
             user.claimableReward = userClaimableReward;
             user.previousCumulatedRewardPerToken = _cumulativeRewardPerToken;
-            emit UpdateRewards(_account, userRewards, userClaimableReward);
+
+            if (userClaimableReward > 0) {
+                emit UpdateRewards(_account, userRewards, userClaimableReward);
+            }
         }
     }
     /**
      * @notice Updates the claimable rewards for the given account.
      * @param _account address of the account to update claimable rewards.
-     * @param _receiver address of the account to receive the claimable rewards.
      * @dev Calls _updateRewards to update the account's claimable rewards in the state.
      * Then, returns the account's claimable rewards from the state.
      */
-    function _updateClaim(address _account, address _receiver) private returns (uint256) {
-        _updateRewards(_account);
-        UserInfo memory user = userInfo[_account];
-        uint256 tokenAmount = user.claimableReward;
-        if (tokenAmount > 0) {
-            emit UpdateClaim(_receiver, tokenAmount);
-        }
-        return tokenAmount;
-    }
-
-    /**
-     * @notice Updates and returns the account's claimable rewards. Only treasury can call.
-     * @param _account address of the account to update and get claimable rewards for.
-     * @dev Calls _updateClaim to update and retrieve the account's claimable rewards.
-     * Only callable by the treasury contract. Obtains the user's claimable rewards and
-     * resets the user's claimable rewards to 0 after. If the claimable amount is more 
-     * than the treasury's balance, returns the treasury's balance instead.
-     */
-    function getUserClaimableRewards(address _account) external returns (uint256) {
+    function updateClaim(address _account) external returns (uint256) {
         require(msg.sender == treasury, "PurseStakingV3: msg.sender is not the treasury");
 
         uint256 treasuryBalance = IERC20Upgradeable(rewardToken()).balanceOf(treasury);
         require(treasuryBalance > 0, "PurseStakingV3: treasury has no rewards available");
-        
-        uint256 claimableAmount = _updateClaim(_account, _account);
-        require(claimableAmount > 0, "PurseStakingV3: user does not have available rewards");
-        
+
+        _updateRewards(_account);
         UserInfo storage user = userInfo[_account];
+        uint256 claimableAmount = user.claimableReward;
+        require(claimableAmount > 0, "PurseStakingV3: user does not have available rewards");
+
         user.claimableReward = 0;
 
         if (claimableAmount > treasuryBalance) {
             claimableAmount = treasuryBalance;
         }
 
-        emit UpdateUserClaimed(_account);
+        emit UpdateUserClaimed(_account, claimableAmount);
         return claimableAmount;
     }
 

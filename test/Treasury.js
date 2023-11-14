@@ -10,10 +10,10 @@ describe("Treasury Tests", function () {
     const REWARD_DISTRIBUTOR = "RewardDistributor";
     const TREASURY = "Treasury";
 
-    const PURSE = "0x57A6Db5E6D68419629dcE619314d9Fb37d2074b5";
-    const PURSESTAKINGADDRESS = "0xCeF5fEbfC67ceB175560Dac99B05cDA951c10C26";
-    const DISTRIBUTORADDRESS = "0xBB0c22EE5F2C3bD3B937bfD8753a352c0F8d8E1c";
-    const TREASURYADDRESS = "0x3e4d07e72A8384F926930A6B49a4302B810fA788";
+    const PURSE = "0xC1ba0436DACDa5aF5A061a57687c60eE478c4141";
+    const PURSESTAKINGADDRESS = "0x8A6aFc7D27cDFf9FDC6b4efa63a757333eB58508";
+    const DISTRIBUTORADDRESS = "0xdb307306ae74EefaCf26afdca25C5A11D5b7e09e";
+    const TREASURYADDRESS = "0x774029863759eEd41B6f7Fe12dc5D44Ec9eD4bCB";
 
     const ZEROADDRESS = "0x0000000000000000000000000000000000000000";
 
@@ -193,16 +193,22 @@ describe("Treasury Tests", function () {
             await tx2.wait();
         });
 
+        it("User cannot claim on behalf of others", async () => {
+            await expect(
+                treasury.claimRewards(userB.address)
+            ).to.be.revertedWith("Treasury: msg.sender does not match the address claiming rewards");
+        });
+
         it("User who did not stake have no available rewards", async () => {
             await expect(
-                treasury.claimRewards(userRandom.address)
+                treasury.connect(userRandom).claimRewards(userRandom.address)
             ).to.be.revertedWith("PurseStakingV3: user does not have available rewards");
         });
 
         it("User who has staked before can claim available rewards", async () => {
             const initialBalance = await purse.balanceOf(userC.address);
             const initialPreview = await purseStaking.previewClaimableRewards(userC.address);
-            const tx1 = await treasury.claimRewards(userC.address);
+            const tx1 = await treasury.connect(userC).claimRewards(userC.address);
             await tx1.wait();
             const updatedBalance = await purse.balanceOf(userC.address);
             const updatedPreview = await purseStaking.previewClaimableRewards(userC.address);
@@ -281,7 +287,7 @@ describe("Treasury Tests", function () {
             expect(claimableRewardsStruct2).to.be.greaterThan(claimableRewardsStruct1);
             expect(preview2).to.be.greaterThan(preview1);
 
-            const claimTx = await treasury.claimRewards(userB.address);
+            const claimTx = await treasury.connect(userB).claimRewards(userB.address);
             await claimTx.wait();
             await new Promise(resolve => setTimeout(resolve, 5000));
 
@@ -292,7 +298,7 @@ describe("Treasury Tests", function () {
 
             console.log(initialBalance);
             console.log(finalBalance);
-            expect(finalBalance).to.be.greaterThan(initialBalance); //this line would expect to fail if its the very first time since the upgrade (0.01% difference)
+            expect(finalBalance).to.be.greaterThan(initialBalance);
             expect(previewFinal).to.be.lessThan(preview2);
             expect(claimableRewardsStructFinal).to.equal(0);
         });
@@ -301,7 +307,7 @@ describe("Treasury Tests", function () {
             const preview = await purseStaking.previewClaimableRewards(userB.address);
             expect(preview).to.equal(0);
             await expect(
-                treasury.claimRewards(userB.address)
+                treasury.connect(userB).claimRewards(userB.address)
             ).to.be.revertedWith("PurseStakingV3: user does not have available rewards");
         });
 
