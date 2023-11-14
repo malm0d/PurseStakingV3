@@ -16,12 +16,14 @@ describe("Test", function () {
     const TREASURYADDRESS = "0x774029863759eEd41B6f7Fe12dc5D44Ec9eD4bCB";
 
     let owner;
-    const userB = "0xAbCCf019ce52e7DEac396D1f1A1D9087EBF97966";
-    const userC = "0x9d356F4DD857fFeF5B5d48DCf30eE4d9574d708D";
+    let userB;
+    let userC;
 
     beforeEach(async () => {
         const signers = await hre.ethers.getSigners();
         owner = signers[0];
+        userB = signers[1].address;
+        userC = signers[2].address;
     });
 
     it("PurseStaking", async () => {
