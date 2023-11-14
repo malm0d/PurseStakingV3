@@ -118,7 +118,7 @@ describe("Reward Distributor Tests", function () {
                 const initialCRPTValue = await purseStaking.cumulativeRewardPerToken();
                 const initialTokensPerInterval = await rewardDistributor.tokensPerInterval();
                 const tx1 = await rewardDistributor.setTokensPerInterval(
-                    ethers.parseEther("5")
+                    ethers.parseEther("10")
                 );
                 await tx1.wait();
                 await new Promise(resolve => setTimeout(resolve, 5000));
