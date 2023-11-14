@@ -244,7 +244,7 @@ contract PurseStakingV3 is Initializable, UUPSUpgradeable, OwnableUpgradeable, P
         }
     }
     /**
-     * @notice Updates the claimable rewards for the given account.
+     * @notice Updates and returns the claimable rewards for the given account.
      * @param _account address of the account to update claimable rewards.
      * @dev Calls _updateRewards to update the account's claimable rewards in the state.
      * Then, returns the account's claimable rewards from the state.
