@@ -23,6 +23,8 @@ contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausabl
     event UpdateUserAvailableRewards(address indexed _address, uint256 indexed _amount, uint256 indexed _timestamp);
     event Claimed(address indexed _address, uint256 indexed _amount, uint256 indexed _timestamp);
     event ReturnToken(address indexed _token, address indexed _to, uint256 indexed _amount);
+    event DistributorUpdated(address indexed _address);
+    event PurseStakingUpdated(address indexed _address);
 
     function initialize(address _purseStaking, address _distributor) public initializer {
         PURSE_STAKING = _purseStaking;
@@ -42,6 +44,8 @@ contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausabl
     function updatePurseStaking(address _address) external onlyOwner {
         require(_address != address(0), "Treasury: zero address");
         PURSE_STAKING = _address;
+        
+        emit PurseStakingUpdated(_address);
     }
 
     /**
@@ -52,6 +56,8 @@ contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausabl
     function updateDistributor(address _address) external onlyOwner {
         require(_address != address(0), "Treasury: zero address");
         DISTRIBUTOR = _address;
+
+        emit DistributorUpdated(_address);
     }
 
     /**

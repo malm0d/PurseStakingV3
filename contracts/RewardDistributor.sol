@@ -24,6 +24,9 @@ contract RewardDistributor is Initializable, UUPSUpgradeable, IRewardDistributor
 
     event Distribute(uint256 indexed amount);
     event TokensPerIntervalChange(uint256 indexed amount);
+    event TreasuryUpdated(address indexed _address);
+    event RewardTrackerUpdated(address indexed _address);
+    event RecoverToken(address indexed _token, address indexed _to, uint256 indexed _amount);
 
     function initialize(
         address _rewardToken, 
@@ -93,6 +96,7 @@ contract RewardDistributor is Initializable, UUPSUpgradeable, IRewardDistributor
         require(lastDistributionTime != 0, "RewardDistributor: lastDistributionTime is not set");
         tokensPerInterval = _amount;
         IPurseStakingV3(rewardTracker).updateRewards();
+
         emit TokensPerIntervalChange(_amount);
     }
 
@@ -106,6 +110,8 @@ contract RewardDistributor is Initializable, UUPSUpgradeable, IRewardDistributor
     function recoverToken(address _token, uint256 _amount, address _recipient) external onlyRole(OWNER_ROLE) {
         require(_recipient != address(0), "RewardDistributor: Send to Zero Address");
         IERC20Upgradeable(_token).safeTransfer(_recipient, _amount);
+
+        emit RecoverToken(_token, _recipient, _amount);
     }
 
     /**
@@ -116,6 +122,8 @@ contract RewardDistributor is Initializable, UUPSUpgradeable, IRewardDistributor
     function updateTreasury(address _treasury) external onlyRole(OWNER_ROLE) {
         require(_treasury != address(0), "RewardDistributor: Zero Address");
         treasury = _treasury;
+
+        emit TreasuryUpdated(_treasury);
     }
 
     /**
@@ -126,6 +134,8 @@ contract RewardDistributor is Initializable, UUPSUpgradeable, IRewardDistributor
     function updateRewardTracker(address _rewardTracker) external onlyRole(OWNER_ROLE) {
         require(_rewardTracker != address(0), "RewardDistributor: Zero Address");
         rewardTracker = _rewardTracker;
+        
+        emit RewardTrackerUpdated(_rewardTracker);
     }
 
     /**
