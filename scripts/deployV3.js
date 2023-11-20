@@ -10,9 +10,16 @@ const { upgrades } = require("hardhat");
 //npx hardhat compile --force
 //npx hardhat run --network bsctestnet scripts/deployV3.js
 //npx hardhat verify --network bsctestnet 0x...
+
+// testnet deployer: 0x2027E055201E26b1bFE33Eb923b3fdb7E6f30807
+
+// Mainnet
+// const PURSE_TOKEN_ADDRESS = "0x29a63F4B209C29B4DC47f06FFA896F32667DAD2C";
+// const PURSE_STAKING_PROXY_ADDRESS = "0xFb1D31a3f51Fb9422c187492D8EA14921d6ea6aE";
+
 async function main() {
-    const PURSE_TOKEN_ADDRESS = "0xC1ba0436DACDa5aF5A061a57687c60eE478c4141";
-    const PURSE_STAKING_PROXY_ADDRESS = "0x8A6aFc7D27cDFf9FDC6b4efa63a757333eB58508";
+    const PURSE_TOKEN_ADDRESS = "0x29a63F4B209C29B4DC47f06FFA896F32667DAD2C";
+    const PURSE_STAKING_PROXY_ADDRESS = "0xFb1D31a3f51Fb9422c187492D8EA14921d6ea6aE";
     const [deployer] = await hre.ethers.getSigners();
     console.log(`Deployer: ${deployer.address}`);
     console.log();
@@ -22,10 +29,10 @@ async function main() {
         RewardDistributor,
         [
             PURSE_TOKEN_ADDRESS,
-            "0x2027E055201E26b1bFE33Eb923b3fdb7E6f30807",
-            "0x2027E055201E26b1bFE33Eb923b3fdb7E6f30807",
-            "0x2027E055201E26b1bFE33Eb923b3fdb7E6f30807",
-            "0x2027E055201E26b1bFE33Eb923b3fdb7E6f30807"
+            PURSE_STAKING_PROXY_ADDRESS,
+            "0xf7756F7611071B1B56a4C3616c45CB42F9f48D82",
+            "0xf7756F7611071B1B56a4C3616c45CB42F9f48D82",
+            "0xf7756F7611071B1B56a4C3616c45CB42F9f48D82"
         ]
     );
     await rewardDistributor.waitForDeployment();
