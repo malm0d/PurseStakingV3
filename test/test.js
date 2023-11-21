@@ -30,7 +30,7 @@ describe("Test", function () {
     });
 
     it("PurseStaking", async () => {
-
+        console.log(owner.address)
         token = await hre.ethers.getContractAt(
             BEP20ABI,
             PURSE,
