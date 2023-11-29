@@ -1,10 +1,10 @@
 const { assert, expect } = require("chai");
 require("dotenv").config();
 const hre = require("hardhat");
-const BEP20ABI = require("./BEP20.json");
+const BEP20ABI = require("../BEP20.json");
 require("dotenv").config();
 
-//npx hardhat test test/Treasury.js --network bsctestnet
+//npx hardhat test test/staking/Treasury.js --network bsctestnet
 describe("Treasury Tests", function () {
     const PURSE_STAKING = "PurseStakingV3";
     const REWARD_DISTRIBUTOR = "RewardDistributor";
