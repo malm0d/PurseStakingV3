@@ -7,25 +7,25 @@ import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/Own
 import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import {SafeERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
-import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
 interface IRewarder {
     function onReward(address user, uint256 rewardAmount) external;
 }
 
-contract PurseRewardMultiplier is IRewarder, Initializable, UUPSUpgradeable, OwnableUpgradeable, PausableUpgradeable, ReentrancyGuardUpgradeable {
+contract PurseRewardMultiplier is IRewarder, Initializable, UUPSUpgradeable, OwnableUpgradeable, PausableUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     //storage variables
     address private MASTER_CHEF;
-    IERC20Upgradeable[] public rewardTokens;
-    uint256[] public rewardMultipliers;
+
+    // IERC20Upgradeable[] public rewardTokens;
+    // uint256[] public rewardMultipliers;
 
     //Can we use this struct to optimize gas?
-    //Occupies 32 bytes nicely, per struct
+    //Occupies each struct in the array occupies 32 bytes nicely
     struct RewardInfo {
-        address rewardToken;
-        uint96 rewardMultiplier;
+        address rewardToken; //20bytes == 160bits
+        uint96 rewardMultiplier; //96 bits
     }
     RewardInfo[] public rewardInfo;
 
@@ -33,7 +33,7 @@ contract PurseRewardMultiplier is IRewarder, Initializable, UUPSUpgradeable, Own
     uint256 private BASE_REWARD_TOKEN_DIVISOR;
 
     //can this nested mapping be optimized to a single mapping?
-    //If the reward token is solely PURSE, we can use single mapping
+    //If the reward token is solely PURSE, we can use single mapping.
     mapping(address => mapping(uint256 => uint256)) private rewardDebts;
 
     event Reward(address indexed _user);
@@ -43,12 +43,17 @@ contract PurseRewardMultiplier is IRewarder, Initializable, UUPSUpgradeable, Own
 
     function initialize(
         address _masterChef,
-        address _owner,
-        address _governor
+        uint256 _baseRewardTokenDecimal,
+        address _rewardToken,
+        uint96 _multiplier
     ) public initializer {
         MASTER_CHEF = _masterChef;
-        //some
-
+        BASE_REWARD_TOKEN_DIVISOR = 10 ** _baseRewardTokenDecimal;
+        RewardInfo memory initialRewardInfo = RewardInfo({
+            rewardToken: _rewardToken,
+            rewardMultiplier: _multiplier
+        });
+        rewardInfo.push(initialRewardInfo);
         __Ownable_init();
         __UUPSUpgradeable_init();
     }
@@ -79,9 +84,31 @@ contract PurseRewardMultiplier is IRewarder, Initializable, UUPSUpgradeable, Own
         emit MultiplierUpdated(_pid, _multiplier);
     }
 
-    function onReward(address _user, uint256 _rewardAmount) external override {
+    function onReward(address _user, uint256 _rewardAmount) external override whenNotPaused {
         require(msg.sender == MASTER_CHEF, "PurseRewardMultiplier: only callable by masterchef");
-        //some
+        require(_user != address(0), "PurseRewardMultiplier: zero address");
+        uint256 rewardInfoLength = rewardInfo.length;
+        for (uint256 i = 0; i < rewardInfoLength;) {
+            RewardInfo memory _rewardInfo = rewardInfo[i];
+            address rewardToken = _rewardInfo.rewardToken;
+            uint256 pendingReward = 
+                rewardDebts[_user][i] + 
+                ((_rewardAmount * _rewardInfo.rewardMultiplier) / BASE_REWARD_TOKEN_DIVISOR);
+            uint256 rewardBalance = IERC20Upgradeable(rewardToken).balanceOf(address(this));
+
+            if (pendingReward > rewardBalance) {
+                rewardDebts[_user][i] = pendingReward - rewardBalance;
+                IERC20Upgradeable(rewardToken).safeTransfer(_user, rewardBalance);
+            } else {
+                rewardDebts[_user][i] = 0;
+                IERC20Upgradeable(rewardToken).safeTransfer(_user, pendingReward);
+            }
+
+            unchecked {
+                i++;
+            }
+        }
+        emit Reward(_user);
     }
 
     function returnToken(address _token, address _to, uint256 _amount) external onlyOwner {
@@ -92,6 +119,38 @@ contract PurseRewardMultiplier is IRewarder, Initializable, UUPSUpgradeable, Own
         emit ReturnToken(_token, _to, _amount);
     }
 
+    function pendingTokens(
+        address _user,
+        uint256 _rewardAmount
+    ) external view returns (address[] memory, uint256[] memory) {
+        uint256 rewardInfoLength = rewardInfo.length;
+        address[] memory tokens = new address[](rewardInfoLength);
+        uint256[] memory amounts = new uint256[](rewardInfoLength);
+        for (uint256 i = 0; i < rewardInfoLength;) {
+            RewardInfo memory _rewardInfo = rewardInfo[i];
+            uint256 pendingReward = 
+                rewardDebts[_user][i] + 
+                ((_rewardAmount * _rewardInfo.rewardMultiplier) / BASE_REWARD_TOKEN_DIVISOR);
+            uint256 rewardBalance = IERC20Upgradeable(_rewardInfo.rewardToken).balanceOf(address(this));
+
+            tokens[i] = _rewardInfo.rewardToken;
+            if (pendingReward > rewardBalance) {
+                amounts[i] = rewardBalance;
+            } else {
+                amounts[i] = pendingReward;
+            }
+
+            unchecked {
+                i++;
+            }
+        }
+        return (tokens, amounts);
+    }
+
+    function getRewardInfo(uint256 _pid) external view returns (address, uint96) {
+        return (rewardInfo[_pid].rewardToken, rewardInfo[_pid].rewardMultiplier);
+    }
+
     function pause() external whenNotPaused onlyOwner {
         _pause();
     }
@@ -99,23 +158,4 @@ contract PurseRewardMultiplier is IRewarder, Initializable, UUPSUpgradeable, Own
     function unpause() external whenPaused onlyOwner {
         _unpause();
     }
-
-    function pendingTokens(
-        address _user,
-        uint256 _rewardAmount
-    ) external view returns (address[] memory, uint256[] memory) {
-
-    }
-
-    function getRewardInfo(uint256 _pid) external view returns (address, uint96) {
-        return (rewardInfo[_pid].rewardToken, rewardInfo[_pid].rewardMultiplier);
-    }
-
-    // function getRewardTokens() external view returns (IERC20Upgradeable[] memory) {
-    //     return rewardTokens;
-    // }
-
-    // function getRewardMultipliers() external view returns (uint256[] memory) {
-    //     return rewardMultipliers;
-    // }
 }
