@@ -54,8 +54,17 @@ describe("RewardMultiplierTest", function () {
         it("Non MasterChef address cannot call onReward", async () => { });
 
         it("Non owner cannot call returnToken", async () => { });
-    })
+    });
 
+    describe("Test addRewardToken", function () { });
+
+    describe("Test removeRewardToken", function () { });
+
+    describe("Test updateMultiplier", function () { });
+
+    describe("Test returnToken", function () { });
+
+    describe("Test onReward", function () { });
 
 
 });
