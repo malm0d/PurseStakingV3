@@ -38,6 +38,7 @@ contract PurseRewardMultiplier is IRewarder, Initializable, UUPSUpgradeable, Own
 
     event Reward(address indexed _user);
     event RewardTokenAdded(address indexed _token, uint256 indexed _multiplier);
+    event RewardTokenRemoved(uint256 indexed _pid, address indexed _token);
     event MultiplierUpdated(uint256 indexed _pid, uint256 indexed _multiplier);
     event ReturnToken(address indexed _token, address indexed _to, uint256 _amount);
 
@@ -72,6 +73,22 @@ contract PurseRewardMultiplier is IRewarder, Initializable, UUPSUpgradeable, Own
         rewardInfo.push(newRewardInfo);
 
         emit RewardTokenAdded(_token, _multiplier);
+    }
+
+    /**
+     * @notice DO NOT USE UNLESS YOU ARE SURE WHAT YOU ARE DOING
+     */
+    function removeRewardToken(uint256 _pid) external onlyOwner {
+        uint256 rewardInfoLength = rewardInfo.length;
+        require(_pid < rewardInfoLength, "PurseRewardMultiplier: invalid pid argument");
+        address rewardTokenRemove = rewardInfo[_pid].rewardToken;
+        uint256 lastIndex = rewardInfoLength - 1;
+        if (_pid != lastIndex) {
+            rewardInfo[_pid] = rewardInfo[lastIndex];
+        }
+        //pop last element since we already moved it to replace the struct at _pid index
+        rewardInfo.pop();
+        emit RewardTokenRemoved(_pid, rewardTokenRemove);
     }
 
     function updateMultiplier(uint256 _pid, uint96 _multiplier) external onlyOwner {
