@@ -1,16 +1,17 @@
 const { assert, expect } = require("chai");
 require("dotenv").config();
 const hre = require("hardhat");
-const ERC20ABI = require("../ERC20.json");
+const MASTER_CHEF_ABI = require("../MasterChef.json");
+const PURSE_ABI = require("../Purse.json");
+const WFX_ABI = require("../WFX_Upgradeable.json");
 
 describe("RewardMultiplierTest", function () {
     const REWARD_MULTIPLIER = "PurseRewardMultiplier";
-    const REWARD_TOKEN = "SOME";
-    const MASTER_CHEF = "0xSomeChef";
 
-    const REWARD_MULTIPLIER_ADDRESS = "0xSomeMultiplier";
-    const REWARD_TOKEN_ADDRESS = "0xSOME";
-    const MASTER_CHEF_ADDRESS = "0xSomeChef";
+    const REWARD_MULTIPLIER_ADDRESS_TESTNET = "";
+    const WFX_ADDRESS_TESTNET = "0x3452e23F9c4cC62c70B7ADAd699B264AF3549C19";
+    const PURSE_ADDRESS_TESTNET = "0xc8B4d3e67238e38B20d38908646fF6F4F48De5EC";
+    const MASTERCHEF_ADDRESS_TESTNET = "0x3Af307F9f14d7641320Bb3cf6bb4A14A740EdEec";
 
     let owner;
     let user1;
@@ -27,19 +28,25 @@ describe("RewardMultiplierTest", function () {
 
         RewardMultiplier = await hre.ethers.getContractAt(
             REWARD_MULTIPLIER,
-            REWARD_MULTIPLIER_ADDRESS,
+            REWARD_MULTIPLIER_ADDRESS_TESTNET,
             owner
         );
 
-        RewardToken = await hre.ethers.getContractAt(
-            ERC20ABI,
-            REWARD_TOKEN_ADDRESS,
+        Purse = await hre.ethers.getContractAt(
+            PURSE_ABI,
+            PURSE_ADDRESS_TESTNET,
+            owner
+        );
+
+        WFX = await hre.ethers.getContractAt(
+            WFX_ABI,
+            WFX_ADDRESS_TESTNET,
             owner
         );
 
         MasterChef = await hre.ethers.getContractAt(
-            MASTER_CHEF,
-            MASTER_CHEF_ADDRESS,
+            MASTER_CHEF_ABI,
+            MASTERCHEF_ADDRESS_TESTNET,
             owner
         );
     })

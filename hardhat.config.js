@@ -35,6 +35,22 @@ module.exports = {
         mnemonic: MNEMONIC
       },
     },
+    fxMainnet: {
+      url: "https://fx-json-web3.functionx.io:8545",
+      networkCheckTimeout: 999999,
+      timeoutBlocks: 200,
+      accounts: {
+        mnemonic: MNEMONIC
+      }
+    },
+    fxTestnet: {
+      url: "https://testnet-fx-json-web3.functionx.io:8545",
+      networkCheckTimeout: 999999,
+      timeoutBlocks: 200,
+      accounts: {
+        mnemonic: MNEMONIC
+      }
+    }
   },
   etherscan: {
     apiKey: process.env.BSCSCANAPI

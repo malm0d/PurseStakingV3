@@ -15,9 +15,7 @@ interface IRewarder {
 contract PurseRewardMultiplier is IRewarder, Initializable, UUPSUpgradeable, OwnableUpgradeable, PausableUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
-    //storage variables
     address private MASTER_CHEF;
-
     // IERC20Upgradeable[] public rewardTokens;
     // uint256[] public rewardMultipliers;
 
@@ -29,11 +27,9 @@ contract PurseRewardMultiplier is IRewarder, Initializable, UUPSUpgradeable, Own
     }
     RewardInfo[] public rewardInfo;
 
-    //can this below be removed? We can use decimals from ERC20 to calc divisor
+    //can this below be removed? Can use decimals from ERC20 to calc divisor?
     uint256 private BASE_REWARD_TOKEN_DIVISOR;
 
-    //can this nested mapping be optimized to a single mapping?
-    //If the reward token is solely PURSE, we can use single mapping.
     mapping(address => mapping(uint256 => uint256)) private rewardDebts;
 
     event Reward(address indexed _user);

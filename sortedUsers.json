@@ -1,0 +1,272 @@
+[
+  {
+    "user": "0x62be1DaF60c3D0258e86e29a16D2B29c8E5F7174",
+    "amountWei": "96058201172788683328508998",
+    "amountEther": "96058201.17279"
+  },
+  {
+    "user": "0x5A3425eeF5707702B2c6d91c796741f4b6Fd9def",
+    "amountWei": "45746051499037568517987791",
+    "amountEther": "45746051.49904"
+  },
+  {
+    "user": "0x212214f9F6c3200d87d962f01B8A230bD982D70f",
+    "amountWei": "38584740250086323924239247",
+    "amountEther": "38584740.25009"
+  },
+  {
+    "user": "0x8FF179e745Fe110aEcf8456517e12c54a65E9FBB",
+    "amountWei": "24248508495756751072426374",
+    "amountEther": "24248508.49576"
+  },
+  {
+    "user": "0xa8B8b29851FD363044D0adfFfD44aD1B32606AD3",
+    "amountWei": "20680719868960821485389248",
+    "amountEther": "20680719.86896"
+  },
+  {
+    "user": "0x9fc5C625e00dEB8042399AD91Fc475Dfa42Cc43c",
+    "amountWei": "18024994668631989790816470",
+    "amountEther": "18024994.66863"
+  },
+  {
+    "user": "0x610629Af1Cc8543C0e0348F62559801dc4099A76",
+    "amountWei": "6866997184402527447713425",
+    "amountEther": "6866997.18440"
+  },
+  {
+    "user": "0xD8Adac8947Da34B0e1b44c60953c3e6473e2350e",
+    "amountWei": "5375036447566112712570912",
+    "amountEther": "5375036.44757"
+  },
+  {
+    "user": "0xA7396814b9946f3fd1616410985aF0258412477c",
+    "amountWei": "4886108535827554992849028",
+    "amountEther": "4886108.53583"
+  },
+  {
+    "user": "0x28E817C8727728b147Cf9Ec6deFc17317DBe6d00",
+    "amountWei": "2484609495413541489122341",
+    "amountEther": "2484609.49541"
+  },
+  {
+    "user": "0x0ef792C61375133f06BEcb81d0966b96bbc9cEa2",
+    "amountWei": "1681325102249323468518981",
+    "amountEther": "1681325.10225"
+  },
+  {
+    "user": "0xEc4ff532E317831227EE504838BdaF0d04B2b5ae",
+    "amountWei": "1366018612021054683115038",
+    "amountEther": "1366018.61202"
+  },
+  {
+    "user": "0x0c27255e28a67c1eAdA02c7D9513d0A5Da6971d3",
+    "amountWei": "1331690545726284345807743",
+    "amountEther": "1331690.54573"
+  },
+  {
+    "user": "0xF02b79CB51dbF6239B419440D934F94E9c1B53a1",
+    "amountWei": "794992021455602191368554",
+    "amountEther": "794992.02146"
+  },
+  {
+    "user": "0x0398E1e805f057709FC2f753105319DDf1eabe2a",
+    "amountWei": "754448398238125833319189",
+    "amountEther": "754448.39824"
+  },
+  {
+    "user": "0xeEaCe5367588b6483fcb3131Dca559A2a2F9EE0A",
+    "amountWei": "655302277441777371104159",
+    "amountEther": "655302.27744"
+  },
+  {
+    "user": "0x7fcd0849dE769016B1800dB557D773BAAF26bd01",
+    "amountWei": "544639362857896078586730",
+    "amountEther": "544639.36286"
+  },
+  {
+    "user": "0x75E4B73B484224b7244e4C2526DD2b80D92E0156",
+    "amountWei": "500033499316603247645265",
+    "amountEther": "500033.49932"
+  },
+  {
+    "user": "0x359b21b77Efb3f26533E3edB9De8b3Ef8F4e0775",
+    "amountWei": "438256790956114401662519",
+    "amountEther": "438256.79096"
+  },
+  {
+    "user": "0x9Bbe577CFeC46b4BA3DA15431D37AA592686002f",
+    "amountWei": "417479864257440722056025",
+    "amountEther": "417479.86426"
+  },
+  {
+    "user": "0xbef4E22bf9696FE4b455C53587e119e455F2fc3B",
+    "amountWei": "361104582427666349807491",
+    "amountEther": "361104.58243"
+  },
+  {
+    "user": "0x4E2caCaaef3EB72dd774F4E781383dECb32A2C4B",
+    "amountWei": "282755022508950570609272",
+    "amountEther": "282755.02251"
+  },
+  {
+    "user": "0xfC2B89D22195045161e6419BDf3E5D2744Fbbae7",
+    "amountWei": "192163458030721962933782",
+    "amountEther": "192163.45803"
+  },
+  {
+    "user": "0x5a0f00A65f23C848a996e149Fc6FFeE11eb0652a",
+    "amountWei": "184619641148481612037022",
+    "amountEther": "184619.64115"
+  },
+  {
+    "user": "0x4a0577eBd84afFccfEA79e14c652D7C316299A60",
+    "amountWei": "157029902177480041506580",
+    "amountEther": "157029.90218"
+  },
+  {
+    "user": "0x20bB96117EDc0036E804af5f8b86013b891B73Ab",
+    "amountWei": "115000000000000000000000",
+    "amountEther": "115000.00000"
+  },
+  {
+    "user": "0xDE4E5b6AeB5Ad571a94e84311aB8b500a002c302",
+    "amountWei": "87330843208046181353726",
+    "amountEther": "87330.84321"
+  },
+  {
+    "user": "0x5d02c857E98465f5b3a957B1f43569C4dAe58cA0",
+    "amountWei": "84615025692709588035749",
+    "amountEther": "84615.02569"
+  },
+  {
+    "user": "0x65382f9c06bFc2a43C1FDc23AB9B121461d79743",
+    "amountWei": "80024489567973805893147",
+    "amountEther": "80024.48957"
+  },
+  {
+    "user": "0x4b9465aC83f10dde59cD6564b61dB25056B459FB",
+    "amountWei": "41161136932772662614364",
+    "amountEther": "41161.13693"
+  },
+  {
+    "user": "0xFF19abD7E7035fa6480E5095119946a916bF5B4d",
+    "amountWei": "31740802413015989606228",
+    "amountEther": "31740.80241"
+  },
+  {
+    "user": "0x420B6E95ffBA3B87550625d1AA6faB5FD6BbB4A5",
+    "amountWei": "27580729339304772490859",
+    "amountEther": "27580.72934"
+  },
+  {
+    "user": "0xc7CFD7838e593e1bd2aeA39062961cC43B717774",
+    "amountWei": "20663099313430714312862",
+    "amountEther": "20663.09931"
+  },
+  {
+    "user": "0x7119c0835f59331eee0f7Ddd06774183e4e266B3",
+    "amountWei": "18528918294536763209307",
+    "amountEther": "18528.91829"
+  },
+  {
+    "user": "0x039014F376a14f3cdF0aaCfAcAb3208262B35578",
+    "amountWei": "18139648301589545826316",
+    "amountEther": "18139.64830"
+  },
+  {
+    "user": "0xD471498a32975dBb19be1A75a753cc7157bE2F04",
+    "amountWei": "17767589553702347947062",
+    "amountEther": "17767.58955"
+  },
+  {
+    "user": "0x9B0dFf9176410A52Ca04EF7F5B2778b26Ee2A85D",
+    "amountWei": "14214188125639422945893",
+    "amountEther": "14214.18813"
+  },
+  {
+    "user": "0x4cfeA1f3cd9165B528fF07D24Bf075A75cbcD5e8",
+    "amountWei": "12380974801396223077289",
+    "amountEther": "12380.97480"
+  },
+  {
+    "user": "0x539D76B1312C6B07Df67052fE75F5CF557EA1AeE",
+    "amountWei": "10840040361288642668090",
+    "amountEther": "10840.04036"
+  },
+  {
+    "user": "0xaa2631b8A44062b8aBF21e7178Fc353f4e8d44F9",
+    "amountWei": "10380403436801903243354",
+    "amountEther": "10380.40344"
+  },
+  {
+    "user": "0x768E21C9067f402eE5d414dA33bc0bfE052CC6Cf",
+    "amountWei": "6379477955401678344801",
+    "amountEther": "6379.47796"
+  },
+  {
+    "user": "0xdF1ab52510B4Ea5e01a24A0d6af516612A78289B",
+    "amountWei": "5362984074919846579148",
+    "amountEther": "5362.98407"
+  },
+  {
+    "user": "0x11EA7a35bb0546E9901e1f3507C5AD120fE77b7a",
+    "amountWei": "4350000000000000000000",
+    "amountEther": "4350.00000"
+  },
+  {
+    "user": "0x520014315D1b90e392cAAA0eF09858bF136739A0",
+    "amountWei": "2144527843753538641962",
+    "amountEther": "2144.52784"
+  },
+  {
+    "user": "0x952AA1Fbe1bAeA47bC5eB077030cd5b7bC401E49",
+    "amountWei": "1583083464653343094260",
+    "amountEther": "1583.08346"
+  },
+  {
+    "user": "0x683E0FFBe91AEf6aAbf67cDA2c1CCdF53e5f905B",
+    "amountWei": "1164285364584713417874",
+    "amountEther": "1164.28536"
+  },
+  {
+    "user": "0xFE5D64E5fD73995135a4f88563f5c260D8B63Ae7",
+    "amountWei": "1041386718627320893539",
+    "amountEther": "1041.38672"
+  },
+  {
+    "user": "0x660e7b07Da0f8F147d25dAbFCbACBa70fd0ed363",
+    "amountWei": "905828732462248289206",
+    "amountEther": "905.82873"
+  },
+  {
+    "user": "0x75A9F9d4fF67cbF0Bde69f7f49D8bc511272f19b",
+    "amountWei": "768184858266114557520",
+    "amountEther": "768.18486"
+  },
+  {
+    "user": "0x485F1252f863A482C52490C1771E78ac14B2A78F",
+    "amountWei": "141778809304226569476",
+    "amountEther": "141.77881"
+  },
+  {
+    "user": "0x3Dc0E87D59B7F6361cd66958C163062a3946D082",
+    "amountWei": "6146381049040157557",
+    "amountEther": "6.14638"
+  },
+  {
+    "user": "0x21a57DA61E20549399874DB13caF02Eabe54d2f2",
+    "amountWei": "200252990856767751",
+    "amountEther": "0.20025"
+  },
+  {
+    "user": "0x8e7C101a56f2405e2989AD86704c8DC838b5C1C0",
+    "amountWei": "20033716576621544",
+    "amountEther": "0.02003"
+  },
+  {
+    "user": "0x010C7fc45bb6C56E7605b9797B6fd3842c920239",
+    "amountWei": "10000000000000000",
+    "amountEther": "0.01000"
+  }
+]
