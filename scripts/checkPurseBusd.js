@@ -162,6 +162,7 @@ function prepEventsData(userEvents) {
 //addresses that are in the `addressesToFilterFor` array. Returns a new object
 //with the filtered user addresses, if the user address is not in the `addressesToFilterFor`
 // array, then the user address is added to the new object with an empty array.
+//{ user0: [event0, event1, ...], user1: [event0, event1, ...], userN: [], ...  }
 function filterUserEventsByAddresses(userEvents, addressesToFilterFor) {
     let filteredEvents = {};
     addressesToFilterFor.forEach(address => {
@@ -318,18 +319,93 @@ async function tallyRewardsEarnedPerUser(userEvents, addressesToFilterFor) {
 
 async function tallyEarnedRewardsPerUser(_userEventsFiltered, _userRange) {
     const logFileName = "purseBusdUserEarnedRewards.json";
-    const _maxRetries = 1000;
-    const _retryDelay = 5000;
-
-    let existingData = fs.existsSync(logFileName)
-        ? JSON.parse(fs.readFileSync(logFileName, 'utf8'))
-        : [];
 
     console.log("Total users to check: " + Object.keys(_userEventsFiltered).length);
 
+    let results = [];
     for (let user in _userEventsFiltered) {
+        const startingBlock = _userRange[user].fromBlock;
+        let fromBlock = _userRange[user].fromBlock;
+        let toBlock = _userRange[user].toBlock;
 
+        //get staked amount and total staked in pool at `fromBlock`
+        let userStakedAmount = await getUserLpTokenStakedAmount(user, fromBlock);
+        let totalStakedInPool = await getPoolTotalLPStaked(fromBlock);
+        let userRewardsEarned = BigInt(0);
+
+        if (_userEventsFiltered[user].length > 0) {
+            //If user has events, go through all events for user and 
+            //calculate the rewards earned for each event.
+            for (let i = 0; i < _userEventsFiltered[user].length; i++) {
+                let event = _userEventsFiltered[user][i];
+                //skip event if it is before the `fromBlock`
+                if (event.blockNumber < fromBlock) {
+                    continue;
+                }
+                //otherwise, calculate the rewards earned from the last event to the current event.
+                //the rewards earned should be based on user staked amount and total staked in pool
+                //at the last event block number, and the number of blocks elapsed since last event
+                let rewardsEarnedSinceLastEvent = calculateRewardsEarnedFromLastEvent(
+                    userStakedAmount,
+                    totalStakedInPool,
+                    fromBlock,
+                    event.blockNumber
+                );
+
+                userRewardsEarned += rewardsEarnedSinceLastEvent;
+
+                //update user's staked amount and total staked in pool for next event
+                if (event.event === "Deposit") {
+                    userStakedAmount += BigInt(event.amount);
+                } else if (event.event === "Withdraw") {
+                    userStakedAmount -= BigInt(event.amount);
+                }
+                totalStakedInPool = await getPoolTotalLPStaked(event.blockNumber);
+
+                //update `fromBlock` to the current event block number
+                fromBlock = event.blockNumber;
+            }
+
+            //after the loop, we will have the total rewards earned for the user, up to the last event.
+            //now we need to calculate the rewards earned from the last event to the `toBlock` 
+            //(block at which purse rewards was set to zero)
+            let finalRewardsEarned = calculateRewardsEarnedFromLastEvent(
+                userStakedAmount,
+                totalStakedInPool,
+                _userEventsFiltered[user][_userEventsFiltered[user].length - 1].blockNumber,
+                toBlock
+            );
+            userRewardsEarned += finalRewardsEarned;
+
+        } else {
+            //If user does not have any events, means user has no deposit or withdraw event
+            //between the `fromBlock` and `toBlock` range. So we just need to calculate the rewards
+            //earned from `fromBlock` to `toBlock`.
+            userRewardsEarned = calculateRewardsEarnedFromLastEvent(
+                userStakedAmount,
+                totalStakedInPool,
+                fromBlock,
+                toBlock
+            );
+        }
+
+        console.log("User: " + user + " Rewards: " + userRewardsEarned);
+        console.log();
+        let newRewardsEntry = {
+            user: user,
+            fromBlock: startingBlock,
+            toBlock: toBlock,
+            rewardsEarnedWei: userRewardsEarned.toString(),
+            rewardsEarnedEther: (Number(userRewardsEarned) / (1e18)).toFixed(10)
+        };
+        results.push(newRewardsEntry);
     }
+    fs.writeFileSync(logFileName, JSON.stringify(results, null, 2));
+    return results;
+}
+
+async function getClaimEvents(_fromBlock, _toBlock, _batchSize) {
+    //event ClaimReward(address indexed user, uint256 amount);
 
 }
 
@@ -382,6 +458,10 @@ async function main() {
     console.log("User deposit and withdraw events block numbers:");
     console.log(userEventsBlockNumbers);
     console.log();
+
+    const earnedRewardsResult = await tallyEarnedRewardsPerUser(userEventsFiltered, userRange);
+    console.log("Earned rewards result:");
+    console.log(earnedRewardsResult);
 
 }
 
