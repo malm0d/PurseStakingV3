@@ -340,6 +340,8 @@ async function tallyEarnedRewardsPerUser(_userEventsFiltered, _userRange) {
                 let event = _userEventsFiltered[user][i];
                 //skip event if it is before the `fromBlock`
                 if (event.blockNumber < fromBlock) {
+                    console.log("Skipping event for user: " + user + " at block: " + event.blockNumber + " because it is before the `fromBlock`: " + fromBlock);
+                    console.log();
                     continue;
                 }
                 //otherwise, calculate the rewards earned from the last event to the current event.
@@ -462,6 +464,8 @@ async function main() {
     const earnedRewardsResult = await tallyEarnedRewardsPerUser(userEventsFiltered, userRange);
     console.log("Earned rewards result:");
     console.log(earnedRewardsResult);
+
+    //TODO: need to calculate how much they claimed so we can deduct from the total rewards earned
 
 }
 
