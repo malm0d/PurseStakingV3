@@ -1,5 +1,6 @@
 require("@nomicfoundation/hardhat-toolbox");
 require('@openzeppelin/hardhat-upgrades');
+require("@nomiclabs/hardhat-web3");
 require("dotenv").config();
 
 const MNEMONIC = process.env.MNEMONIC;
@@ -28,7 +29,7 @@ module.exports = {
       timeoutBlocks: 200,
     },
     bscmainnet: {
-      url: "https://bsc-dataseed.bnbchain.org/",
+      url: "https://bsc-mainnet.chainnodes.org/062698ce-0d9b-4eae-b9b8-e0525dafaa86",
       chainId: 56,
       gasPrice: 10000000000,
       accounts: {
