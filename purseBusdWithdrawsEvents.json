@@ -3,450 +3,600 @@
     "user": "0x440CbcE3Bee8Bd6ffaB3EAFBDA3e2Aa3b304f19E",
     "amount": "161517192872936574435513",
     "blockNumber": 22934506,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10817574268589073584307030"
   },
   {
     "user": "0xf8273b2a2df22CAc4Cd81302cD56DeB9Ae9fd488",
     "amount": "66973669784780857062110",
     "blockNumber": 22994772,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10750600598804292727244920"
   },
   {
     "user": "0xA68598f861Cc11DD3e358E29710aDb83f628Da8D",
     "amount": "16219001991861248074282",
     "blockNumber": 23081031,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10734381596812431479170638"
   },
   {
     "user": "0x62be1DaF60c3D0258e86e29a16D2B29c8E5F7174",
     "amount": "16100904882707120594605",
     "blockNumber": 23191459,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10718280691929724358576033"
   },
   {
     "user": "0xD8Adac8947Da34B0e1b44c60953c3e6473e2350e",
     "amount": "5316026391620025340179",
     "blockNumber": 23243635,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10712964665538104333235854"
   },
   {
     "user": "0xaa2631b8A44062b8aBF21e7178Fc353f4e8d44F9",
     "amount": "39714762975792857550926",
     "blockNumber": 23941884,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10683638037154860149902796"
   },
   {
     "user": "0xa8B8b29851FD363044D0adfFfD44aD1B32606AD3",
     "amount": "10032000000000000000000",
     "blockNumber": 24014671,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "458349462173663368",
+    "blockTotalStakedInPool": "10713546306994277879519058"
   },
   {
     "user": "0xaa2631b8A44062b8aBF21e7178Fc353f4e8d44F9",
     "amount": "1000000000000000000",
     "blockNumber": 24295655,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "39939269839417729616262",
+    "blockTotalStakedInPool": "10730351345353823033420648"
   },
   {
     "user": "0x4cfeA1f3cd9165B528fF07D24Bf075A75cbcD5e8",
     "amount": "42369995867911732089923",
     "blockNumber": 24629133,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10708358483957936188448666"
   },
   {
     "user": "0x1896Ce7a0Da463CA26b108dAD0a9E44581e226d1",
     "amount": "16930520061716163502302",
     "blockNumber": 24889105,
-    "event": "Withdraw"
-  },
-  {
-    "user": "0x8d43c8b212dc2527e7356227890A1fc24dD047ea",
-    "amount": "2540307562352959534764",
-    "blockNumber": 25026023,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10747881522273465237900626"
   },
   {
     "user": "0xfa8E0AE0D8721e8C60eA8E8f022CaDD986e635e5",
     "amount": "1681000000000000000000",
     "blockNumber": 25026181,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10763340280872474788297709"
+  },
+  {
+    "user": "0xfa8E0AE0D8721e8C60eA8E8f022CaDD986e635e5",
+    "amount": "1681000000000000000000",
+    "blockNumber": 25026181,
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10761659280872474788297709"
   },
   {
     "user": "0x4cfeA1f3cd9165B528fF07D24Bf075A75cbcD5e8",
     "amount": "50602080078890350759489",
     "blockNumber": 25169858,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10713811710054465319901666"
   },
   {
     "user": "0xaa2631b8A44062b8aBF21e7178Fc353f4e8d44F9",
     "amount": "40324616070162249373731",
     "blockNumber": 26008338,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10878074991233826703516275"
   },
   {
     "user": "0x29ceA1EB09a8DA0311Be554D76c7827B658C1e21",
     "amount": "58076614637469802574667",
     "blockNumber": 27093745,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10872775337967210871722832"
   },
   {
     "user": "0x4cfeA1f3cd9165B528fF07D24Bf075A75cbcD5e8",
     "amount": "54827500331800453498924",
     "blockNumber": 27703989,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "11143434216301678146400965"
   },
   {
     "user": "0x4cfeA1f3cd9165B528fF07D24Bf075A75cbcD5e8",
     "amount": "244411450842678495578328",
     "blockNumber": 27762271,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "11169846766126705181001684"
   },
   {
     "user": "0xBf8c73CA501Be9F3667C37EB261192A30949e07A",
     "amount": "44900329013450442410293",
     "blockNumber": 28496954,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "11453431725083785534398801"
   },
   {
     "user": "0xC0cC6eC1F2B57945832D4eccF1a7F8188C4da39E",
     "amount": "2205407386065673804786",
     "blockNumber": 28503775,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "11608147030595955298267532"
   },
   {
     "user": "0xa8B8b29851FD363044D0adfFfD44aD1B32606AD3",
     "amount": "50000000000000000000000",
     "blockNumber": 28975368,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "7998959511292905750104",
+    "blockTotalStakedInPool": "11589782780248124586797521"
   },
   {
     "user": "0x8aD9bE2976A89C294D5a4d7500187484C94E121b",
     "amount": "135000000000000000000",
     "blockNumber": 29086558,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "11609555278285698596667557"
   },
   {
     "user": "0x0A6b946419ef8421a8bF62055f7fbEE497e5e00F",
     "amount": "535940070804090011298",
     "blockNumber": 29981303,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "11631339324507341003125243"
   },
   {
     "user": "0x645fB0f72D55B705D148C6B652ffef32d0d4EC16",
     "amount": "1000000000000000000",
     "blockNumber": 30029042,
-    "event": "Withdraw"
-  },
-  {
-    "user": "0x645fB0f72D55B705D148C6B652ffef32d0d4EC16",
-    "amount": "2142202644153520000",
-    "blockNumber": 30041658,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "11631338324507341003125243"
   },
   {
     "user": "0x645fB0f72D55B705D148C6B652ffef32d0d4EC16",
     "amount": "425080768818773000",
     "blockNumber": 30044296,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "11000000000000000000",
+    "blockTotalStakedInPool": "11631344751115273463685243"
+  },
+  {
+    "user": "0x645fB0f72D55B705D148C6B652ffef32d0d4EC16",
+    "amount": "425080768818773000",
+    "blockNumber": 30044296,
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "11000000000000000000",
+    "blockTotalStakedInPool": "11631349324507341003125243"
   },
   {
     "user": "0xbeb51d5716b58af1cd5D22676890294864081359",
     "amount": "1588450095103575112460",
     "blockNumber": 30250311,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "11710144134422920805890923"
   },
   {
     "user": "0x8b17EAA4De0598e028f4526FC8844b1cBabf996A",
     "amount": "2645152822175345471725",
     "blockNumber": 30657871,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "11798246746919455264750946"
   },
   {
     "user": "0x0BAc8B591A19a0A6cD9Caa4e56FA17727de54d42",
     "amount": "13220556812762729946644",
     "blockNumber": 30944058,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "11790660260688319156164742"
   },
   {
     "user": "0xF8328c7aA1A9FbFB975959B9393d940E220d3971",
     "amount": "20000000000000000000",
     "blockNumber": 31099041,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "21000000000000000000",
+    "blockTotalStakedInPool": "11809148576355514511828505"
   },
   {
     "user": "0xF8328c7aA1A9FbFB975959B9393d940E220d3971",
     "amount": "20500000000000000000",
     "blockNumber": 31125935,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "20500000000000000000",
+    "blockTotalStakedInPool": "11809148076355514511828505"
   },
   {
     "user": "0xF8328c7aA1A9FbFB975959B9393d940E220d3971",
     "amount": "20500000000000000000",
     "blockNumber": 31149612,
-    "event": "Withdraw"
-  },
-  {
-    "user": "0xF8328c7aA1A9FbFB975959B9393d940E220d3971",
-    "amount": "15000000000000000000",
-    "blockNumber": 31153575,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "11809127576355514511828505"
   },
   {
     "user": "0xF8328c7aA1A9FbFB975959B9393d940E220d3971",
     "amount": "10000000000000000000",
     "blockNumber": 31153709,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "21000000000000000000",
+    "blockTotalStakedInPool": "11809148576355514511828505"
+  },
+  {
+    "user": "0xF8328c7aA1A9FbFB975959B9393d940E220d3971",
+    "amount": "10000000000000000000",
+    "blockNumber": 31153709,
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "21000000000000000000",
+    "blockTotalStakedInPool": "11809148576355514511828505"
   },
   {
     "user": "0xa8B8b29851FD363044D0adfFfD44aD1B32606AD3",
     "amount": "1000000000000000000000",
     "blockNumber": 31246968,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "99013436708882094004748",
+    "blockTotalStakedInPool": "11999532404097660968277555"
   },
   {
     "user": "0x3482A03b490ef359c51d3605B5636ad70e3043Bd",
     "amount": "3098599638350832160493",
     "blockNumber": 31744596,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "12165258149786374014003404"
   },
   {
     "user": "0x4cfeA1f3cd9165B528fF07D24Bf075A75cbcD5e8",
     "amount": "431096642981402463315513",
     "blockNumber": 32191050,
-    "event": "Withdraw"
-  },
-  {
-    "user": "0xA30C7B73f440A46c94Cea84976a70Dd397d70e2f",
-    "amount": "3570199460460837722097",
-    "blockNumber": 32203589,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "12113319093742594586786635"
   },
   {
     "user": "0x0c6717953b543Df36F2Dd1323FCE0eb62B801687",
     "amount": "7487366708894896668416",
     "blockNumber": 32203811,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "12540845537263536212380051"
+  },
+  {
+    "user": "0x0c6717953b543Df36F2Dd1323FCE0eb62B801687",
+    "amount": "7487366708894896668416",
+    "blockNumber": 32203811,
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "12533358170554641315711635"
   },
   {
     "user": "0xf8273b2a2df22CAc4Cd81302cD56DeB9Ae9fd488",
     "amount": "80567429056863881554928",
     "blockNumber": 32320988,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "12471897565271427616558460"
   },
   {
     "user": "0x6B18De6c42C9F6D6D04Eef51912DA5A6220463D4",
     "amount": "473570103733927009280",
     "blockNumber": 32779618,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "9000000000000000000000",
+    "blockTotalStakedInPool": "13171520190386645000591444"
   },
   {
     "user": "0xa8B8b29851FD363044D0adfFfD44aD1B32606AD3",
     "amount": "9000000000000000000000",
     "blockNumber": 32795850,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "90013436708882094004748",
+    "blockTotalStakedInPool": "13162993760490378927600724"
   },
   {
     "user": "0x2116B517DA6d0749e08CC7eB3488c6e00f96dd6E",
     "amount": "1096850427833545279541378",
     "blockNumber": 32879255,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "12236729275642078637129029"
   },
   {
     "user": "0xCfb25Ed1F1b433f274Bc1E0640c8380421d0b9cf",
     "amount": "330255000000000000000000",
     "blockNumber": 32882766,
-    "event": "Withdraw"
-  },
-  {
-    "user": "0xC488477dC9bB7519B96B4C0C4B447E722c1C3726",
-    "amount": "713840444181496167977",
-    "blockNumber": 32937941,
-    "event": "Withdraw"
-  },
-  {
-    "user": "0xfD00A16087BA588F69c13e83753D45c39eeD9078",
-    "amount": "501667279837075509619916",
-    "blockNumber": 32939236,
-    "event": "Withdraw"
-  },
-  {
-    "user": "0x5904d192E78df1BD98728273633aCccEd8216b63",
-    "amount": "420203611595973729054387",
-    "blockNumber": 32939322,
-    "event": "Withdraw"
-  },
-  {
-    "user": "0x57a591A8221C05b6a721507de66B7fa73a01E10F",
-    "amount": "80055183175844165917166",
-    "blockNumber": 32940079,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "11906474275642078637129029"
   },
   {
     "user": "0xCfb25Ed1F1b433f274Bc1E0640c8380421d0b9cf",
     "amount": "334181000000000000000000",
     "blockNumber": 32940781,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "12281524464883111606043839"
   },
   {
-    "user": "0x1896Ce7a0Da463CA26b108dAD0a9E44581e226d1",
-    "amount": "14537371998691322991691",
-    "blockNumber": 32950706,
-    "event": "Withdraw"
+    "user": "0xCfb25Ed1F1b433f274Bc1E0640c8380421d0b9cf",
+    "amount": "334181000000000000000000",
+    "blockNumber": 32940781,
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "11779857185046036096423923"
+  },
+  {
+    "user": "0xCfb25Ed1F1b433f274Bc1E0640c8380421d0b9cf",
+    "amount": "334181000000000000000000",
+    "blockNumber": 32940781,
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "11359653573450062367369536"
+  },
+  {
+    "user": "0xCfb25Ed1F1b433f274Bc1E0640c8380421d0b9cf",
+    "amount": "334181000000000000000000",
+    "blockNumber": 32940781,
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "11279598390274218201452370"
+  },
+  {
+    "user": "0xCfb25Ed1F1b433f274Bc1E0640c8380421d0b9cf",
+    "amount": "334181000000000000000000",
+    "blockNumber": 32940781,
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10945417390274218201452370"
   },
   {
     "user": "0xEc4ff532E317831227EE504838BdaF0d04B2b5ae",
     "amount": "21750530459445397570753",
     "blockNumber": 32951188,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10930880018275526878460679"
+  },
+  {
+    "user": "0xEc4ff532E317831227EE504838BdaF0d04B2b5ae",
+    "amount": "21750530459445397570753",
+    "blockNumber": 32951188,
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10909129487816081480889926"
   },
   {
     "user": "0x64B6403A5cEdb7440f3DfE2A6C74a7B689f20D93",
     "amount": "8805401956185620977023",
     "blockNumber": 32975228,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10900324085859895859912903"
   },
   {
     "user": "0x38E9F6A8a8024b21B37a270D7dE362E7b9237bd0",
     "amount": "1896420182378864349045",
     "blockNumber": 33033693,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10899066539111235697856245"
   },
   {
     "user": "0xBc523B0Bf24c6BbA895649bd11C9d1a94A265ABb",
     "amount": "132032941676776941960814",
     "blockNumber": 33052238,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10768930017616837620244476"
   },
   {
     "user": "0x2a51487336f8680A2D7827417bEAc6236F7ef7ae",
     "amount": "696685758786722202749381",
     "blockNumber": 33145082,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10381651569728316540152695"
   },
   {
     "user": "0xCfb25Ed1F1b433f274Bc1E0640c8380421d0b9cf",
     "amount": "308935000000000000000000",
     "blockNumber": 33235793,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10073563029302221744672093"
   },
   {
     "user": "0xCfb25Ed1F1b433f274Bc1E0640c8380421d0b9cf",
     "amount": "298444000000000000000000",
     "blockNumber": 33322274,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10074368326410261681675260"
   },
   {
     "user": "0xbB63dE9C37f2905F65E2026d42Bdc9c00C42f3E9",
     "amount": "495584838243112112169",
     "blockNumber": 33340587,
-    "event": "Withdraw"
-  },
-  {
-    "user": "0x0ef792C61375133f06BEcb81d0966b96bbc9cEa2",
-    "amount": "75383674118840004997354",
-    "blockNumber": 33367010,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10073872741572018569563091"
   },
   {
     "user": "0xCfb25Ed1F1b433f274Bc1E0640c8380421d0b9cf",
     "amount": "298180000000000000000000",
     "blockNumber": 33367965,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10296669067453178564565737"
+  },
+  {
+    "user": "0xCfb25Ed1F1b433f274Bc1E0640c8380421d0b9cf",
+    "amount": "298180000000000000000000",
+    "blockNumber": 33367965,
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "9998489067453178564565737"
   },
   {
     "user": "0x95b7e76d778A0F684768662D488D1670A6D547dA",
     "amount": "5213918514197198348280",
     "blockNumber": 33402065,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "10301212458200905268870024"
   },
   {
     "user": "0xCfb25Ed1F1b433f274Bc1E0640c8380421d0b9cf",
     "amount": "307043000000000000000000",
     "blockNumber": 33435719,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "9994169458200905268870024"
   },
   {
     "user": "0xE43139c1098A4f6833a27193daeeE84Ef6F3722F",
     "amount": "4183937417699190786115",
     "blockNumber": 33480423,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "9989985520783206078083909"
   },
   {
     "user": "0x94B62A3b131bbe6B66F35028c7b65156970Bb091",
     "amount": "4412162490479778833299782",
     "blockNumber": 33481643,
-    "event": "Withdraw"
-  },
-  {
-    "user": "0x0BAc8B591A19a0A6cD9Caa4e56FA17727de54d42",
-    "amount": "13220556812762729946644",
-    "blockNumber": 33491421,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "5577823030303427244784127"
   },
   {
     "user": "0x48b87a0B46A535207f9643419666454E1eb89CCA",
     "amount": "81128725173068911089981",
     "blockNumber": 33500460,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "5564602473490664514837483"
   },
   {
-    "user": "0x7442D8c8B51B4d2f23CA69B630fb97E5EBf42d6d",
-    "amount": "312827714111249900022884",
-    "blockNumber": 33501340,
-    "event": "Withdraw"
-  },
-  {
-    "user": "0x9A7ACE9532EDbF2bCa82AB4718C91d85Ea54fBdE",
-    "amount": "388167960704717015535065",
-    "blockNumber": 33501387,
-    "event": "Withdraw"
-  },
-  {
-    "user": "0x7B415009888deF9B1B5b6A5b3C09585C417caB02",
-    "amount": "443383619945887459067355",
-    "blockNumber": 33501608,
-    "event": "Withdraw"
-  },
-  {
-    "user": "0x1777EA2C90C2d14d8365e57ee77975575eA66ACC",
-    "amount": "539091660882314184100288",
-    "blockNumber": 33501842,
-    "event": "Withdraw"
-  },
-  {
-    "user": "0xd9f8228B545Cb91e18f780099995Bab596a2F1A5",
-    "amount": "221935133243304750608644",
-    "blockNumber": 33501907,
-    "event": "Withdraw"
-  },
-  {
-    "user": "0xf97d133082F7db7eCb7ADD916D04f0A9DD6712a9",
-    "amount": "59960506452297286450038",
-    "blockNumber": 33503752,
-    "event": "Withdraw"
-  },
-  {
-    "user": "0xaB4131c81d588FAc981DBf1ef5f5275c10f64950",
-    "amount": "28551685765323238044342",
-    "blockNumber": 33503826,
-    "event": "Withdraw"
+    "user": "0x48b87a0B46A535207f9643419666454E1eb89CCA",
+    "amount": "81128725173068911089981",
+    "blockNumber": 33500460,
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "5483473748317595603747502"
   },
   {
     "user": "0x464d147f38ea2b3AEeCa5D0abeBbA98998f9Ac5C",
     "amount": "129387858169718513749310",
     "blockNumber": 33504354,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "5170646034206345703724618"
+  },
+  {
+    "user": "0x464d147f38ea2b3AEeCa5D0abeBbA98998f9Ac5C",
+    "amount": "129387858169718513749310",
+    "blockNumber": 33504354,
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "4782478073501628688189553"
+  },
+  {
+    "user": "0x464d147f38ea2b3AEeCa5D0abeBbA98998f9Ac5C",
+    "amount": "129387858169718513749310",
+    "blockNumber": 33504354,
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "4339094453555741229122198"
+  },
+  {
+    "user": "0x464d147f38ea2b3AEeCa5D0abeBbA98998f9Ac5C",
+    "amount": "129387858169718513749310",
+    "blockNumber": 33504354,
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "3800002792673427045021910"
+  },
+  {
+    "user": "0x464d147f38ea2b3AEeCa5D0abeBbA98998f9Ac5C",
+    "amount": "129387858169718513749310",
+    "blockNumber": 33504354,
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "3578067659430122294413266"
+  },
+  {
+    "user": "0x464d147f38ea2b3AEeCa5D0abeBbA98998f9Ac5C",
+    "amount": "129387858169718513749310",
+    "blockNumber": 33504354,
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "3518107152977825007963228"
+  },
+  {
+    "user": "0x464d147f38ea2b3AEeCa5D0abeBbA98998f9Ac5C",
+    "amount": "129387858169718513749310",
+    "blockNumber": 33504354,
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "3489555467212501769918886"
+  },
+  {
+    "user": "0x464d147f38ea2b3AEeCa5D0abeBbA98998f9Ac5C",
+    "amount": "129387858169718513749310",
+    "blockNumber": 33504354,
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "3360167609042783256169576"
   },
   {
     "user": "0xf8e50c23eEB69b3E6dF7A92316061451CD648528",
     "amount": "1308522753911543918103058",
     "blockNumber": 33513682,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "2051644855131239338066518"
   },
   {
     "user": "0x84BA3875bdBD2BccdD3cbac2eF242E8013E595c9",
     "amount": "8888888879690031636215",
     "blockNumber": 33547863,
-    "event": "Withdraw"
+    "event": "Withdraw",
+    "userCurrentStakedAmount": "0",
+    "blockTotalStakedInPool": "2042755966251549306430303"
   }
 ]

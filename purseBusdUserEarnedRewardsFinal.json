@@ -1,0 +1,62 @@
+{
+  "0xb6f9e4c6db0c4f3a7e8aff01077e601a7626409b": {
+    "user": "0xb6f9e4c6db0c4f3a7e8aff01077e601a7626409b",
+    "fromBlock": 33651665,
+    "toBlock": 33673092,
+    "userStakedAmount": "46097459614822310874125",
+    "totalStakedInPool": "3766557610219819735066187",
+    "rewardsEarnedWei": "104903780071000742319900",
+    "rewardsEarnedEther": "104903.7800710007",
+    "eventThatTriggerRewards": null,
+    "updateUserStakedAmountForNext": false,
+    "updateTotalStakedInPoolForNext": false
+  },
+  "0xfa235972863481090c2e91d519810596a9ec1af4": {
+    "user": "0xfa235972863481090c2e91d519810596a9ec1af4",
+    "fromBlock": 22900257,
+    "toBlock": 33673092,
+    "userStakedAmount": "668692163544051906684",
+    "totalStakedInPool": "6409146204072648535351667",
+    "rewardsEarnedWei": "257593361472049017641626",
+    "rewardsEarnedEther": "257593.3614720490",
+    "eventThatTriggerRewards": null,
+    "updateUserStakedAmountForNext": false,
+    "updateTotalStakedInPoolForNext": false
+  },
+  "0xbeadb1638cb46de09b691a11a9070d284445dfee": {
+    "user": "0xbeadb1638cb46de09b691a11a9070d284445dfee",
+    "fromBlock": 32853115,
+    "toBlock": 33673092,
+    "userStakedAmount": "16689915083909727916936",
+    "totalStakedInPool": "6615165631772094959281666",
+    "rewardsEarnedWei": "546253633960647171721403",
+    "rewardsEarnedEther": "546253.6339606472",
+    "eventThatTriggerRewards": null,
+    "updateUserStakedAmountForNext": false,
+    "updateTotalStakedInPoolForNext": false
+  },
+  "0x1ac8d5f6fd417ab2909a310ba671500ceabc0aed": {
+    "user": "0x1ac8d5f6fd417ab2909a310ba671500ceabc0aed",
+    "fromBlock": 32117788,
+    "toBlock": 33673092,
+    "userStakedAmount": "2811002217006347538734",
+    "totalStakedInPool": "6568080471420551704168595",
+    "rewardsEarnedWei": "156521576848631373786003",
+    "rewardsEarnedEther": "156521.5768486314",
+    "eventThatTriggerRewards": null,
+    "updateUserStakedAmountForNext": false,
+    "updateTotalStakedInPoolForNext": false
+  },
+  "0x30c568c5d6f9fb383986cfd6dd99effc0444b869": {
+    "user": "0x30c568c5d6f9fb383986cfd6dd99effc0444b869",
+    "fromBlock": 32562249,
+    "toBlock": 33673092,
+    "userStakedAmount": "643114149328520597472",
+    "totalStakedInPool": "6615165631772094959281666",
+    "rewardsEarnedWei": "26731229550152059823608",
+    "rewardsEarnedEther": "26731.2295501521",
+    "eventThatTriggerRewards": null,
+    "updateUserStakedAmountForNext": false,
+    "updateTotalStakedInPoolForNext": false
+  }
+}
