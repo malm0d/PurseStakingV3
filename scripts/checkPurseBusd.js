@@ -1,8 +1,8 @@
 const hre = require("hardhat");
 const fs = require('fs');
-const PURSE_BUSD_POOL_ABI = require("../test/PurseBusdPool.json");
-const PURSE_BUSD_LPTOKEN_ABI = require("../test/PurseBusdLpToken.json");
-const PURSE_BSC_ABI = require("../test/PurseBsc.json");
+const PURSE_BUSD_POOL_ABI = require("../abis/PurseLPRestakePool.json");
+const PURSE_BUSD_LPTOKEN_ABI = require("../abis/PurseBusdLpToken.json");
+const PURSE_BSC_ABI = require("../abis/PurseBsc.json");
 
 //npx hardhat run --network bscmainnet scripts/checkPurseBusd.js
 

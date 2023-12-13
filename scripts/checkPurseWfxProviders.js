@@ -1,9 +1,9 @@
 const hre = require("hardhat");
-const FACTORY_ABI = require("../test/Factory.json");
-const WFX_ABI = require("../test/WFX_Upgradeable.json");
-const PURSE_ABI = require("../test/Purse.json");
-const PAIR_ABI = require("../test/Pair.json");
-const MASTER_CHEF_ABI = require("../test/MasterChefV2.json");
+const FACTORY_ABI = require("../abis/Factory.json");
+const WFX_ABI = require("../abis/WFX_Upgradeable.json");
+const PURSE_ABI = require("../abis/Purse.json");
+const PAIR_ABI = require("../abis/Pair.json");
+const MASTER_CHEF_ABI = require("../abis/MasterChefV2.json");
 const fs = require('fs');
 const path = require('path');
 
