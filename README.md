@@ -1,13 +1,16 @@
-# Sample Hardhat Project
+# PurseStaking V3
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+This repository contains the contracts and files for the PurseStakingV3 ecosystem.
 
-Try running some of the following tasks:
+There are also other files under the `scripts` directory used to perform some analytics, such as finding the top liquidity providers for PURSE-WFX, and calculating earned rewards for PURSE-BUSD (now deprecated), and calculating the APR for the PURSE-USDT pool.
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.js
-```
+## Contracts
+- PurseStakingV3
+- RewardDistributor
+- Treasury
+- RewardMultiplier
+
+## Utility scripts
+- checkPurseWfxProviders
+- checkPurseBusd
+- purseUsdtAPRCalc
