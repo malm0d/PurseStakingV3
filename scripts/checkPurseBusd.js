@@ -20,7 +20,7 @@ const PURSE_PER_BLOCK = BigInt("400000000000000000000");
 let fromBlock = 22900257;
 
 //`toBlock` is the block at which purse rewards was set to zero
-let toBlock = 33673092;
+let toBlock = 33742714;//33673092;
 
 const batchSize = 10000;
 
@@ -147,9 +147,9 @@ async function getEvents(_fromBlock, _toBlock, _batchSize) {
         });
     }
 
-    fs.writeFileSync("purseBusdDepositsEvents.json", JSON.stringify(newDepositEventLogs, null, 2));
-    fs.writeFileSync("purseBusdWithdrawsEvents.json", JSON.stringify(newWithdrawEventLogs, null, 2));
-    fs.writeFileSync("purseBusdCombinedEvents.json", JSON.stringify(userEvents, null, 2));
+    fs.writeFileSync("purseBusdDepositsEvents2.json", JSON.stringify(newDepositEventLogs, null, 2));
+    fs.writeFileSync("purseBusdWithdrawsEvents2.json", JSON.stringify(newWithdrawEventLogs, null, 2));
+    fs.writeFileSync("purseBusdCombinedEvents2.json", JSON.stringify(userEvents, null, 2));
 
     return userEvents;
 }
@@ -162,7 +162,7 @@ function extractSequenceOfEvents(userEvents) {
         }
     }
     combined.sort((a, b) => a.blockNumber - b.blockNumber);
-    fs.writeFileSync("purseBusdSequenceEvents.json", JSON.stringify(combined, null, 2))
+    fs.writeFileSync("purseBusdSequenceEvents2.json", JSON.stringify(combined, null, 2))
     return combined;
 
 }
@@ -247,7 +247,7 @@ function calculateRewardsEarnedFromLastEvent(userStakedAmount, totalStakedInPool
 }
 
 async function tallyEarnedRewardsPerUser(_sequenceOfEvents, _userEventsFiltered, _userRange) {
-    const logFileName = "purseBusdUserEarnedRewardsRaw.json";
+    const logFileName = "purseBusdUserEarnedRewardsRaw2.json";
 
     console.log("Total users to check: " + Object.keys(_userEventsFiltered).length);
     const usersOfInterest = Object.keys(_userEventsFiltered);
@@ -296,6 +296,11 @@ async function tallyEarnedRewardsPerUser(_sequenceOfEvents, _userEventsFiltered,
                 console.log("Skipping event for user: " + user + " at block: " + event.blockNumber + " because it is before the `fromBlock`: " + fromBlock);
                 console.log();
                 continue;
+            }
+            if (event.blockNumber > toBlock) {
+                console.log("Skipping event for user: " + user + " at block: " + event.blockNumber + " because it is after the `toBlock`: " + toBlock);
+                console.log();
+                break;
             }
             //if event is the user, then we need to calculate the rewards earned and update
             //the user's staked amount and total staked in pool for next event
@@ -424,18 +429,18 @@ function getFinalEarnedRewardValues(earnedRewardsResult) {
         userKey, { rewardsEarnedWei, rewardsEarnedEther, fromBlock, toBlock }
     ]) => `${userKey},${rewardsEarnedWei},${rewardsEarnedEther},${fromBlock},${toBlock}`).join('\n');
     const csvData = header + rows;
-    fs.writeFileSync("purseBusdUserEarnedRewardsFinal.csv", csvData, 'utf-8');
-    fs.writeFileSync("purseBusdUserEarnedRewardsFinal.json", JSON.stringify(result, null, 2));
+    fs.writeFileSync("purseBusdUserEarnedRewardsFinal2.csv", csvData, 'utf-8');
+    fs.writeFileSync("purseBusdUserEarnedRewardsFinal2.json", JSON.stringify(result, null, 2));
     return result;
 }
 
 
 async function main() {
     // console.log("Getting user events");
-    // const userEvents = await getEvents(fromBlock, toBlock, batchSize);
+    // let userEvents = await getEvents(fromBlock, toBlock, batchSize);
     // console.log("User events retrieved.")
 
-    const userBlockRange = JSON.parse(fs.readFileSync("impactedUsers.json", 'utf8'));
+    const userBlockRange = JSON.parse(fs.readFileSync("impactedUsers2.json", 'utf8'));
     console.log(userBlockRange);
     console.log();
 
@@ -443,7 +448,7 @@ async function main() {
     console.log(impactedAddresses);
     console.log();
 
-    let userEvents = JSON.parse(fs.readFileSync("purseBusdCombinedEvents.json", 'utf8'));
+    userEvents = JSON.parse(fs.readFileSync("./purseBusdCombinedEvents2.json", 'utf8'));
     userEvents = prepEventsData(userEvents);
     //console.log(userEvents);
 
@@ -459,12 +464,73 @@ async function main() {
 
 
     const earnedRewardsResult = await tallyEarnedRewardsPerUser(sequenceOfEvents, userEventsFiltered, userBlockRange);
-    console.log("Earned rewards result:");
-    console.log(earnedRewardsResult);
+    //console.log("Earned rewards result:");
+    //console.log(earnedRewardsResult);
 
     const finalEarnedRewardValues = getFinalEarnedRewardValues(earnedRewardsResult);
     console.log("Final earned rewards result:");
     console.log(finalEarnedRewardValues);
+
+    // const originalTotal = BigInt("104903780071000742319900")
+    //     + BigInt("257593361472049017641626")
+    //     + BigInt("546253633960647171721403")
+    //     + BigInt("156521576848631373786003")
+    //     + BigInt("26731229550152059823608")
+    // console.log("Original Total");
+    // console.log("Wei: " + originalTotal.toString());
+    // console.log("Ether: " + Number(originalTotal) / (1e18));
+    // console.log();
+
+    // const newTotal = BigInt("222330127129817183020602")
+    //     + BigInt("260225152791323100750637")
+    //     + BigInt("584202601658912715386060")
+    //     + BigInt("160288281937132021145514")
+    //     + BigInt("29190599977678429294523")
+    // console.log("New Total");
+    // console.log("Wei: " + newTotal.toString());
+    // console.log("Ether: " + Number(newTotal) / (1e18));
+    // console.log();
+
+    // const diff = newTotal - originalTotal;
+    // console.log("Difference");
+    // console.log("Wei: " + diff.toString());
+    // console.log("Ether: " + Number(diff) / (1e18));
+    // console.log();
+
+    // const user1Diff = BigInt("222330127129817183020602") - BigInt("104903780071000742319900");
+    // console.log("User1 Difference");
+    // console.log("Wei: " + user1Diff.toString());
+    // console.log("Ether: " + Number(user1Diff) / (1e18));
+    // console.log();
+
+    // const user2Diff = BigInt("260225152791323100750637") - BigInt("257593361472049017641626");
+    // console.log("User2 Difference");
+    // console.log("Wei: " + user2Diff.toString());
+    // console.log("Ether: " + Number(user2Diff) / (1e18));
+    // console.log();
+
+    // const user3Diff = BigInt("584202601658912715386060") - BigInt("546253633960647171721403");
+    // console.log("User3 Difference");
+    // console.log("Wei: " + user3Diff.toString());
+    // console.log("Ether: " + Number(user3Diff) / (1e18));
+    // console.log();
+
+    // const user4Diff = BigInt("160288281937132021145514") - BigInt("156521576848631373786003");
+    // console.log("User4 Difference");
+    // console.log("Wei: " + user4Diff.toString());
+    // console.log("Ether: " + Number(user4Diff) / (1e18));
+    // console.log();
+
+    // const user5Diff = BigInt("29190599977678429294523") - BigInt("26731229550152059823608");
+    // console.log("User5 Difference");
+    // console.log("Wei: " + user5Diff.toString());
+    // console.log("Ether: " + Number(user5Diff) / (1e18));
+    // console.log();
+
+    // const diffTotal = user1Diff + user2Diff + user3Diff + user4Diff + user5Diff;
+    // console.log("Difference Total");
+    // console.log("Wei: " + diffTotal.toString());
+    // console.log("Ether: " + Number(diffTotal) / (1e18));
 
 }
 
