@@ -1,0 +1,841 @@
+[
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "uint256",
+                "name": "",
+                "internalType": "uint256"
+            }
+        ],
+        "name": "BASE_REWARD_TOKEN_DIVISOR",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "address",
+                "name": "",
+                "internalType": "address"
+            }
+        ],
+        "name": "CHEF_V2",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "bytes32",
+                "name": "",
+                "internalType": "bytes32"
+            }
+        ],
+        "name": "DEFAULT_ADMIN_ROLE",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "bytes32",
+                "name": "",
+                "internalType": "bytes32"
+            }
+        ],
+        "name": "GOVERNOR_ROLE",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "bytes32",
+                "name": "",
+                "internalType": "bytes32"
+            }
+        ],
+        "name": "OPERATOR_ROLE",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "bytes32",
+                "name": "",
+                "internalType": "bytes32"
+            }
+        ],
+        "name": "OWNER_ROLE",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "outputs": [],
+        "name": "addRewardToken",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "_rewardToken",
+                "internalType": "address"
+            },
+            {
+                "type": "uint96",
+                "name": "_multiplier",
+                "internalType": "uint96"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "uint256[]",
+                "name": "amounts",
+                "internalType": "uint256[]"
+            }
+        ],
+        "name": "claimable",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "account",
+                "internalType": "address"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "uint256",
+                "name": "",
+                "internalType": "uint256"
+            }
+        ],
+        "name": "cumulativeRewardPerToken",
+        "inputs": [
+            {
+                "type": "uint256",
+                "name": "",
+                "internalType": "uint256"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "uint256[]",
+                "name": "",
+                "internalType": "uint256[]"
+            }
+        ],
+        "name": "getRewardMultipliers",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "address[]",
+                "name": "",
+                "internalType": "address[]"
+            }
+        ],
+        "name": "getRewardTokens",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "bytes32",
+                "name": "",
+                "internalType": "bytes32"
+            }
+        ],
+        "name": "getRoleAdmin",
+        "inputs": [
+            {
+                "type": "bytes32",
+                "name": "role",
+                "internalType": "bytes32"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "uint256",
+                "name": "",
+                "internalType": "uint256"
+            },
+            {
+                "type": "uint256",
+                "name": "",
+                "internalType": "uint256"
+            }
+        ],
+        "name": "getUserRewardInfo",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "_user",
+                "internalType": "address"
+            },
+            {
+                "type": "uint256",
+                "name": "_i",
+                "internalType": "uint256"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "outputs": [],
+        "name": "grantRole",
+        "inputs": [
+            {
+                "type": "bytes32",
+                "name": "role",
+                "internalType": "bytes32"
+            },
+            {
+                "type": "address",
+                "name": "account",
+                "internalType": "address"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "bool",
+                "name": "",
+                "internalType": "bool"
+            }
+        ],
+        "name": "hasRole",
+        "inputs": [
+            {
+                "type": "bytes32",
+                "name": "role",
+                "internalType": "bytes32"
+            },
+            {
+                "type": "address",
+                "name": "account",
+                "internalType": "address"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "outputs": [],
+        "name": "initialize",
+        "inputs": [
+            {
+                "type": "address[]",
+                "name": "_rewardTokens",
+                "internalType": "address[]"
+            },
+            {
+                "type": "uint256[]",
+                "name": "_rewardMultipliers",
+                "internalType": "uint256[]"
+            },
+            {
+                "type": "uint256",
+                "name": "_baseRewardTokenDecimal",
+                "internalType": "uint256"
+            },
+            {
+                "type": "address",
+                "name": "_chefV2",
+                "internalType": "address"
+            },
+            {
+                "type": "uint256",
+                "name": "_tokenTrackerId",
+                "internalType": "uint256"
+            },
+            {
+                "type": "address",
+                "name": "_owner",
+                "internalType": "address"
+            },
+            {
+                "type": "address",
+                "name": "_governor",
+                "internalType": "address"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "uint256",
+                "name": "",
+                "internalType": "uint256"
+            }
+        ],
+        "name": "lastDistributionTime",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "outputs": [],
+        "name": "onReward",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "_user",
+                "internalType": "address"
+            },
+            {
+                "type": "uint256",
+                "name": "_rewardAmount",
+                "internalType": "uint256"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "outputs": [],
+        "name": "pause",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "bool",
+                "name": "",
+                "internalType": "bool"
+            }
+        ],
+        "name": "paused",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "uint256[]",
+                "name": "amounts",
+                "internalType": "uint256[]"
+            }
+        ],
+        "name": "pendingRewards",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "bytes32",
+                "name": "",
+                "internalType": "bytes32"
+            }
+        ],
+        "name": "proxiableUUID",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "outputs": [],
+        "name": "removeRewardToken",
+        "inputs": [
+            {
+                "type": "uint256",
+                "name": "_pid",
+                "internalType": "uint256"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "outputs": [],
+        "name": "renounceRole",
+        "inputs": [
+            {
+                "type": "bytes32",
+                "name": "role",
+                "internalType": "bytes32"
+            },
+            {
+                "type": "address",
+                "name": "account",
+                "internalType": "address"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "outputs": [],
+        "name": "returnToken",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "_token",
+                "internalType": "address"
+            },
+            {
+                "type": "address",
+                "name": "_to",
+                "internalType": "address"
+            },
+            {
+                "type": "uint256",
+                "name": "_amount",
+                "internalType": "uint256"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "outputs": [],
+        "name": "revokeRole",
+        "inputs": [
+            {
+                "type": "bytes32",
+                "name": "role",
+                "internalType": "bytes32"
+            },
+            {
+                "type": "address",
+                "name": "account",
+                "internalType": "address"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "uint256",
+                "name": "",
+                "internalType": "uint256"
+            }
+        ],
+        "name": "rewardMultipliers",
+        "inputs": [
+            {
+                "type": "uint256",
+                "name": "",
+                "internalType": "uint256"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "address",
+                "name": "",
+                "internalType": "address"
+            }
+        ],
+        "name": "rewardTokens",
+        "inputs": [
+            {
+                "type": "uint256",
+                "name": "",
+                "internalType": "uint256"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "bool",
+                "name": "",
+                "internalType": "bool"
+            }
+        ],
+        "name": "supportsInterface",
+        "inputs": [
+            {
+                "type": "bytes4",
+                "name": "interfaceId",
+                "internalType": "bytes4"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "uint256",
+                "name": "",
+                "internalType": "uint256"
+            }
+        ],
+        "name": "tokenTrackerId",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "address",
+                "name": "",
+                "internalType": "address"
+            }
+        ],
+        "name": "treasury",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "outputs": [],
+        "name": "unpause",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "outputs": [],
+        "name": "updateLastDistributionTime",
+        "inputs": []
+    },
+    {
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "outputs": [],
+        "name": "updateMultiplier",
+        "inputs": [
+            {
+                "type": "uint256",
+                "name": "_pid",
+                "internalType": "uint256"
+            },
+            {
+                "type": "uint96",
+                "name": "_multiplier",
+                "internalType": "uint96"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "outputs": [],
+        "name": "updateTreasury",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "_treasury",
+                "internalType": "address"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "outputs": [],
+        "name": "upgradeTo",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "newImplementation",
+                "internalType": "address"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "payable",
+        "outputs": [],
+        "name": "upgradeToAndCall",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "newImplementation",
+                "internalType": "address"
+            },
+            {
+                "type": "bytes",
+                "name": "data",
+                "internalType": "bytes"
+            }
+        ]
+    },
+    {
+        "type": "event",
+        "name": "AdminChanged",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "previousAdmin",
+                "indexed": false
+            },
+            {
+                "type": "address",
+                "name": "newAdmin",
+                "indexed": false
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "BeaconUpgraded",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "beacon",
+                "indexed": true
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "Claim",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "_account",
+                "indexed": true
+            },
+            {
+                "type": "address",
+                "name": "_token",
+                "indexed": true
+            },
+            {
+                "type": "uint256",
+                "name": "_amount",
+                "indexed": false
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "Initialized",
+        "inputs": [
+            {
+                "type": "uint8",
+                "name": "version",
+                "indexed": false
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "MultiplierUpdated",
+        "inputs": [
+            {
+                "type": "uint256",
+                "name": "_pid",
+                "indexed": true
+            },
+            {
+                "type": "uint256",
+                "name": "_multiplier",
+                "indexed": true
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "Paused",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "account",
+                "indexed": false
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "ReturnToken",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "_token",
+                "indexed": true
+            },
+            {
+                "type": "address",
+                "name": "_to",
+                "indexed": true
+            },
+            {
+                "type": "uint256",
+                "name": "_amount",
+                "indexed": false
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "RewardTokenAdded",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "_token",
+                "indexed": true
+            },
+            {
+                "type": "uint256",
+                "name": "_multiplier",
+                "indexed": true
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "RewardTokenRemoved",
+        "inputs": [
+            {
+                "type": "uint256",
+                "name": "_pid",
+                "indexed": true
+            },
+            {
+                "type": "address",
+                "name": "_token",
+                "indexed": true
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "RoleAdminChanged",
+        "inputs": [
+            {
+                "type": "bytes32",
+                "name": "role",
+                "indexed": true
+            },
+            {
+                "type": "bytes32",
+                "name": "previousAdminRole",
+                "indexed": true
+            },
+            {
+                "type": "bytes32",
+                "name": "newAdminRole",
+                "indexed": true
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "RoleGranted",
+        "inputs": [
+            {
+                "type": "bytes32",
+                "name": "role",
+                "indexed": true
+            },
+            {
+                "type": "address",
+                "name": "account",
+                "indexed": true
+            },
+            {
+                "type": "address",
+                "name": "sender",
+                "indexed": true
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "RoleRevoked",
+        "inputs": [
+            {
+                "type": "bytes32",
+                "name": "role",
+                "indexed": true
+            },
+            {
+                "type": "address",
+                "name": "account",
+                "indexed": true
+            },
+            {
+                "type": "address",
+                "name": "sender",
+                "indexed": true
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "Unpaused",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "account",
+                "indexed": false
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "Upgraded",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "implementation",
+                "indexed": true
+            }
+        ],
+        "anonymous": false
+    }
+]

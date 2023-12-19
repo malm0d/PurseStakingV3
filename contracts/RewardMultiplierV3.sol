@@ -42,7 +42,7 @@ contract RewarderViaMultiplierV3 is Initializable, UUPSUpgradeable, PausableUpgr
 
     /**************************************** Only Operator/Governor Functions ****************************************/
 
-    function onReward(address _user, uint256 _rewardAmount) external onlyRole(OPERATOR_ROLE) whenNotPaused {
+    function onReward(address _user, uint256 /*_rewardAmount*/) external onlyRole(OPERATOR_ROLE) whenNotPaused {
         _claim(_user);
     }
 
