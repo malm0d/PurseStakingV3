@@ -97,7 +97,7 @@ async function main() {
     console.log("Current APR: " + apr);
 
     //Adjust target APR here, this will calculate how much pursePerBlock to set to achieve the targetted APR.
-    const targetAPR = 100;
+    const targetAPR = 36;
     const targetPursePerBlock = (targetAPR * tvl / 100) / (28000 * 365 * (Number(bonusMultiplier) / 10 ** 18) * pursePrice)
     console.log("Target Purse per block (WEI): ", targetPursePerBlock);
     console.log("Target Purse per block (ETHER): ", targetPursePerBlock / 10 ** 18);
