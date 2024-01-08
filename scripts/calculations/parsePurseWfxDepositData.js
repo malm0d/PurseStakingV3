@@ -1,6 +1,6 @@
-const data = require("../eventLogs.json");
+const data = require("../../eventLogs.json");
 const fs = require('fs');
-//npx hardhat run scripts/parsePurseWfxDepositData.js
+//npx hardhat run scripts/calculations/parsePurseWfxDepositData.js
 
 function getUsersByAmount(jsonData) {
     const amountsByUser = data.reduce((acc, { user, amount }) => {

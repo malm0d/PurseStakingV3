@@ -1,7 +1,7 @@
 const fs = require('fs');
 const earnedRewardsRawData = require("../purseBusdUserEarnedRewards.json");
 
-//npx hardhat run --network bscmainnet scripts/parseUserEarnedRewards.js
+//npx hardhat run --network bscmainnet scripts/calculations/parseUserEarnedRewards.js
 
 // [
 //     {

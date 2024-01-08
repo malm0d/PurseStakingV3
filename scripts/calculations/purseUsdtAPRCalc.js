@@ -1,11 +1,11 @@
 const hre = require("hardhat");
-const PURSE_LP_POOL_ABI = require("../abis/PurseLPRestakePool.json");
-const PURSE_USDT_ABI = require("../abis/PurseUsdtLPToken.json");
-const PURSE_ABI = require("../abis/PurseBsc.json");
-const USDT_ABI = require("../abis/UsdtBsc.json");
+const PURSE_LP_POOL_ABI = require("../../abis/PurseLPRestakePool.json");
+const PURSE_USDT_ABI = require("../../abis/PurseUsdtLPToken.json");
+const PURSE_ABI = require("../../abis/PurseBsc.json");
+const USDT_ABI = require("../../abis/UsdtBsc.json");
 const axios = require('axios');
 
-// npx hardhat run --network bscmainnet scripts/purseUsdtAPRCalc.js
+// npx hardhat run --network bscmainnet scripts/calculations/purseUsdtAPRCalc.js
 
 const endpoint = "https://bsc-mainnet.chainnodes.org/ca0d8638-3aff-4563-a8cb-e7e36ed32201";
 const provider = new ethers.JsonRpcProvider(endpoint);

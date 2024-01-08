@@ -8,21 +8,19 @@ const hre = require("hardhat");
 const { upgrades } = require("hardhat");
 
 //npx hardhat compile --force
-//npx hardhat run --network bsctestnet scripts/upgrade.js
-//npx hardhat verify --network bsctestnet 0x...
+//npx hardhat run --network bsctestnet scripts/deployRetro.js
+//npx hardhat verify --network bsctestnet 0x... 0xrootHash
 async function main() {
-    const PROXY = "0xFb1D31a3f51Fb9422c187492D8EA14921d6ea6aE";
     const [deployer] = await hre.ethers.getSigners();
     console.log(`Deployer: ${deployer.address}`);
     console.log();
-
-    const PurseStakingV3 = await hre.ethers.getContractFactory("PurseStakingV3");
-    const purseStakingV3 = await upgrades.upgradeProxy(
-        PROXY,
-        PurseStakingV3,
+    const Retro = await hre.ethers.getContractFactory("RetroactiveRewards");
+    const retro = await Retro.deploy(
+        "0x21e355e07f9efc7591d406770fcfa833afcd6b808364ef5c730b4279e279a33f"
     )
+    await retro.waitForDeployment();
+    console.log("Retro deployed to: ", await retro.getAddress());
 
-    console.log("Upgraded");
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -1,13 +1,13 @@
 const hre = require("hardhat");
-const FACTORY_ABI = require("../abis/Factory.json");
-const WFX_ABI = require("../abis/WFX_Upgradeable.json");
-const PURSE_ABI = require("../abis/PurseFxcore.json");
-const PAIR_ABI = require("../abis/Pair.json");
-const MASTER_CHEF_ABI = require("../abis/MasterChefV2.json");
+const FACTORY_ABI = require("../../abis/Factory.json");
+const WFX_ABI = require("../../abis/WFX_Upgradeable.json");
+const PURSE_ABI = require("../../abis/PurseFxcore.json");
+const PAIR_ABI = require("../../abis/Pair.json");
+const MASTER_CHEF_ABI = require("../../abis/MasterChefV2.json");
 const fs = require('fs');
 const path = require('path');
 
-//npx hardhat run --network fxMainnet scripts/checkPurseWfxProviders.js
+//npx hardhat run --network fxMainnet scripts/calculations/checkPurseWfxProviders.js
 
 async function queryEvents(provider, contract, fromBlock, toBlock, filter) {
     try {

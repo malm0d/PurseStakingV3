@@ -1,10 +1,10 @@
 const hre = require("hardhat");
 const fs = require('fs');
-const PURSE_BUSD_POOL_ABI = require("../abis/PurseLPRestakePool.json");
-const PURSE_BUSD_LPTOKEN_ABI = require("../abis/PurseBusdLpToken.json");
-const PURSE_BSC_ABI = require("../abis/PurseBsc.json");
+const PURSE_BUSD_POOL_ABI = require("../../abis/PurseLPRestakePool.json");
+const PURSE_BUSD_LPTOKEN_ABI = require("../../abis/PurseBusdLpToken.json");
+const PURSE_BSC_ABI = require("../../abis/PurseBsc.json");
 
-//npx hardhat run --network bscmainnet scripts/checkPurseBusd.js
+//npx hardhat run --network bscmainnet scripts/calculations/checkPurseBusd.js
 
 //1: https://bsc-mainnet.chainnodes.org/062698ce-0d9b-4eae-b9b8-e0525dafaa86
 //2: https://bsc-mainnet.chainnodes.org/ca0d8638-3aff-4563-a8cb-e7e36ed32201

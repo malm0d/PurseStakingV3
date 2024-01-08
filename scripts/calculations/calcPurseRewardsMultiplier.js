@@ -1,6 +1,6 @@
 const hre = require("hardhat");
-const MASTERCHEF_FX_ABI = require("../abis/MasterChefFxMainnet.json");
-const MULTIPLIER_ABI = require("../abis/RewarderViaMultiplierV2.json");
+const MASTERCHEF_FX_ABI = require("../../abis/MasterChefFxMainnet.json");
+const MULTIPLIER_ABI = require("../../abis/RewarderViaMultiplierV2.json");
 const axios = require("axios");
 
 const endpoint = "https://fx-json-web3.functionx.io:8545"
@@ -28,7 +28,7 @@ const queryPricesApi = async () => {
     return json;
 }
 
-// npx hardhat run --network fxMainnet scripts/calcPurseRewardsMultiplier.js
+// npx hardhat run --network fxMainnet scripts/calculations/calcPurseRewardsMultiplier.js
 async function main() {
     const signers = await hre.ethers.getSigners();
     const owner = signers[0];

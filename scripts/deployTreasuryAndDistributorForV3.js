@@ -7,8 +7,10 @@
 const hre = require("hardhat");
 const { upgrades } = require("hardhat");
 
+//Deploys PurseStakingV3's Reward Distributor and Treasury contracts
+
 //npx hardhat compile --force
-//npx hardhat run --network bsctestnet scripts/deployV3.js
+//npx hardhat run --network bsctestnet scripts/deployTreasuryAndDistributorV3.js
 //npx hardhat verify --network bsctestnet 0x...
 
 // testnet deployer: 0x2027E055201E26b1bFE33Eb923b3fdb7E6f30807

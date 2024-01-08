@@ -7,8 +7,10 @@
 const hre = require("hardhat");
 const { upgrades } = require("hardhat");
 
+//For deploying PurseStakingV2 for testing purposes
+
 //npx hardhat compile --force
-//npx hardhat run --network bsctestnet scripts/deployV2.js
+//npx hardhat run --network bsctestnet scripts/deployPurseStakingV2.js
 //npx hardhat verify --network bsctestnet 0x...
 async function main() {
   const [deployer] = await hre.ethers.getSigners();
