@@ -1,7 +1,7 @@
 const hre = require("hardhat");
 const { upgrades } = require("hardhat");
 
-// For importing PurseStakingV2 data from mainnet to local for deployment upgrade
+// For importing PurseStakingV2 data from mainnet for upgrading to PurseStakingV3
 
 //npx hardhat run --network bscmainnet scripts/mainnet/forceImportPurseStakingV2.js
 async function main() {
