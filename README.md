@@ -30,7 +30,7 @@ There are also other files under the `scripts` directory used to perform some an
 - PurseStakingV3:0x8A6aFc7D27cDFf9FDC6b4efa63a757333eB58508
 - RewardDistributor:0xdb307306ae74EefaCf26afdca25C5A11D5b7e09e
 - Treasury: 0x774029863759eEd41B6f7Fe12dc5D44Ec9eD4bCB
-- PurseStakingVesting:
+- PurseStakingVesting:0x74019d73c9E4d6FE5610C20df6b0FFCe365c4053
 
 #### Stake Purse Vault
 - StakePurseVault:
@@ -40,3 +40,8 @@ There are also other files under the `scripts` directory used to perform some an
 
 ## Utility scripts
 - purseUsdtAPRCalc: Calculates parameters to set to achieve specified APR for PURSE-USDT Pool
+
+## Using forked networks
+Run: `npx hardhat node --fork https://<Chainstack_endpoint>`.
+
+Use `--network hardhat` in hardhat commands. The current forked network is bsc testnet.
