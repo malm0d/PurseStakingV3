@@ -4,6 +4,7 @@ require("@nomiclabs/hardhat-web3");
 require("dotenv").config();
 
 const MNEMONIC = process.env.MNEMONIC;
+const archiveNodeFork = process.env.BSC_TESTNET_ARCHIVE_NODE;//Chainstack node
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -17,6 +18,14 @@ module.exports = {
     }
   },
   networks: {
+    hardhat: {
+      forking: {
+        url: archiveNodeFork,
+      },
+      accounts: {
+        mnemonic: MNEMONIC
+      }
+    },
     bsctestnet: {
       url: "https://bsc-testnet.publicnode.com	",
       chainId: 97,
