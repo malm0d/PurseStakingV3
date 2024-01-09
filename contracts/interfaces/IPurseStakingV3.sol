@@ -10,4 +10,6 @@ interface IPurseStakingV3 {
     function previewClaimableRewards(address _address) external view returns (uint256);
     function enter(uint256 purseAmount) external returns (bool);
     function leave(uint256 xPurseAmount) external returns (bool);
+    function availablePurseSupply() external view returns (uint256);
+    function sendVestedPurse(uint256 safeAmount) external;
 }
