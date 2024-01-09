@@ -4,7 +4,7 @@ const { upgrades } = require("hardhat");
 //Upgrade PurseStakingV2 to PurseStakingV3 on BSC mainnet
 
 //npx hardhat compile --force
-//npx hardhat run --network bsctestnet scripts/upgradeToPurseStakingV3.js
+//npx hardhat run --network bsctestnet scripts/mainnet/upgradeToPurseStakingV3.js
 //npx hardhat verify --network bscmainnet 0x...
 async function main() {
     const PROXY = "0xFb1D31a3f51Fb9422c187492D8EA14921d6ea6aE";

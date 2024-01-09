@@ -1,14 +1,8 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
-// will compile your contracts, add the Hardhat Runtime Environment's members to the
-// global scope, and execute the script.
 const hre = require("hardhat");
 const { upgrades } = require("hardhat");
 
 //npx hardhat compile --force
-//npx hardhat run --network bsctestnet scripts/deployRetro.js
+//npx hardhat run --network bsctestnet scripts/testnet/deployRetro.js
 //npx hardhat verify --network bsctestnet 0x... 0xrootHash
 async function main() {
     const [deployer] = await hre.ethers.getSigners();

@@ -2,7 +2,7 @@ const hre = require("hardhat");
 const { upgrades } = require("hardhat");
 
 //fxmainnet
-//./node_modules/.bin/poa-solidity-flattener ./contracts/RewarderViaMultiplierV2.sol
+//./node_modules/.bin/poa-solidity-flattener ../../contracts/RewarderViaMultiplierV2.sol
 async function main() {
     const [deployer] = await hre.ethers.getSigners();
     console.log(`Deployer: ${deployer.address}`);

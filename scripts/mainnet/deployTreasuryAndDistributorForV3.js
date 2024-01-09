@@ -4,7 +4,7 @@ const { upgrades } = require("hardhat");
 //Deploys PurseStakingV3's Reward Distributor and Treasury contracts to mainnet
 
 //npx hardhat compile --force
-//npx hardhat run --network bsctestnet scripts/deployTreasuryAndDistributorV3.js
+//npx hardhat run --network bsctestnet scripts/mainnet/deployTreasuryAndDistributorV3.js
 //npx hardhat verify --network bscmainnet 0x...
 
 // Mainnet
