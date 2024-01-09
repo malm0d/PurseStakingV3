@@ -4,6 +4,15 @@
     {
       "address": "0x4E9EddA793f5265bD6360F0F9f950Eb821C255e9",
       "kind": "uups"
+    },
+    {
+      "address": "0x8A6aFc7D27cDFf9FDC6b4efa63a757333eB58508",
+      "kind": "uups"
+    },
+    {
+      "address": "0x74019d73c9E4d6FE5610C20df6b0FFCe365c4053",
+      "txHash": "0xa44076353ad1afeb64c8817a58daeb417ecb7bb52b6d9ec52ea5af50ec3340ac",
+      "kind": "uups"
     }
   ],
   "impls": {
@@ -290,7 +299,7 @@
             "label": "purseToken",
             "offset": 0,
             "slot": "252",
-            "type": "t_contract(IPurseToken)6398",
+            "type": "t_contract(IPurseToken)9516",
             "contract": "PurseStakingV3",
             "src": "contracts/PurseStakingV3.sol:30"
           },
@@ -306,7 +315,7 @@
             "label": "userInfo",
             "offset": 0,
             "slot": "254",
-            "type": "t_mapping(t_address,t_struct(UserInfo)6433_storage)",
+            "type": "t_mapping(t_address,t_struct(UserInfo)9551_storage)",
             "contract": "PurseStakingV3",
             "src": "contracts/PurseStakingV3.sol:42"
           },
@@ -368,11 +377,11 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(IPurseToken)6398": {
+          "t_contract(IPurseToken)9516": {
             "label": "contract IPurseToken",
             "numberOfBytes": "20"
           },
-          "t_mapping(t_address,t_struct(UserInfo)6433_storage)": {
+          "t_mapping(t_address,t_struct(UserInfo)9551_storage)": {
             "label": "mapping(address => struct PurseStakingV3.UserInfo)",
             "numberOfBytes": "32"
           },
@@ -380,7 +389,7 @@
             "label": "string",
             "numberOfBytes": "32"
           },
-          "t_struct(UserInfo)6433_storage": {
+          "t_struct(UserInfo)9551_storage": {
             "label": "struct PurseStakingV3.UserInfo",
             "members": [
               {
@@ -425,6 +434,435 @@
           "t_uint256": {
             "label": "uint256",
             "numberOfBytes": "32"
+          }
+        },
+        "namespaces": {}
+      },
+      "allAddresses": [
+        "0xF9750Aa14AB3D89b7E9052d609b7f73E3D81245c",
+        "0xD3147c184C3e7524C45fc1253ddd5C14931bb675"
+      ]
+    },
+    "fbe66a5effbd4cefa703b547b6231b2c1023707efaec91e3c4d50dd3892ed706": {
+      "address": "0xC93c02D9783f42A6c51831526e86979a68127585",
+      "txHash": "0x92e19562549d9e1ae5a9211979773f4464337ff55b4f15bc0bb18756f1524c48",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "contracts/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "contracts/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "contracts/@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "contracts/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "contracts/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "contracts/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "contracts/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "_paused",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_bool",
+            "contract": "PausableUpgradeable",
+            "src": "contracts/@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:29"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "PausableUpgradeable",
+            "src": "contracts/@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:102"
+          },
+          {
+            "label": "name",
+            "offset": 0,
+            "slot": "251",
+            "type": "t_string_storage",
+            "contract": "PurseStakingV3v",
+            "src": "contracts/PurseStakingV3v.sol:30"
+          },
+          {
+            "label": "purseToken",
+            "offset": 0,
+            "slot": "252",
+            "type": "t_contract(IPurseToken)10663",
+            "contract": "PurseStakingV3v",
+            "src": "contracts/PurseStakingV3v.sol:31"
+          },
+          {
+            "label": "_totalReceiptSupply",
+            "offset": 0,
+            "slot": "253",
+            "type": "t_uint256",
+            "contract": "PurseStakingV3v",
+            "src": "contracts/PurseStakingV3v.sol:32"
+          },
+          {
+            "label": "userInfo",
+            "offset": 0,
+            "slot": "254",
+            "type": "t_mapping(t_address,t_struct(UserInfo)10698_storage)",
+            "contract": "PurseStakingV3v",
+            "src": "contracts/PurseStakingV3v.sol:43"
+          },
+          {
+            "label": "_totalLockedAmount",
+            "offset": 0,
+            "slot": "255",
+            "type": "t_uint256",
+            "contract": "PurseStakingV3v",
+            "src": "contracts/PurseStakingV3v.sol:45"
+          },
+          {
+            "label": "lockPeriod",
+            "offset": 0,
+            "slot": "256",
+            "type": "t_uint256",
+            "contract": "PurseStakingV3v",
+            "src": "contracts/PurseStakingV3v.sol:46"
+          },
+          {
+            "label": "cumulativeRewardPerToken",
+            "offset": 0,
+            "slot": "257",
+            "type": "t_uint256",
+            "contract": "PurseStakingV3v",
+            "src": "contracts/PurseStakingV3v.sol:48"
+          },
+          {
+            "label": "distributor",
+            "offset": 0,
+            "slot": "258",
+            "type": "t_address",
+            "contract": "PurseStakingV3v",
+            "src": "contracts/PurseStakingV3v.sol:49"
+          },
+          {
+            "label": "treasury",
+            "offset": 0,
+            "slot": "259",
+            "type": "t_address",
+            "contract": "PurseStakingV3v",
+            "src": "contracts/PurseStakingV3v.sol:50"
+          },
+          {
+            "label": "vesting",
+            "offset": 0,
+            "slot": "260",
+            "type": "t_address",
+            "contract": "PurseStakingV3v",
+            "src": "contracts/PurseStakingV3v.sol:51"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(IPurseToken)10663": {
+            "label": "contract IPurseToken",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_struct(UserInfo)10698_storage)": {
+            "label": "mapping(address => struct PurseStakingV3v.UserInfo)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(UserInfo)10698_storage": {
+            "label": "struct PurseStakingV3v.UserInfo",
+            "members": [
+              {
+                "label": "receiptToken",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "newReceiptToken",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "withdrawReward",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "lockTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "claimableReward",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "previousCumulatedRewardPerToken",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        },
+        "namespaces": {}
+      }
+    },
+    "6c611d2c0f9d6b8079e499fd553b42fcbb124faca04eaa48ff7f5cc22a1eab75": {
+      "address": "0x46b7Ba6f6E6eA92FD3ca64FFefEDFeAB6C0AA994",
+      "txHash": "0xe69d59799de44c59ff67e580d28b6ba3b8dc238cb2bf805a1a888e2c324a9d48",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:68"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:169"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:111"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:88"
+          },
+          {
+            "label": "purseStaking",
+            "offset": 0,
+            "slot": "251",
+            "type": "t_address",
+            "contract": "PurseStakingVesting",
+            "src": "contracts/PurseStakingVesting.sol:21"
+          },
+          {
+            "label": "accountVestingSchedules",
+            "offset": 0,
+            "slot": "252",
+            "type": "t_mapping(t_address,t_array(t_struct(VestingSchedule)11843_storage)dyn_storage)",
+            "contract": "PurseStakingVesting",
+            "src": "contracts/PurseStakingVesting.sol:32"
+          },
+          {
+            "label": "accountEscrowedBalance",
+            "offset": 0,
+            "slot": "253",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "PurseStakingVesting",
+            "src": "contracts/PurseStakingVesting.sol:35"
+          },
+          {
+            "label": "accountVestedBalance",
+            "offset": 0,
+            "slot": "254",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "PurseStakingVesting",
+            "src": "contracts/PurseStakingVesting.sol:38"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_struct(VestingSchedule)11843_storage)dyn_storage": {
+            "label": "struct PurseStakingVesting.VestingSchedule[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_array(t_struct(VestingSchedule)11843_storage)dyn_storage)": {
+            "label": "mapping(address => struct PurseStakingVesting.VestingSchedule[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(VestingSchedule)11843_storage": {
+            "label": "struct PurseStakingVesting.VestingSchedule",
+            "members": [
+              {
+                "label": "startTime",
+                "type": "t_uint128",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "endTime",
+                "type": "t_uint128",
+                "offset": 16,
+                "slot": "0"
+              },
+              {
+                "label": "quantity",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "vestedQuantity",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_uint128": {
+            "label": "uint128",
+            "numberOfBytes": "16"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
           }
         },
         "namespaces": {}
