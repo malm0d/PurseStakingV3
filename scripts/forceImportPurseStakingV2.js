@@ -1,9 +1,9 @@
 const hre = require("hardhat");
 const { upgrades } = require("hardhat");
 
-// For importing PurseStakingV2 data
+// For importing PurseStakingV2 data from mainnet to local for deployment upgrade
 
-//npx hardhat run --network bsctestnet scripts/forceImportPurseStakingV2.js
+//npx hardhat run --network bscmainnet scripts/forceImportPurseStakingV2.js
 async function main() {
     const PROXY = "0xFb1D31a3f51Fb9422c187492D8EA14921d6ea6aE";
     const [deployer] = await hre.ethers.getSigners();

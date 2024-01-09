@@ -1,19 +1,11 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
-// will compile your contracts, add the Hardhat Runtime Environment's members to the
-// global scope, and execute the script.
 const hre = require("hardhat");
 const { upgrades } = require("hardhat");
 
-//Deploys PurseStakingV3's Reward Distributor and Treasury contracts
+//Deploys PurseStakingV3's Reward Distributor and Treasury contracts to mainnet
 
 //npx hardhat compile --force
 //npx hardhat run --network bsctestnet scripts/deployTreasuryAndDistributorV3.js
-//npx hardhat verify --network bsctestnet 0x...
-
-// testnet deployer: 0x2027E055201E26b1bFE33Eb923b3fdb7E6f30807
+//npx hardhat verify --network bscmainnet 0x...
 
 // Mainnet
 // const PURSE_TOKEN_ADDRESS = "0x29a63F4B209C29B4DC47f06FFA896F32667DAD2C";
