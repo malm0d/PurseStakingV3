@@ -2,6 +2,8 @@ require("@nomicfoundation/hardhat-toolbox");
 require('@openzeppelin/hardhat-upgrades');
 require("@nomiclabs/hardhat-web3");
 require("dotenv").config();
+require("@nomicfoundation/hardhat-network-helpers");
+
 
 const MNEMONIC = process.env.MNEMONIC;
 const archiveNodeFork = process.env.BSC_TESTNET_ARCHIVE_NODE;//Chainstack node
@@ -64,5 +66,8 @@ module.exports = {
   },
   etherscan: {
     apiKey: process.env.BSCSCANAPI
+  },
+  mocha: {
+    timeout: 300000
   }
 };
