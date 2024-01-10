@@ -10,7 +10,7 @@ const helpers = require("@nomicfoundation/hardhat-network-helpers");
 //Testnet: npx hardhat test test/staking/PurseStakingVesting.js --network bsctestnet
 //Forked: npx hardhat test test/staking/PurseStakingVesting.js --network hardhat
 
-//IMPT: "Functionality" tests will be done on a forked bsc testnet, so do not run it together
+//IMPT: "Functionality" tests will be done on a forked bsc testnet, so DO NOT run it together
 //with the other tests: "Pre-conditions", "Access control", "Update contract addresses".
 describe("PurseStakingV3 Vesting Tests", function () {
     const PURSE_STAKING = "PurseStakingV3v";
