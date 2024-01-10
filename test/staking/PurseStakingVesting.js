@@ -5,14 +5,14 @@ const PURSE_BSC_ABI = require("../../abis/PurseBsc.json");
 require("dotenv").config();
 const helpers = require("@nomicfoundation/hardhat-network-helpers");
 
-//Tests for PurseStakingV3 vesting logic.
+//Tests for PurseStakingV3 contract.
 
 //Testnet: npx hardhat test test/staking/PurseStakingVesting.js --network bsctestnet
 //Forked: npx hardhat test test/staking/PurseStakingVesting.js --network hardhat
 
 //IMPT: "Functionality" tests will be done on a forked bsc testnet, so DO NOT run it together
 //with the other tests: "Pre-conditions", "Access control", "Update contract addresses".
-describe("PurseStakingV3 Vesting Tests", function () {
+describe("PurseStakingVesting Tests", function () {
     const PURSE_STAKING = "PurseStakingV3v";
     const PURSE_STAKING_VESTING = "PurseStakingVesting";
 

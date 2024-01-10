@@ -4,7 +4,7 @@ const hre = require("hardhat");
 const PURSE_BSC_ABI = require("../../abis/PurseBsc.json");
 require("dotenv").config();
 
-//Tests for PurseStakingV3 vesting logic.
+//Tests for PurseStakingV3v vesting logic.
 
 //npx hardhat test test/staking/PurseStakingV3v.js --network bsctestnet
 describe("PurseStakingV3v Tests", function () {
