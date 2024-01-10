@@ -59,13 +59,13 @@ describe("PurseStakingV3v Tests", function () {
     });
 
     describe("Access control:", function () {
-        it("updateVesting can only be called by owner", async () => {
+        it("updateVesting cannot be called by non owner", async () => {
             await expect(
                 purseStaking.connect(userB).updateVesting(ZEROADDRESS)
             ).to.be.revertedWith("Ownable: caller is not the owner");
         });
 
-        it("sendVestedPurse can only be called by vesting contract", async () => {
+        it("sendVestedPurse cannot be called by non vesting contract", async () => {
             await expect(
                 purseStaking.connect(owner).sendVestedPurse(BigInt(1 * 10 ** 18))
             ).to.be.revertedWith("PurseStakingV3: msg.sender is not the vesting contract");
