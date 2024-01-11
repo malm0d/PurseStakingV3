@@ -23,6 +23,7 @@ There are also other files under the `scripts` directory used to perform some an
 - StakePurseVault
 - StakePurseVaultVesting:
 - StakePurseVaultTreasury:
+- Vault Ecosystem Reward Distributor:
 
 ### BSC Testnet
 #### Purse Staking
@@ -33,9 +34,10 @@ There are also other files under the `scripts` directory used to perform some an
 - PurseStakingVesting:0x74019d73c9E4d6FE5610C20df6b0FFCe365c4053
 
 #### Stake Purse Vault
-- StakePurseVault:
-- StakePurseVaultVesting:
-- StakePurseVaultTreasury:
+- StakePurseVault: 0x2be6B3045A772A9C3EcC776450D09e06040F8ED7
+- StakePurseVaultVesting:0x1cddE3BB0DaF9Def56F7e5e5B8BfDFd6689160A7
+- StakePurseVaultTreasury:0xA95B5650c6D525a8d82E6Ec766d1c6DF7eC0c4e7
+- Vault Ecosystem Reward Distributor: 0x8C3c57c0424F1744115DEaE10ED89815B6b86e5C
 
 
 ## Utility scripts
