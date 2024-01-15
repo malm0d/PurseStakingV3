@@ -320,7 +320,7 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
     }
 
     ///@dev Get config parameters for the vault.
-    function getVaultConfids() public view returns (uint256, uint256) {
+    function getVaultConfigs() public view returns (uint256, uint256) {
         return (MIN_COMPOUND_AMOUNT, CAP_STAKE_PURSE_TARGET);
     }
 
