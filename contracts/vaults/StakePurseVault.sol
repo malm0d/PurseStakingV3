@@ -101,8 +101,7 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
      * @notice Stake PURSE tokens to the vault
      * @param amount The amount of PURSE tokens to stake to vault
      * @dev Vault will stake to PurseStaking.
-     * For compound to happen, `amount` must be greater than or equal to `MIN_COMPOUND_AMOUNT`,
-     * and `pendingPurseRewards` must be greater than 0.
+     * For compound to happen, `amount` must be greater than or equal to `MIN_COMPOUND_AMOUNT`
      */
     function stakePurse(uint256 amount) external whenNotPaused {
         require(amount > 0, "StakePurseVault: Cannot stake 0");
@@ -110,7 +109,7 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
         require(amount + _totalAssets <= CAP_STAKE_PURSE_TARGET, "StakePurseVault: Cap exceeded");
 
          //Compound rewards before stake
-        if (pendingPurseRewards > 0 && amount >= MIN_COMPOUND_AMOUNT) {
+        if (amount >= MIN_COMPOUND_AMOUNT) {
             compound();
         }
 
@@ -135,9 +134,7 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
         uint256 userSharesPreBurn = balanceOf(msg.sender);
         require(userSharesPreBurn >= amount, "StakePurseVault: Amount exceeds shares");
 
-        if (pendingPurseRewards > 0) {
-            compound();
-        }
+        compound();
 
         _claim(msg.sender, msg.sender); //Claim vault rewards for user
 
@@ -155,19 +152,26 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
 
     /**
      * @notice Compound staking rewards for vault
-     * @dev Claims staking rewards from PurseStaking Treasury + any pending Purse rewards in the vault,
-     * and restakes them to PurseStaking through `_stake`.
-     * Reverts if `compoundAmount` is zero.
+     * @dev Claims staking rewards from PurseStaking Treasury and restakes them to PurseStaking through `_stake`.
      */
     function compound() public nonReentrant whenNotPaused {
         uint256 rewardsToCompound;
-        if (IPurseStakingV3(purseStaking).previewClaimableRewards(address(this)) > 0) {
-            rewardsToCompound = ITreasury(purseStakingTreasury).claimRewards(address(this)) + pendingPurseRewards;
+        // if (IPurseStakingV3(purseStaking).previewClaimableRewards(address(this)) > 0) {
+        //     rewardsToCompound = ITreasury(purseStakingTreasury).claimRewards(address(this)) + pendingPurseRewards;
+        // } else {
+        //     rewardsToCompound = pendingPurseRewards;
+        // }
+
+        if (IPurseStakingV3(purseStaking).previewClaimableRewards(address(this)) == 0) {
+            return;
         } else {
-            rewardsToCompound = pendingPurseRewards;
+            rewardsToCompound = ITreasury(purseStakingTreasury).claimRewardsV2(address(this));
+        }
+        if (rewardsToCompound == 0) {
+            return;
         }
 
-        pendingPurseRewards = 0;
+        //pendingPurseRewards = 0;
 
         uint256 feeProtocol = rewardsToCompound * feeOnReward / BIPS_DIVISOR;
         uint256 feeCompounder = rewardsToCompound * feeOnCompounder / BIPS_DIVISOR;
@@ -206,8 +210,8 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
         IERC20Upgradeable(PURSE).safeIncreaseAllowance(purseStaking, amount);
         bool success = IPurseStakingV3(purseStaking).enter(amount);
         require(success, "StakePurseVault: Stake to PurseStaking failed");
-        uint256 purseStakingRewards = ITreasury(purseStakingTreasury).claimRewards(address(this));
-        pendingPurseRewards += purseStakingRewards;
+        // uint256 purseStakingRewards = ITreasury(purseStakingTreasury).claimRewards(address(this));
+        // pendingPurseRewards += purseStakingRewards;
     }
 
     /**
@@ -221,8 +225,8 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
         bool success = IPurseStakingV3(purseStaking).leave(amount);
         require(success, "StakePurseVault: Unstake from PurseStaking failed");
 
-        uint256 purseStakingRewards = ITreasury(purseStakingTreasury).claimRewards(address(this));
-        pendingPurseRewards += purseStakingRewards;
+        // uint256 purseStakingRewards = ITreasury(purseStakingTreasury).claimRewards(address(this));
+        // pendingPurseRewards += purseStakingRewards;
 
         IStakePurseVaultVesting(stakePurseVaultVesting).lockWithEndTime(
             msg.sender,
@@ -347,13 +351,13 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
 
     /************************************* Only Governor Functions *************************************/
     
-    function updateConfigs(uint256 newMinCompound, uint256 newCapStakePurse) external onlyRole(GOVERNOR_ROLE) {
+    function updateVaultConfigs(uint256 newMinCompound, uint256 newCapStakePurse) external onlyRole(GOVERNOR_ROLE) {
         MIN_COMPOUND_AMOUNT = newMinCompound;
         CAP_STAKE_PURSE_TARGET = newCapStakePurse;
         emit ConfigsUpdated(newMinCompound, newCapStakePurse);
     }
 
-    function updateFees(uint256 newFeeOnReward, uint256 newFeeOnCompounder, uint256 newFeeOnWithdrawal) external onlyRole(GOVERNOR_ROLE) {
+    function updateVaultFees(uint256 newFeeOnReward, uint256 newFeeOnCompounder, uint256 newFeeOnWithdrawal) external onlyRole(GOVERNOR_ROLE) {
         feeOnReward = newFeeOnReward;
         feeOnCompounder = newFeeOnCompounder;
         feeOnWithdrawal = newFeeOnWithdrawal;
