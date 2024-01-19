@@ -68,14 +68,13 @@ contract Treasury is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausabl
      * Also reverts if the treasury has no rewards, the user does not have available
      * rewards, the address is the zero address, when the contract is paused.
      */
-    function claimRewards(address _address) external whenNotPaused returns (uint256) {
+    function claimRewards(address _address) external whenNotPaused {
         require(_address != address(0), "Treasury: zero address");
         require(msg.sender == _address, "Treasury: msg.sender does not match the address claiming rewards");
         uint256 userClaimableAmount = IPurseStakingV3(PURSE_STAKING).updateClaim(msg.sender);
         IERC20Upgradeable(PURSE).safeTransfer(msg.sender, userClaimableAmount);
 
         emit Claimed(msg.sender, userClaimableAmount, block.timestamp);
-        return userClaimableAmount;
     }
 
     /**
