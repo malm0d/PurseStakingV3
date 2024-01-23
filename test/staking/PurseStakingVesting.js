@@ -55,47 +55,47 @@ describe("PurseStakingVesting Tests", function () {
         );
     });
 
-    // describe("Pre-conditions:", function () {
-    //     it("PurseStakingVesting has the correct Purse Staking address", async () => {
-    //         const purseStakingAddress = await vesting.getPurseStaking();
-    //         assert.equal(purseStakingAddress, PURSESTAKING_ADDRESS);
-    //     });
-    // });
+    describe("Pre-conditions:", function () {
+        it("PurseStakingVesting has the correct Purse Staking address", async () => {
+            const purseStakingAddress = await vesting.getPurseStaking();
+            assert.equal(purseStakingAddress, PURSESTAKING_ADDRESS);
+        });
+    });
 
-    // describe("Access control:", function () {
-    //     it("lockWithEndTime cannot be called by non PurseStaking", async () => {
-    //         await expect(
-    //             vesting.connect(owner).lockWithEndTime(owner.address, 100, 100)
-    //         ).to.be.revertedWith("Only PurseStaking can call");
-    //     });
+    describe("Access control:", function () {
+        it("lockWithEndTime cannot be called by non PurseStaking", async () => {
+            await expect(
+                vesting.connect(owner).lockWithEndTime(owner.address, 100, 100)
+            ).to.be.revertedWith("Only PurseStaking can call");
+        });
 
-    //     it("updatePurseStaking cannot be called by non owner", async () => {
-    //         await expect(
-    //             vesting.connect(userB).updatePurseStaking(userB.address)
-    //         ).to.be.revertedWith("Ownable: caller is not the owner");
-    //     });
+        it("updatePurseStaking cannot be called by non owner", async () => {
+            await expect(
+                vesting.connect(userB).updatePurseStaking(userB.address)
+            ).to.be.revertedWith("Ownable: caller is not the owner");
+        });
 
-    //     it("recoverToken cannot be called by non owner", async () => {
-    //         await expect(
-    //             vesting.connect(userC).recoverToken(PURSE_ADDRESS, 100, userC.address)
-    //         ).to.be.revertedWith("Ownable: caller is not the owner");
-    //     });
-    // });
+        it("recoverToken cannot be called by non owner", async () => {
+            await expect(
+                vesting.connect(userC).recoverToken(PURSE_ADDRESS, 100, userC.address)
+            ).to.be.revertedWith("Ownable: caller is not the owner");
+        });
+    });
 
-    // describe("Update contract addresses:", function () {
-    //     it("updatePurseStaking updates purseStaking variable correctly", async () => {
-    //         const tx1 = await vesting.updatePurseStaking(userC.address);
-    //         await tx1.wait();
-    //         await new Promise(resolve => setTimeout(resolve, 5000));
-    //         const purseStakingAddress1 = await vesting.getPurseStaking();
-    //         expect(purseStakingAddress1).to.equal(userC.address);
-    //         const tx2 = await vesting.updatePurseStaking(PURSESTAKING_ADDRESS);
-    //         await tx2.wait();
-    //         await new Promise(resolve => setTimeout(resolve, 5000));
-    //         const purseStakingAddress2 = await vesting.getPurseStaking();
-    //         expect(purseStakingAddress2).to.equal(PURSESTAKING_ADDRESS);
-    //     });
-    // });
+    describe("Update contract addresses:", function () {
+        it("updatePurseStaking updates purseStaking variable correctly", async () => {
+            const tx1 = await vesting.updatePurseStaking(userC.address);
+            await tx1.wait();
+            await new Promise(resolve => setTimeout(resolve, 5000));
+            const purseStakingAddress1 = await vesting.getPurseStaking();
+            expect(purseStakingAddress1).to.equal(userC.address);
+            const tx2 = await vesting.updatePurseStaking(PURSESTAKING_ADDRESS);
+            await tx2.wait();
+            await new Promise(resolve => setTimeout(resolve, 5000));
+            const purseStakingAddress2 = await vesting.getPurseStaking();
+            expect(purseStakingAddress2).to.equal(PURSESTAKING_ADDRESS);
+        });
+    });
 
     //Note: Functionality tests will be done on a forked bsc testnet.
     //IMPT: the state of the forked testnet resets to the initialized state after each test run,
