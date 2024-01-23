@@ -111,10 +111,6 @@ contract PurseStakingV3v is Initializable, UUPSUpgradeable, OwnableUpgradeable, 
         _updateRewards(msg.sender);
 
         if(user.receiptToken <= 0) {
-            // uint256 lockDuration = block.timestamp.sub(user.lockTime); 
-            // if (user.withdrawReward > 0 && lockDuration >= lockPeriod && user.lockTime != 0) {
-            //     withdrawLockedAmount();
-            // }
             purseReward = xPurseAmount.mul(totalPurse).div(totalXPurse);
             user.newReceiptToken -= xPurseAmount;
             handleReceipt(purseReward);
@@ -140,15 +136,13 @@ contract PurseStakingV3v is Initializable, UUPSUpgradeable, OwnableUpgradeable, 
     }
 
     function handleReceipt(uint256 _purseReward) internal {
-        // UserInfo storage user = userInfo[msg.sender];             
-        // user.withdrawReward += _purseReward;
-        // user.lockTime = block.timestamp;
-        _totalLockedAmount += _purseReward;
         IPurseStakingVesting(vesting).lockWithEndTime(
             msg.sender,
             _purseReward,
             block.timestamp.add(lockPeriod) //endTime
         );
+        purseToken.transfer(vesting, _purseReward);
+        emit SendVestedPurse(_purseReward);
     }
 
     function updateLockPeriod(uint256 newLockPeriod) external onlyOwner {
@@ -212,17 +206,6 @@ contract PurseStakingV3v is Initializable, UUPSUpgradeable, OwnableUpgradeable, 
 
     function unpause() external whenPaused onlyOwner {
         _unpause();
-    }
-
-    /**
-     * @dev Sends PURSE to PurseStakingVesting contract.
-     * Only callable by PurseStakingVesting contract.
-     */
-    function sendVestedPurse(uint256 safeAmount) external {
-        require(msg.sender == vesting, "PurseStakingV3: msg.sender is not the vesting contract");
-        _totalLockedAmount -= safeAmount;
-        IERC20Upgradeable(address(purseToken)).safeTransfer(msg.sender, safeAmount);
-        emit SendVestedPurse(safeAmount);
     }
 
     /**

@@ -134,10 +134,6 @@ contract PurseStakingVesting is Initializable, UUPSUpgradeable, OwnableUpgradeab
         accountEscrowedBalance[msg.sender] = accountEscrowedBalance[msg.sender] - totalVesting;
         accountVestedBalance[msg.sender] = accountVestedBalance[msg.sender] + totalVesting;
 
-        uint256 purseStakingLiquidity = IPurseStakingV3(purseStaking).availablePurseSupply();
-        require(purseStakingLiquidity >= totalVesting, "PurseStakingVesting: insufficient liquidity in system");
-
-        IPurseStakingV3(purseStaking).sendVestedPurse(totalVesting);
         IERC20Upgradeable(PURSE).safeTransfer(msg.sender, totalVesting);
 
         emit CompleteVesting(msg.sender, totalVesting);
