@@ -14,7 +14,7 @@ describe("PurseStakingV3v Tests", function () {
     const PURSE_ADDRESS = "0xC1ba0436DACDa5aF5A061a57687c60eE478c4141";
     const PURSESTAKING_ADDRESS = "0x8A6aFc7D27cDFf9FDC6b4efa63a757333eB58508";
     const PURSESTAKINGVESTING_ADDRESS = "0x74019d73c9E4d6FE5610C20df6b0FFCe365c4053";
-    const LOCKPERIOD = BigInt("1814400")
+    const LOCKPERIOD = BigInt("86400")
 
     const ZEROADDRESS = "0x0000000000000000000000000000000000000000";
 
@@ -64,12 +64,6 @@ describe("PurseStakingV3v Tests", function () {
                 purseStaking.connect(userB).updateVesting(ZEROADDRESS)
             ).to.be.revertedWith("Ownable: caller is not the owner");
         });
-
-        it("sendVestedPurse cannot be called by non vesting contract", async () => {
-            await expect(
-                purseStaking.connect(owner).sendVestedPurse(BigInt(1 * 10 ** 18))
-            ).to.be.revertedWith("PurseStakingV3: msg.sender is not the vesting contract");
-        });
     });
 
     describe("Update contract addresses:", function () {
@@ -89,10 +83,12 @@ describe("PurseStakingV3v Tests", function () {
 
     describe("Functionality:", function () {
         it("Calling leave creates a vesting schedule with the correct values," +
-            "& total locked amount increases",
+            "& contract balance of Purse should decrease",
             async () => {
-                //Get locked amount before leave
-                const totalLockedAmountBefore = await purseStaking.totalLockedAmount();
+                //Get contract purse balance before
+                const purseBalanceBefore = await purse.balanceOf(PURSESTAKING_ADDRESS);
+
+                const numberOfVestingSchedulesBefore = await vesting.numVestingSchedules(owner.address);
 
                 //Unstake 50,000 PURSE
                 const tx1 = await purseStaking.connect(owner).leave(BigInt(50000 * 10 ** 18));
@@ -100,8 +96,8 @@ describe("PurseStakingV3v Tests", function () {
                 await new Promise(resolve => setTimeout(resolve, 5000));
 
                 //Get vesting schedule from vesting
-                const numberOfVestingSchedules = await vesting.numVestingSchedules(owner.address);
-                expect(numberOfVestingSchedules).to.equal(BigInt(1));
+                const numberOfVestingSchedulesAfter = await vesting.numVestingSchedules(owner.address);
+                expect(numberOfVestingSchedulesAfter).to.equal(numberOfVestingSchedulesBefore + BigInt(1));
 
                 //Check values of vesting schedule
                 const vestingSchedule = await vesting.getVestingScheduleAtIndex(owner.address, 0);
@@ -112,17 +108,20 @@ describe("PurseStakingV3v Tests", function () {
                 expect(vestingAmount).to.be.gte(BigInt(50000 * 10 ** 18));
                 expect(lockDuration).to.equal(LOCKPERIOD);
 
-                //Get locked amount after leave.
-                //Increment in locked amount maybe more because leave function adds rewards to withdrawn amount
-                const totalLockedAmountAfter = await purseStaking.totalLockedAmount();
-                expect(totalLockedAmountAfter).to.be.gt(totalLockedAmountBefore);
+                //Get purse balance after leave.
+                //Decrease in balance may be greater because leave function adds rewards to withdrawn amount
+                const purseBalanceAfter = await purse.balanceOf(PURSESTAKING_ADDRESS);
+                expect(purseBalanceAfter).to.be.lt(purseBalanceBefore);
+                expect(purseBalanceAfter).to.be.lt(purseBalanceBefore - BigInt(50000 * 10 ** 18));
             }
         );
 
         it("Repeat of above test albeit with a different user",
             async () => {
-                //Get locked amount before leave
-                const totalLockedAmountBefore = await purseStaking.totalLockedAmount();
+                //Get contract purse balance before
+                const purseBalanceBefore = await purse.balanceOf(PURSESTAKING_ADDRESS);
+
+                const numberOfVestingSchedulesBefore = await vesting.numVestingSchedules(userC.address);
 
                 //Unstake 50,000 PURSE
                 const tx1 = await purseStaking.connect(userC).leave(BigInt(50000 * 10 ** 18));
@@ -130,8 +129,8 @@ describe("PurseStakingV3v Tests", function () {
                 await new Promise(resolve => setTimeout(resolve, 5000));
 
                 //Get vesting schedule from vesting
-                const numberOfVestingSchedules = await vesting.numVestingSchedules(userC.address);
-                expect(numberOfVestingSchedules).to.equal(BigInt(1));
+                const numberOfVestingSchedulesAfter = await vesting.numVestingSchedules(userC.address);
+                expect(numberOfVestingSchedulesAfter).to.equal(numberOfVestingSchedulesBefore + BigInt(1));
 
                 //Check values of vesting schedule
                 const vestingSchedule = await vesting.getVestingScheduleAtIndex(userC.address, 0);
@@ -142,18 +141,21 @@ describe("PurseStakingV3v Tests", function () {
                 expect(vestingAmount).to.be.gte(BigInt(50000 * 10 ** 18));
                 expect(lockDuration).to.equal(LOCKPERIOD);
 
-                //Get locked amount after leave.
-                //Increment in locked amount maybe more because leave function adds rewards to leave amount
-                const totalLockedAmountAfter = await purseStaking.totalLockedAmount();
-                expect(totalLockedAmountAfter).to.be.gt(totalLockedAmountBefore);
+                //Get purse balance after leave.
+                //Decrease in balance may be greater because leave function adds rewards to withdrawn amount
+                const purseBalanceAfter = await purse.balanceOf(PURSESTAKING_ADDRESS);
+                expect(purseBalanceAfter).to.be.lt(purseBalanceBefore);
+                expect(purseBalanceAfter).to.be.lt(purseBalanceBefore - BigInt(50000 * 10 ** 18));
             }
         );
 
         it("Calling leave again creates another vesting schedule with the correct values," +
-            "& total locked amount increases",
+            "& contract balance of Purse should decrease",
             async () => {
-                //Get locked amount before leave
-                const totalLockedAmountBefore = await purseStaking.totalLockedAmount();
+                //Get contract purse balance before
+                const purseBalanceBefore = await purse.balanceOf(PURSESTAKING_ADDRESS);
+
+                const numberOfVestingSchedulesBefore = await vesting.numVestingSchedules(userC.address);
 
                 //Unstake 100,000 PURSE
                 const tx1 = await purseStaking.connect(userC).leave(BigInt(100000 * 10 ** 18));
@@ -161,8 +163,8 @@ describe("PurseStakingV3v Tests", function () {
                 await new Promise(resolve => setTimeout(resolve, 5000));
 
                 //Get vesting schedules from vesting
-                const numberOfVestingSchedules = await vesting.numVestingSchedules(userC.address);
-                expect(numberOfVestingSchedules).to.equal(BigInt(2));
+                const numberOfVestingSchedulesAfter = await vesting.numVestingSchedules(userC.address);
+                expect(numberOfVestingSchedulesAfter).to.equal(numberOfVestingSchedulesBefore + BigInt(1));
 
                 //Check values of vesting schedule
                 const vestingSchedule2 = await vesting.getVestingScheduleAtIndex(userC.address, 1);
@@ -173,10 +175,11 @@ describe("PurseStakingV3v Tests", function () {
                 expect(vestingAmount2).to.be.gte(BigInt(100000 * 10 ** 18));
                 expect(lockDuration2).to.equal(LOCKPERIOD);
 
-                //Get locked amount after leave.
-                //Increment in locked amount maybe more because leave function adds rewards to leave amount
-                const totalLockedAmountAfter = await purseStaking.totalLockedAmount();
-                expect(totalLockedAmountAfter).to.be.gt(totalLockedAmountBefore);
+                //Get purse balance after leave.
+                //Decrease in balance may be greater because leave function adds rewards to withdrawn amount
+                const purseBalanceAfter = await purse.balanceOf(PURSESTAKING_ADDRESS);
+                expect(purseBalanceAfter).to.be.lt(purseBalanceBefore);
+                expect(purseBalanceAfter).to.be.lt(purseBalanceBefore - BigInt(100000 * 10 ** 18));
 
                 //End times are not the same
                 const vestingSchedule1 = await vesting.getVestingScheduleAtIndex(userC.address, 0);
@@ -188,8 +191,10 @@ describe("PurseStakingV3v Tests", function () {
 
         it("Repeat of above test albeit with a different user",
             async () => {
-                //Get locked amount before leave
-                const totalLockedAmountBefore = await purseStaking.totalLockedAmount();
+                //Get contract purse balance before
+                const purseBalanceBefore = await purse.balanceOf(PURSESTAKING_ADDRESS);
+
+                const numberOfVestingSchedulesBefore = await vesting.numVestingSchedules(owner.address);
 
                 //Unstake 100,000 PURSE
                 const tx1 = await purseStaking.connect(owner).leave(BigInt(100000 * 10 ** 18));
@@ -197,8 +202,8 @@ describe("PurseStakingV3v Tests", function () {
                 await new Promise(resolve => setTimeout(resolve, 5000));
 
                 //Get vesting schedules from vesting
-                const numberOfVestingSchedules = await vesting.numVestingSchedules(owner.address);
-                expect(numberOfVestingSchedules).to.equal(BigInt(2));
+                const numberOfVestingSchedulesAfter = await vesting.numVestingSchedules(owner.address);
+                expect(numberOfVestingSchedulesAfter).to.equal(numberOfVestingSchedulesBefore + BigInt(1));
 
                 //Check values of vesting schedule
                 const vestingSchedule2 = await vesting.getVestingScheduleAtIndex(owner.address, 1);
@@ -209,10 +214,11 @@ describe("PurseStakingV3v Tests", function () {
                 expect(vestingAmount2).to.be.gte(BigInt(100000 * 10 ** 18));
                 expect(lockDuration2).to.equal(LOCKPERIOD);
 
-                //Get locked amount after leave.
-                //Increment in locked amount maybe more because leave function adds rewards to leave amount
-                const totalLockedAmountAfter = await purseStaking.totalLockedAmount();
-                expect(totalLockedAmountAfter).to.be.gt(totalLockedAmountBefore);
+                //Get purse balance after leave.
+                //Decrease in balance may be greater because leave function adds rewards to withdrawn amount
+                const purseBalanceAfter = await purse.balanceOf(PURSESTAKING_ADDRESS);
+                expect(purseBalanceAfter).to.be.lt(purseBalanceBefore);
+                expect(purseBalanceAfter).to.be.lt(purseBalanceBefore - BigInt(100000 * 10 ** 18));
 
                 //End times are not the same
                 const vestingSchedule1 = await vesting.getVestingScheduleAtIndex(owner.address, 0);

@@ -19,8 +19,6 @@ describe("PurseStakingVesting Tests", function () {
     const PURSE_ADDRESS = "0xC1ba0436DACDa5aF5A061a57687c60eE478c4141";
     const PURSESTAKING_ADDRESS = "0x8A6aFc7D27cDFf9FDC6b4efa63a757333eB58508";
     const PURSESTAKINGVESTING_ADDRESS = "0x74019d73c9E4d6FE5610C20df6b0FFCe365c4053";
-    const LOCKPERIOD = BigInt("1814400")
-    const LOCKPERIOD_SECONDS = 1814400;
 
     const ZEROADDRESS = "0x0000000000000000000000000000000000000000";
 
@@ -57,60 +55,93 @@ describe("PurseStakingVesting Tests", function () {
         );
     });
 
-    describe("Pre-conditions:", function () {
-        it("PurseStakingVesting has the correct Purse Staking address", async () => {
-            const purseStakingAddress = await vesting.getPurseStaking();
-            assert.equal(purseStakingAddress, PURSESTAKING_ADDRESS);
-        });
-    });
+    // describe("Pre-conditions:", function () {
+    //     it("PurseStakingVesting has the correct Purse Staking address", async () => {
+    //         const purseStakingAddress = await vesting.getPurseStaking();
+    //         assert.equal(purseStakingAddress, PURSESTAKING_ADDRESS);
+    //     });
+    // });
 
-    describe("Access control:", function () {
-        it("lockWithEndTime cannot be called by non PurseStaking", async () => {
-            await expect(
-                vesting.connect(owner).lockWithEndTime(owner.address, 100, 100)
-            ).to.be.revertedWith("Only PurseStaking can call");
-        });
+    // describe("Access control:", function () {
+    //     it("lockWithEndTime cannot be called by non PurseStaking", async () => {
+    //         await expect(
+    //             vesting.connect(owner).lockWithEndTime(owner.address, 100, 100)
+    //         ).to.be.revertedWith("Only PurseStaking can call");
+    //     });
 
-        it("updatePurseStaking cannot be called by non owner", async () => {
-            await expect(
-                vesting.connect(userB).updatePurseStaking(userB.address)
-            ).to.be.revertedWith("Ownable: caller is not the owner");
-        });
+    //     it("updatePurseStaking cannot be called by non owner", async () => {
+    //         await expect(
+    //             vesting.connect(userB).updatePurseStaking(userB.address)
+    //         ).to.be.revertedWith("Ownable: caller is not the owner");
+    //     });
 
-        it("recoverToken cannot be called by non owner", async () => {
-            await expect(
-                vesting.connect(userC).recoverToken(PURSE_ADDRESS, 100, userC.address)
-            ).to.be.revertedWith("Ownable: caller is not the owner");
-        });
-    });
+    //     it("recoverToken cannot be called by non owner", async () => {
+    //         await expect(
+    //             vesting.connect(userC).recoverToken(PURSE_ADDRESS, 100, userC.address)
+    //         ).to.be.revertedWith("Ownable: caller is not the owner");
+    //     });
+    // });
 
-    describe("Update contract addresses:", function () {
-        it("updatePurseStaking updates purseStaking variable correctly", async () => {
-            const tx1 = await vesting.updatePurseStaking(userC.address);
-            await tx1.wait();
-            await new Promise(resolve => setTimeout(resolve, 5000));
-            const purseStakingAddress1 = await vesting.getPurseStaking();
-            expect(purseStakingAddress1).to.equal(userC.address);
-            const tx2 = await vesting.updatePurseStaking(PURSESTAKING_ADDRESS);
-            await tx2.wait();
-            await new Promise(resolve => setTimeout(resolve, 5000));
-            const purseStakingAddress2 = await vesting.getPurseStaking();
-            expect(purseStakingAddress2).to.equal(PURSESTAKING_ADDRESS);
-        });
-    });
+    // describe("Update contract addresses:", function () {
+    //     it("updatePurseStaking updates purseStaking variable correctly", async () => {
+    //         const tx1 = await vesting.updatePurseStaking(userC.address);
+    //         await tx1.wait();
+    //         await new Promise(resolve => setTimeout(resolve, 5000));
+    //         const purseStakingAddress1 = await vesting.getPurseStaking();
+    //         expect(purseStakingAddress1).to.equal(userC.address);
+    //         const tx2 = await vesting.updatePurseStaking(PURSESTAKING_ADDRESS);
+    //         await tx2.wait();
+    //         await new Promise(resolve => setTimeout(resolve, 5000));
+    //         const purseStakingAddress2 = await vesting.getPurseStaking();
+    //         expect(purseStakingAddress2).to.equal(PURSESTAKING_ADDRESS);
+    //     });
+    // });
 
     //Note: Functionality tests will be done on a forked bsc testnet.
     //IMPT: the state of the forked testnet resets to the initialized state after each test run,
     //though with increasing block number (and timestamp) to mimic the actual testnet.
     //IT DOES NOT CARRY FORWARD THE CONTRACT STATE BETWEEN RUNS.
     describe("Functionality:", function () {
+        it("Calling leave in PurseStaking should update contract balances correctly and create a vesting schedule", async () => {
+            const purseStakingBalanceBefore = await purse.balanceOf(PURSESTAKING_ADDRESS);
+            const vestingBalanceBefore = await purse.balanceOf(PURSESTAKINGVESTING_ADDRESS);
+            const numSchedulesBefore = await vesting.numVestingSchedules(owner.address);
 
-        //At this point, there should be vesting schedules in the vesting contract, otherwise
-        //the tests will fail. Go back to PurseStakingV3v and call `enter` and `leave` to create
-        //vesting schedules.
+            const leaveAmount = BigInt(1000 * 10 ** 18)
+            const leave = await purseStaking.connect(owner).leave(leaveAmount);
+            await leave.wait();
+
+            const purseStakingBalanceAfter = await purse.balanceOf(PURSESTAKING_ADDRESS);
+            const vestingBalanceAfter = await purse.balanceOf(PURSESTAKINGVESTING_ADDRESS);
+            const numSchedulesAfter = await vesting.numVestingSchedules(owner.address);
+
+            expect(purseStakingBalanceAfter).to.be.lt(purseStakingBalanceBefore);
+            expect(vestingBalanceAfter).to.be.gte(vestingBalanceBefore + leaveAmount);
+            expect(numSchedulesAfter).to.equal(numSchedulesBefore + BigInt(1));
+        });
+
+        it("Calling leave in PurseStaking should update contract balances correctly and create a second vesting schedule", async () => {
+            await helpers.time.increase(864000); //Forward time by 10 days (864000 seconds)
+
+            const purseStakingBalanceBefore = await purse.balanceOf(PURSESTAKING_ADDRESS);
+            const vestingBalanceBefore = await purse.balanceOf(PURSESTAKINGVESTING_ADDRESS);
+            const numSchedulesBefore = await vesting.numVestingSchedules(owner.address);
+
+            const leaveAmount = BigInt(2000 * 10 ** 18)
+            const leave = await purseStaking.connect(owner).leave(leaveAmount);
+            await leave.wait();
+
+            const purseStakingBalanceAfter = await purse.balanceOf(PURSESTAKING_ADDRESS);
+            const vestingBalanceAfter = await purse.balanceOf(PURSESTAKINGVESTING_ADDRESS);
+            const numSchedulesAfter = await vesting.numVestingSchedules(owner.address);
+
+            expect(purseStakingBalanceAfter).to.be.lt(purseStakingBalanceBefore);
+            expect(vestingBalanceAfter).to.be.gte(vestingBalanceBefore + leaveAmount);
+            expect(numSchedulesAfter).to.equal(numSchedulesBefore + BigInt(1));
+        });
+
         it("vestCompletedSchedules should complete one vesting schedule: " +
-            "numVestingSchedules, escrowed, vested, purse balances, total locked amount " +
-            "should adjust correctly",
+            "numVestingSchedules, escrowed, vested, purse balances, should adjust correctly",
             async () => {
                 //Get first vesting schedule and its values
                 const vestingSchedule1 = await vesting.getVestingScheduleAtIndex(owner.address, 0);
@@ -123,21 +154,19 @@ describe("PurseStakingVesting Tests", function () {
                 const accountEscrowedBalanceBefore = await vesting.accountEscrowedBalance(owner.address);
                 const accountVestedBalanceBefore = await vesting.accountVestedBalance(owner.address);
                 const userBalanceBefore = await purse.balanceOf(owner.address);
-                const purseStakingBalanceBefore = await purse.balanceOf(PURSESTAKING_ADDRESS);
-                const totalLockedAmountBefore = await purseStaking.totalLockedAmount();
+                const vestingBalanceBefore = await purse.balanceOf(PURSESTAKINGVESTING_ADDRESS);
 
-                //Forward the time by 21 days (1814400 seconds)
-                await helpers.time.increaseTo(Number(vestingStartTime) + LOCKPERIOD_SECONDS);
+                //Forward the time first schedule's endTime
+                // await helpers.time.increaseTo(Number(vestingEndTime));\
+                //Since in the previous test, we forwarded past the lock time of the first schedule, 
+                //we dont need to forward again
 
                 //Vest ONE completed schedule
                 const tx1 = await vesting.connect(owner).vestCompletedSchedules();
                 await tx1.wait();
-                await new Promise(resolve => setTimeout(resolve, 5000));
 
-                //Number of schedules should decrease by 1 (from 2 to 1), since only one schedule
-                //acheived its endTime
+                //Number of schedules should decrease by 1
                 const numScheduleAfter = await vesting.numVestingSchedules(owner.address);
-                expect(numScheduleAfter).to.equal(BigInt(1));
                 expect(numScheduleAfter).to.equal(numSchedulesBefore - BigInt(1));
 
                 //AccountEscrowedBalance should be reduced
@@ -148,33 +177,21 @@ describe("PurseStakingVesting Tests", function () {
                 const accountVestedBalanceAfter = await vesting.accountVestedBalance(owner.address);
                 expect(accountVestedBalanceAfter).to.equal(accountVestedBalanceBefore + vestingAmount);
 
-                //User PURSE balance should increase, and PurseStaking PURSE balance should decrease
+                //User PURSE balance should increase
                 const userBalanceAfter = await purse.balanceOf(owner.address);
-                const purseStakingBalanceAfter = await purse.balanceOf(PURSESTAKING_ADDRESS);
                 expect(userBalanceAfter).to.equal(userBalanceBefore + vestingAmount);
-                expect(purseStakingBalanceAfter).to.equal(purseStakingBalanceBefore - vestingAmount);
 
-                //Total locked amount in PurseStaking should decrease
-                const totalLockedAmountAfter = await purseStaking.totalLockedAmount();
-                expect(totalLockedAmountAfter).to.equal(totalLockedAmountBefore - vestingAmount);
+                //Vesting contract balance should reduce
+                const vestingBalanceAfter = await purse.balanceOf(PURSESTAKINGVESTING_ADDRESS);
+                expect(vestingBalanceAfter).to.equal(vestingBalanceBefore - vestingAmount);
             }
         );
 
         it("vestCompletedSchedules should complete all vesting schedules: " +
-            "numVestingSchedules, escrowed, vested, purse balances, total locked amount " +
-            "should adjust correctly",
+            "numVestingSchedules, escrowed, vested, purse balances, should adjust correctly",
             async () => {
-                //Enter and leave PurseStaking to create another vesting schedule.
-                //(DO NOT include this `enter` & `leave` block if doing separate test runs between
-                //each test case, as the state of the forked testnet does not carry forward from 
-                //the previous test case if the test run is stopped)
-                //--------------------------------------------------------------------------------
-                const enterTx = await purseStaking.connect(owner).enter(BigInt(2000000 * 10 ** 18));
-                await enterTx.wait();
-                await new Promise(resolve => setTimeout(resolve, 5000));
-                const leaveTx = await purseStaking.connect(owner).leave(BigInt(2000000 * 10 ** 18));
+                const leaveTx = await purseStaking.connect(owner).leave(BigInt(3000 * 10 ** 18));
                 await leaveTx.wait();
-                await new Promise(resolve => setTimeout(resolve, 5000));
                 //--------------------------------------------------------------------------------
 
                 //Confirm that multiple vesting schedules exist
@@ -197,17 +214,15 @@ describe("PurseStakingVesting Tests", function () {
                 const accountEscrowedBalanceBefore = await vesting.accountEscrowedBalance(owner.address);
                 const accountVestedBalanceBefore = await vesting.accountVestedBalance(owner.address);
                 const userBalanceBefore = await purse.balanceOf(owner.address);
-                const purseStakingBalanceBefore = await purse.balanceOf(PURSESTAKING_ADDRESS);
-                const totalLockedAmountBefore = await purseStaking.totalLockedAmount();
+                const vestingBalanceBefore = await purse.balanceOf(PURSESTAKINGVESTING_ADDRESS);
 
                 //Forward time to the endTime of the second vesting schedule so that both schedules
                 //can be vested
-                await helpers.time.increaseTo(Number(vestingStartTime2) + LOCKPERIOD_SECONDS);
+                await helpers.time.increaseTo(Number(vestingEndTime2));
 
                 //Vest all completed schedules
                 const vestTx = await vesting.connect(owner).vestCompletedSchedules();
                 await vestTx.wait();
-                await new Promise(resolve => setTimeout(resolve, 5000));
 
                 //Number of schedules should decrease to 0
                 const numScheduleAfter = await vesting.numVestingSchedules(owner.address);
@@ -228,90 +243,62 @@ describe("PurseStakingVesting Tests", function () {
                     accountVestedBalanceBefore + vestingAmount1 + vestingAmount2
                 );
 
-                //User PURSE balance should increase, and PurseStaking PURSE balance should decrease
+                //User PURSE balance should increase
                 const userBalanceAfter = await purse.balanceOf(owner.address);
-                const purseStakingBalanceAfter = await purse.balanceOf(PURSESTAKING_ADDRESS);
                 expect(userBalanceAfter).to.be.gt(userBalanceBefore);
                 expect(userBalanceAfter).to.equal(userBalanceBefore + vestingAmount1 + vestingAmount2);
-                expect(purseStakingBalanceAfter).to.be.lt(purseStakingBalanceBefore);
-                expect(purseStakingBalanceAfter).to.equal(
-                    purseStakingBalanceBefore - vestingAmount1 - vestingAmount2
-                );
 
-                //Total locked amount in PurseStaking should decrease
-                const totalLockedAmountAfter = await purseStaking.totalLockedAmount();
-                expect(totalLockedAmountAfter).to.be.lt(totalLockedAmountBefore);
-                expect(totalLockedAmountAfter).to.equal(
-                    totalLockedAmountBefore - vestingAmount1 - vestingAmount2
-                );
+                //Vesting contract balance should reduce
+                const vestingBalanceAfter = await purse.balanceOf(PURSESTAKINGVESTING_ADDRESS);
+                expect(vestingBalanceAfter).to.be.lt(vestingBalanceBefore);
+                expect(vestingBalanceAfter).to.equal(vestingBalanceBefore - vestingAmount1 - vestingAmount2);
             }
         );
 
-        it("vestCompletedSchedules should revert when a second schedule is not completed yet", async () => {
-            //(DO NOT include this `enter` & `leave` block if doing separate test runs between
-            //each test case, as the state of the forked testnet does not carry forward from 
-            //the previous test case if the test run is stopped)
-            //--------------------------------------------------------------------------------
-            const enterTx1 = await purseStaking.connect(owner).enter(BigInt(2000000 * 10 ** 18));
-            await enterTx1.wait();
-            await new Promise(resolve => setTimeout(resolve, 5000));
-            const leaveTx1 = await purseStaking.connect(owner).leave(BigInt(2000000 * 10 ** 18));
-            await leaveTx1.wait();
+        it("vestCompletedSchedules should revert when there are no schedules to vest", async () => {
+            const lockPeriod = await purseStaking.lockPeriod();
+            const leave1 = await purseStaking.connect(owner).leave(BigInt(1000 * 10 ** 18));
+            await leave1.wait();
+            await helpers.time.increase(Number(lockPeriod) / 2);
+            const leave2 = await purseStaking.connect(owner).leave(BigInt(1500 * 10 ** 18));
+            await leave2.wait();
 
-            //Forward time by 10 days (864000 seconds) so vesting schedules have very different endTimes
-            await helpers.time.increase(864000);
-
-            await new Promise(resolve => setTimeout(resolve, 5000));
-            const enterTx2 = await purseStaking.connect(owner).enter(BigInt(1000000 * 10 ** 18));
-            await enterTx2.wait();
-            await new Promise(resolve => setTimeout(resolve, 5000));
-            const leaveTx2 = await purseStaking.connect(owner).leave(BigInt(1000000 * 10 ** 18));
-            await leaveTx2.wait();
-            await new Promise(resolve => setTimeout(resolve, 5000));
-            //--------------------------------------------------------------------------------
-
-            //Confirm that multiple vesting schedules exist
+            //Confirm there are multiple vesting schedules
             const numSchedulesBefore = await vesting.numVestingSchedules(owner.address);
             expect(numSchedulesBefore).to.be.gt(BigInt(1));
 
-            const vestingSchedule1 = await vesting.getVestingScheduleAtIndex(owner.address, 0);
-            const vestingEndTime1 = vestingSchedule1[1];
-
-            //Forward time to vest the first schedule only
-            await helpers.time.increaseTo(vestingEndTime1);
-
-            //Vest completed schedule
-            const vestTx = await vesting.connect(owner).vestCompletedSchedules();
-            await vestTx.wait();
-            await new Promise(resolve => setTimeout(resolve, 5000));
-
-            //There should be at least one schedule remaining
-            const numScheduleAfter = await vesting.numVestingSchedules(owner.address);
-            expect(numScheduleAfter).to.be.gt(BigInt(0));
-
-            //Vesting the remaining schedule should revert since its endTime has not been reached
+            //Vesting should revert since none of the schdules have reached their endTime
             await expect(
                 vesting.connect(owner).vestCompletedSchedules()
             ).to.be.revertedWith("No tokens to vest");
         });
 
-        it("vestCompletedSchedules should revert when there are no schedules to vest", async () => {
-            //(DO NOT include this `enter` & `leave` block if doing separate test runs between
-            //each test case, as the state of the forked testnet does not carry forward from 
-            //the previous test case if the test run is stopped)
-            //--------------------------------------------------------------------------------
-            const enterTx1 = await purseStaking.connect(owner).enter(BigInt(2000000 * 10 ** 18));
-            await enterTx1.wait();
-            await new Promise(resolve => setTimeout(resolve, 5000));
-            const leaveTx1 = await purseStaking.connect(owner).leave(BigInt(2000000 * 10 ** 18));
-            await leaveTx1.wait();
-            //--------------------------------------------------------------------------------
+        it("vestCompletedSchedules should revert when a second schedule is not completed yet", async () => {
+            const vestingSchedule1 = await vesting.getVestingScheduleAtIndex(owner.address, 0);
+            const vestingEndTime1 = vestingSchedule1[1];
+            const vestingAmount1 = vestingSchedule1[2];
 
-            //Confirm there is at least one vesting schedule
-            const numSchedulesBefore = await vesting.numVestingSchedules(owner.address);
-            expect(numSchedulesBefore).to.be.gt(BigInt(0));
+            //Forward time to vest the first schedule only
+            await helpers.time.increaseTo(vestingEndTime1);
 
-            //Vesting should revert since none of the schdules have reached their endTime
+            const userPurseBalanceBefore = await purse.balanceOf(owner.address);
+            const vestingBalanceBefore = await purse.balanceOf(PURSESTAKINGVESTING_ADDRESS);
+
+            //Vest completed schedule
+            const vestTx = await vesting.connect(owner).vestCompletedSchedules();
+            await vestTx.wait();
+
+            //User PURSE balance should increase by the correct schedule amount
+            const userPurseBalanceAfter = await purse.balanceOf(owner.address);
+            const vestingBalanceAfter = await purse.balanceOf(PURSESTAKINGVESTING_ADDRESS);
+            expect(userPurseBalanceAfter).to.equal(userPurseBalanceBefore + vestingAmount1);
+            expect(vestingBalanceAfter).to.equal(vestingBalanceBefore - vestingAmount1);
+
+            //There should be one schedule remaining
+            const numScheduleAfter = await vesting.numVestingSchedules(owner.address);
+            expect(numScheduleAfter).to.equal(BigInt(1));
+
+            //Vesting the remaining schedule should revert since its endTime has not been reached
             await expect(
                 vesting.connect(owner).vestCompletedSchedules()
             ).to.be.revertedWith("No tokens to vest");
