@@ -118,6 +118,11 @@ contract PurseStakingVesting is Initializable, UUPSUpgradeable, OwnableUpgradeab
                 i++;
             }
         }
+
+        if (totalVesting == 0) {
+            return 0;
+        }
+        
         _completeVesting(totalVesting);
         _clearClaimedSchedule();
         return totalVesting;
