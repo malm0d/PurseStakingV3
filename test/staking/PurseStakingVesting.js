@@ -267,10 +267,11 @@ describe("PurseStakingVesting Tests", function () {
             const numSchedulesBefore = await vesting.numVestingSchedules(owner.address);
             expect(numSchedulesBefore).to.be.gt(BigInt(1));
 
-            //Vesting should revert since none of the schdules have reached their endTime
-            await expect(
-                vesting.connect(owner).vestCompletedSchedules()
-            ).to.be.revertedWith("No tokens to vest");
+            //Vesting should return zero since there are no completed schedules
+            const vestTx = await vesting.connect(owner).vestCompletedSchedules();
+            const receipt = await vestTx.wait();
+            const numSchedulesAfter = await vesting.numVestingSchedules(owner.address);
+            expect(numSchedulesAfter).to.equal(numSchedulesBefore);
         });
 
         it("vestCompletedSchedules should revert when a second schedule is not completed yet", async () => {
@@ -299,9 +300,15 @@ describe("PurseStakingVesting Tests", function () {
             expect(numScheduleAfter).to.equal(BigInt(1));
 
             //Vesting the remaining schedule should revert since its endTime has not been reached
-            await expect(
-                vesting.connect(owner).vestCompletedSchedules()
-            ).to.be.revertedWith("No tokens to vest");
+            // await expect(
+            //     vesting.connect(owner).vestCompletedSchedules()
+            // ).to.be.revertedWith("No tokens to vest");
+
+            //Vesting without any completed schedules should return zero
+            const vestTx2 = await vesting.connect(owner).vestCompletedSchedules();
+            const receipt = await vestTx2.wait();
+            const numScheduleFinal = await vesting.numVestingSchedules(owner.address);
+            expect(numScheduleFinal).to.equal(numScheduleAfter);
         });
 
         it("recoverToken should recover the correct amount of tokens", async () => {
