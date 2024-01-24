@@ -16,4 +16,6 @@ interface IPurseStakingVesting {
     function accountEscrowedBalance(address account) external view returns (uint256);
 
     function accountVestedBalance(address account) external view returns (uint256);
+
+    function vestCompletedSchedules() external returns (uint256);
 }
