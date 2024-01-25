@@ -17,7 +17,7 @@ There are also other files under the `scripts` directory used to perform some an
 - PurseStakingV3: 0xFb1D31a3f51Fb9422c187492D8EA14921d6ea6aE
 - RewardDistributor: 0x1b6d1D232c35F3534EDeB9A989DB62831Ff87A40
 - Treasury: 0x6935a78b5ff92435662FB365085e5E490cC032C5
-- PurseStakingVesting:
+- PurseStakingVesting: 0x4131CF7A6B59510BF969eECaFc2730cE3371486d
 
 #### Stake Purse Vault
 - StakePurseVault
