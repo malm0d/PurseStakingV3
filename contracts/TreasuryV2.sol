@@ -16,7 +16,7 @@ contract TreasuryV2 is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausa
     using SafeERC20Upgradeable for IERC20Upgradeable;
     //Mainnet: 0x29a63F4B209C29B4DC47f06FFA896F32667DAD2C
     //Testnet: 0xC1ba0436DACDa5aF5A061a57687c60eE478c4141
-    address public constant PURSE = 0xC1ba0436DACDa5aF5A061a57687c60eE478c4141;
+    address public constant PURSE = 0x29a63F4B209C29B4DC47f06FFA896F32667DAD2C;
     address public PURSE_STAKING;
     address public DISTRIBUTOR;
     
@@ -27,13 +27,13 @@ contract TreasuryV2 is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausa
     event DistributorUpdated(address indexed _address);
     event PurseStakingUpdated(address indexed _address);
 
-    function initialize(address _purseStaking, address _distributor) public initializer {
-        PURSE_STAKING = _purseStaking;
-        DISTRIBUTOR = _distributor;
-        __Pausable_init();
-        __Ownable_init();
-        __UUPSUpgradeable_init();
-    }
+    // function initialize(address _purseStaking, address _distributor) public initializer {
+    //     PURSE_STAKING = _purseStaking;
+    //     DISTRIBUTOR = _distributor;
+    //     __Pausable_init();
+    //     __Ownable_init();
+    //     __UUPSUpgradeable_init();
+    // }
 
     function _authorizeUpgrade(address) internal override onlyOwner {}
 
@@ -69,16 +69,7 @@ contract TreasuryV2 is Initializable, UUPSUpgradeable, OwnableUpgradeable, Pausa
      * Also reverts if the treasury has no rewards, the user does not have available
      * rewards, the address is the zero address, when the contract is paused.
      */
-    function claimRewards(address _address) external whenNotPaused {
-        require(_address != address(0), "Treasury: zero address");
-        require(msg.sender == _address, "Treasury: msg.sender does not match the address claiming rewards");
-        uint256 userClaimableAmount = IPurseStakingV3(PURSE_STAKING).updateClaim(msg.sender);
-        IERC20Upgradeable(PURSE).safeTransfer(msg.sender, userClaimableAmount);
-
-        emit Claimed(msg.sender, userClaimableAmount, block.timestamp);
-    }
-
-    function claimRewardsV2(address _address) external whenNotPaused returns (uint256) {
+    function claimRewards(address _address) external whenNotPaused returns (uint256) {
         require(_address != address(0), "Treasury: zero address");
         require(msg.sender == _address, "Treasury: msg.sender does not match the address claiming rewards");
         uint256 userClaimableAmount = IPurseStakingV3(PURSE_STAKING).updateClaim(msg.sender);
