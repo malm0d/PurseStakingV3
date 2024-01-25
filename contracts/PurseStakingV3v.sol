@@ -50,13 +50,13 @@ contract PurseStakingV3v is Initializable, UUPSUpgradeable, OwnableUpgradeable, 
     address public treasury;
     address public vesting;
 
-    function initialize(IPurseToken _purseToken) public initializer {
-        purseToken = _purseToken;
-        name = "Purse Staking";
-        __Pausable_init();
-        __Ownable_init();
-        __UUPSUpgradeable_init();
-    }
+    // function initialize(IPurseToken _purseToken) public initializer {
+    //     purseToken = _purseToken;
+    //     name = "Purse Staking";
+    //     __Pausable_init();
+    //     __Ownable_init();
+    //     __UUPSUpgradeable_init();
+    // }
 
     function _authorizeUpgrade(address) internal override onlyOwner {}
 
@@ -109,6 +109,9 @@ contract PurseStakingV3v is Initializable, UUPSUpgradeable, OwnableUpgradeable, 
         require(userReceipt >= xPurseAmount, "Insufficient Receipt Token");
 
         _updateRewards(msg.sender);
+        if (user.withdrawReward > 0) {
+            _migrateLockedAmount();
+        }
 
         if(user.receiptToken <= 0) {
             purseReward = xPurseAmount.mul(totalPurse).div(totalXPurse);
@@ -143,6 +146,24 @@ contract PurseStakingV3v is Initializable, UUPSUpgradeable, OwnableUpgradeable, 
         );
         purseToken.transfer(vesting, _purseReward);
         emit SendVestedPurse(_purseReward);
+    }
+
+    function _migrateLockedAmount() internal whenNotPaused returns (bool success){
+        UserInfo storage user = userInfo[msg.sender];
+        uint256 lockEndTime = user.lockTime;
+        uint256 lockReward = user.withdrawReward;
+
+        _totalLockedAmount -= user.withdrawReward;
+        user.withdrawReward = 0;
+        user.lockTime = 0;
+
+        IPurseStakingVesting(vesting).lockWithEndTime(
+            msg.sender,
+            lockReward,
+            lockEndTime //endTime
+        );
+        purseToken.transfer(vesting, lockReward);
+        return true;
     }
 
     function updateLockPeriod(uint256 newLockPeriod) external onlyOwner {
