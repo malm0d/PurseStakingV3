@@ -150,7 +150,7 @@ contract PurseStakingV3v is Initializable, UUPSUpgradeable, OwnableUpgradeable, 
 
     function _migrateLockedAmount() internal whenNotPaused returns (bool success){
         UserInfo storage user = userInfo[msg.sender];
-        uint256 lockEndTime = user.lockTime;
+        uint256 lockEndTime = user.lockTime.add(lockPeriod);
         uint256 lockReward = user.withdrawReward;
 
         _totalLockedAmount -= user.withdrawReward;
