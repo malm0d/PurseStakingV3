@@ -17,7 +17,7 @@ contract PurseStakingVesting is Initializable, UUPSUpgradeable, OwnableUpgradeab
     using SafeERC20Upgradeable for IERC20Upgradeable;
     //testnet: 0xC1ba0436DACDa5aF5A061a57687c60eE478c4141
     //mainnet: 0x29a63F4B209C29B4DC47f06FFA896F32667DAD2C
-    address public constant PURSE = 0xC1ba0436DACDa5aF5A061a57687c60eE478c4141;
+    address public constant PURSE = 0x29a63F4B209C29B4DC47f06FFA896F32667DAD2C;
     address private purseStaking;
 
     ///@dev vestedQuantity is the amount of tokens that have been vested and are available to the user
@@ -57,6 +57,11 @@ contract PurseStakingVesting is Initializable, UUPSUpgradeable, OwnableUpgradeab
     }
 
     function _authorizeUpgrade(address) internal override onlyOwner {}
+
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
 
     /**************************************** View Functions ****************************************/
 
@@ -122,7 +127,7 @@ contract PurseStakingVesting is Initializable, UUPSUpgradeable, OwnableUpgradeab
         if (totalVesting == 0) {
             return 0;
         }
-        
+
         _completeVesting(totalVesting);
         _clearClaimedSchedule();
         return totalVesting;
