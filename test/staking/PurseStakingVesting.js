@@ -102,23 +102,38 @@ describe("PurseStakingVesting Tests", function () {
     //though with increasing block number (and timestamp) to mimic the actual testnet.
     //IT DOES NOT CARRY FORWARD THE CONTRACT STATE BETWEEN RUNS.
     describe("Functionality:", function () {
-        it("Calling leave in PurseStaking should update contract balances correctly and create a vesting schedule", async () => {
-            const purseStakingBalanceBefore = await purse.balanceOf(PURSESTAKING_ADDRESS);
-            const vestingBalanceBefore = await purse.balanceOf(PURSESTAKINGVESTING_ADDRESS);
-            const numSchedulesBefore = await vesting.numVestingSchedules(owner.address);
+        it("Calling leave in PurseStaking should update contract balances correctly and create a vesting schedule." +
+            "Also locked amount in PurseStaking should be migrated to the Vesting contract.", async () => {
+                const purseStakingBalanceBefore = await purse.balanceOf(PURSESTAKING_ADDRESS);
+                const vestingBalanceBefore = await purse.balanceOf(PURSESTAKINGVESTING_ADDRESS);
+                const numSchedulesBefore = await vesting.numVestingSchedules(owner.address);
 
-            const leaveAmount = BigInt(1000 * 10 ** 18)
-            const leave = await purseStaking.connect(owner).leave(leaveAmount);
-            await leave.wait();
+                const userInfoBefore = await purseStaking.userInfo(owner.address);
+                const lockedInPurseStakingBefore = userInfoBefore[2];
 
-            const purseStakingBalanceAfter = await purse.balanceOf(PURSESTAKING_ADDRESS);
-            const vestingBalanceAfter = await purse.balanceOf(PURSESTAKINGVESTING_ADDRESS);
-            const numSchedulesAfter = await vesting.numVestingSchedules(owner.address);
+                const leaveAmount = BigInt(1000 * 10 ** 18)
+                const leave = await purseStaking.connect(owner).leave(leaveAmount);
+                await leave.wait();
 
-            expect(purseStakingBalanceAfter).to.be.lt(purseStakingBalanceBefore);
-            expect(vestingBalanceAfter).to.be.gte(vestingBalanceBefore + leaveAmount);
-            expect(numSchedulesAfter).to.equal(numSchedulesBefore + BigInt(1));
-        });
+                const purseStakingBalanceAfter = await purse.balanceOf(PURSESTAKING_ADDRESS);
+                const vestingBalanceAfter = await purse.balanceOf(PURSESTAKINGVESTING_ADDRESS);
+                const numSchedulesAfter = await vesting.numVestingSchedules(owner.address);
+
+                const userInfoAfter = await purseStaking.userInfo(owner.address);
+                const lockedInPurseStakingAfter = userInfoAfter[2];
+                expect(lockedInPurseStakingAfter).to.equal(BigInt(0));
+
+                const vestingSchedules = await vesting.getVestingSchedules(owner.address);
+                const migrateSchedule = vestingSchedules[0];
+                const migrateScheduleAmount = migrateSchedule[2];
+
+                expect(migrateScheduleAmount).to.equal(lockedInPurseStakingBefore);
+
+                expect(purseStakingBalanceAfter).to.be.lt(purseStakingBalanceBefore);
+                expect(vestingBalanceAfter).to.be.gte(vestingBalanceBefore + leaveAmount);
+                expect(numSchedulesAfter).to.equal(numSchedulesBefore + BigInt(2));
+            }
+        );
 
         it("Calling leave in PurseStaking should update contract balances correctly and create a second vesting schedule", async () => {
             await helpers.time.increase(864000); //Forward time by 10 days (864000 seconds)
