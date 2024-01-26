@@ -6,7 +6,8 @@ require("@nomicfoundation/hardhat-network-helpers");
 
 
 const MNEMONIC = process.env.MNEMONIC;
-const archiveNodeFork = process.env.BSC_TESTNET_ARCHIVE_NODE;//Chainstack node
+const testnetArchiveNodeFork = process.env.BSC_TESTNET_ARCHIVE_NODE;//Chainstack node
+const mainnetArchiveNodeFork = process.env.BSC_MAINNENT_ARCHIVE_NODE;//Chainstack node
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -22,7 +23,7 @@ module.exports = {
   networks: {
     hardhat: {
       forking: {
-        url: archiveNodeFork,
+        url: testnetArchiveNodeFork,
       },
       accounts: {
         mnemonic: MNEMONIC
@@ -42,7 +43,7 @@ module.exports = {
     bscmainnet: {
       url: "https://bsc-mainnet.chainnodes.org/062698ce-0d9b-4eae-b9b8-e0525dafaa86",
       chainId: 56,
-      gasPrice: 10000000000,
+      gasPrice: 3000000000,
       accounts: {
         mnemonic: MNEMONIC
       },
