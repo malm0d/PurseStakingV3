@@ -289,7 +289,7 @@ describe("PurseStakingVesting Tests", function () {
             expect(numSchedulesAfter).to.equal(numSchedulesBefore);
         });
 
-        it("vestCompletedSchedules should revert when a second schedule is not completed yet", async () => {
+        it("vestCompletedSchedules should only complete one schedule when a second schedule is not completed yet", async () => {
             const vestingSchedule1 = await vesting.getVestingScheduleAtIndex(owner.address, 0);
             const vestingEndTime1 = vestingSchedule1[1];
             const vestingAmount1 = vestingSchedule1[2];
