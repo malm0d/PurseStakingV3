@@ -7,7 +7,7 @@ const VAULT_REWARD_DISTRIBUTOR_ABI = require("../../abis/VaultRewardDistributor.
 require("dotenv").config();
 const helpers = require("@nomicfoundation/hardhat-network-helpers");
 
-//Tests for StakePurseVaultTreasury contract
+//Tests for StakePurseVault contract
 
 //Testnet: npx hardhat test test/vault/StakePurseVault.js --network bsctestnet
 //Forked: npx hardhat test test/vault/StakePurseVault.js --network hardhat
