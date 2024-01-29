@@ -22,7 +22,7 @@ describe("StakePurseVault Tests", function () {
     const STAKEPURSEVAULT_ADDRESS = "0x2be6B3045A772A9C3EcC776450D09e06040F8ED7";
     const STAKEPURSEVAULTVESTING_ADDRESS = "0x1cddE3BB0DaF9Def56F7e5e5B8BfDFd6689160A7";
     const STAKEPURSEVAULTTREASURY_ADDRESS = "0xA95B5650c6D525a8d82E6Ec766d1c6DF7eC0c4e7";
-    const VAULTREWARDDISTRIBUTOR_ADDRESS = "0x8C3c57c0424F1744115DEaE10ED89815B6b86e5C";
+    const VAULTREWARDDISTRIBUTOR_ADDRESS = "0xD9fab2a4C31030a76298db1F3Cc65afbFE4006B0";
 
     const VEST_DURATION_AMOUNT = BigInt("1814400"); //21 days
     const MIN_COMPOUND_AMOUNT = BigInt("500000000000000000000") //500 ETHER
@@ -445,8 +445,10 @@ describe("StakePurseVault Tests", function () {
             expect(userPurseBalanceAfter).to.equal(userPurseBalanceBefore - stakeAmount);
             expect(userStPurseBalanceAfter).to.be.gt(userStPurseBalanceBefore);
             expect(vaultRewardTokenBalanceAfter).to.be.gt(vaultRewardTokenBalanceBefore);
-            expect(vaultCRPTAfter).to.equal(vaultCRPTBefore);
-            expect(userPrevCRPTAfter).to.equal(userPrevCRPTBefore);
+            //expect(vaultCRPTAfter).to.equal(vaultCRPTBefore); Only if its the vaults very first stake
+            //expect(userPrevCRPTAfter).to.equal(userPrevCRPTBefore);
+            expect(vaultCRPTAfter).to.be.gt(vaultCRPTBefore); //This is expected if its not the very first stake
+            expect(userPrevCRPTAfter).to.be.gt(userPrevCRPTBefore); //Also expected since its not the very first stake
             expect(userClaimableRewardAfter).to.be.gt(userClaimableRewardBefore);
         });
 
@@ -477,6 +479,7 @@ describe("StakePurseVault Tests", function () {
             const userClaimableRewardBefore = await stakePurseVault.claimable(owner.address);
             const userInfoBefore = await stakePurseVault.userInfo(owner.address);
             const userPrevCRPTBefore = userInfoBefore[1];
+            const userVaultRewardTokenBalBefore = await rewardDistributorRewardToken.balanceOf(owner.address);
 
             const stakeAmount = BigInt(100 * 10 ** 18);
             const tx1 = await stakePurseVault.connect(owner).stakePurse(stakeAmount);
@@ -493,16 +496,25 @@ describe("StakePurseVault Tests", function () {
             const userClaimableRewardAfter = await stakePurseVault.claimable(owner.address);
             const userInfoAfter = await stakePurseVault.userInfo(owner.address);
             const userPrevCRPTAfter = userInfoAfter[1];
+            const userVaultRewardTokenBalAfter = await rewardDistributorRewardToken.balanceOf(owner.address);
 
             expect(vaultTotalAssetAfter).to.be.gt(vaultTotalAssetBefore);
             expect(vaultClaimableRewardAfter).to.be.gt(vaultClaimableRewardBefore);
 
-            expect(userPurseBalanceAfter).to.be.gt(
-                userPurseBalanceBefore - stakeAmount + userClaimableRewardBefore
-            );
-            expect(userPurseBalanceAfter).to.be.lt(
-                userPurseBalanceBefore - stakeAmount + userClaimableRewardBefore + BigInt(0.00001 * 10 ** 18)
-            );
+            //Note: if reward token is PURSE, run this block
+            //-----------------------------------------
+            // expect(userPurseBalanceAfter).to.be.gt(
+            //     userPurseBalanceBefore - stakeAmount + userClaimableRewardBefore
+            // );
+            // expect(userPurseBalanceAfter).to.be.lt(
+            //     userPurseBalanceBefore - stakeAmount + userClaimableRewardBefore + BigInt(0.00001 * 10 ** 18)
+            // );
+            //-----------------------------------------
+            //Otherwise, if reward token is not PURSE, run the following:
+            //-----------------------------------------
+            expect(userPurseBalanceAfter).to.equal(userPurseBalanceBefore - stakeAmount);
+            expect(userVaultRewardTokenBalAfter).to.be.gt(userVaultRewardTokenBalBefore);
+            //-----------------------------------------
 
             expect(userStPurseBalanceAfter).to.be.gt(userStPurseBalanceBefore);
             expect(vaultRewardTokenBalanceAfter).to.be.gte(vaultRewardTokenBalanceBefore);
@@ -526,6 +538,7 @@ describe("StakePurseVault Tests", function () {
             const userClaimableRewardBefore = await stakePurseVault.claimable(owner.address);
             const userInfoBefore = await stakePurseVault.userInfo(owner.address);
             const userPrevCRPTBefore = userInfoBefore[1];
+            const userVaultRewardTokenBalBefore = await rewardDistributorRewardToken.balanceOf(owner.address);
 
             const stakeAmount = MIN_COMPOUND_AMOUNT;
             const tx1 = await stakePurseVault.connect(owner).stakePurse(stakeAmount);
@@ -542,6 +555,7 @@ describe("StakePurseVault Tests", function () {
             const userClaimableRewardAfter = await stakePurseVault.claimable(owner.address);
             const userInfoAfter = await stakePurseVault.userInfo(owner.address);
             const userPrevCRPTAfter = userInfoAfter[1];
+            const userVaultRewardTokenBalAfter = await rewardDistributorRewardToken.balanceOf(owner.address);
 
             expect(vaultTotalAssetAfter).to.be.gt(vaultTotalAssetBefore);
             expect(vaultTotalAssetAfter).to.be.gt(vaultTotalAssetBefore + stakeAmount);
@@ -551,9 +565,15 @@ describe("StakePurseVault Tests", function () {
             expect(vaultClaimableRewardAfter).to.equal(BigInt(0));
 
             expect(userPurseBalanceBefore).to.be.gt(userPurseBalanceAfter);
-            expect(userPurseBalanceAfter).to.be.gt(
-                userPurseBalanceBefore - stakeAmount + userClaimableRewardBefore + BigInt(0.00001 * 10 ** 18)
-            );
+            //-----------------------------------------------------
+            //If vault reward token is PURSE, run the following:
+            // expect(userPurseBalanceAfter).to.be.gt(
+            //     userPurseBalanceBefore - stakeAmount + userClaimableRewardBefore + BigInt(0.00001 * 10 ** 18)
+            // );
+            //Otherwise:
+            expect(userPurseBalanceAfter).to.gt(userPurseBalanceBefore - stakeAmount);
+            expect(userVaultRewardTokenBalAfter).to.be.gt(userVaultRewardTokenBalBefore);
+            //-----------------------------------------------------
 
             expect(userStPurseBalanceAfter).to.be.gt(userStPurseBalanceBefore);
 
@@ -579,6 +599,7 @@ describe("StakePurseVault Tests", function () {
             const userClaimableRewardBefore = await stakePurseVault.claimable(owner.address);
             const userInfoBefore = await stakePurseVault.userInfo(owner.address);
             const userPrevCRPTBefore = userInfoBefore[1];
+            const userVaultRewardTokenBalBefore = await rewardDistributorRewardToken.balanceOf(owner.address);
 
             const tx1 = await stakePurseVault.connect(owner).compound();
             await tx1.wait();
@@ -594,9 +615,12 @@ describe("StakePurseVault Tests", function () {
             const userClaimableRewardAfter = await stakePurseVault.claimable(owner.address);
             const userInfoAfter = await stakePurseVault.userInfo(owner.address);
             const userPrevCRPTAfter = userInfoAfter[1];
+            const userVaultRewardTokenBalAfter = await rewardDistributorRewardToken.balanceOf(owner.address);
 
             expect(vaultTotalAssetAfter).to.be.gt(vaultTotalAssetBefore);
             expect(vaultTotalAssetAfter).to.be.lt(vaultTotalAssetBefore + vaultClaimableRewardBefore);
+
+            expect(userVaultRewardTokenBalAfter).to.equal(userVaultRewardTokenBalBefore);
 
             expect(vaultClaimableRewardAfter).to.be.lt(vaultClaimableRewardBefore);
             expect(vaultClaimableRewardAfter).to.equal(BigInt(0));
@@ -623,6 +647,7 @@ describe("StakePurseVault Tests", function () {
             const userClaimableRewardBefore = await stakePurseVault.claimable(owner.address);
             const userInfoBefore = await stakePurseVault.userInfo(owner.address);
             const userPrevCRPTBefore = userInfoBefore[1];
+            const userVaultRewardTokenBalBefore = await rewardDistributorRewardToken.balanceOf(owner.address);
 
             const unstakeAmount = BigInt(100 * 10 ** 18); //unstake 100 PURSE shares
             const returnedAssetAmount = await stakePurseVault.previewRedeem(unstakeAmount);
@@ -640,6 +665,7 @@ describe("StakePurseVault Tests", function () {
             const userClaimableRewardAfter = await stakePurseVault.claimable(owner.address);
             const userInfoAfter = await stakePurseVault.userInfo(owner.address);
             const userPrevCRPTAfter = userInfoAfter[1];
+            const userVaultRewardTokenBalAfter = await rewardDistributorRewardToken.balanceOf(owner.address);
 
             expect(vaultTotalAssetAfter).to.be.gt(vaultTotalAssetBefore);
             expect(vaultTotalAssetAfter).to.be.gt(vaultTotalAssetBefore - returnedAssetAmount);
@@ -649,12 +675,23 @@ describe("StakePurseVault Tests", function () {
             expect(vaultClaimableRewardAfter).to.equal(BigInt(0));
 
             expect(userPurseBalanceAfter).to.be.gt(userPurseBalanceBefore);
+            //-----------------------------------------------------
+            //If vault reward token is PURSE, run the following:
+            // expect(userPurseBalanceAfter).to.be.gt(
+            //     userPurseBalanceBefore + userClaimableRewardBefore + (vaultClaimableRewardBefore) * BigInt("10") / BIPS_DIVISOR,
+            // );
+            // expect(userPurseBalanceAfter).to.be.lt(
+            //     userPurseBalanceBefore + userClaimableRewardBefore + (vaultClaimableRewardBefore) * BigInt("20") / BIPS_DIVISOR,
+            // );
+            //Otherwise:
             expect(userPurseBalanceAfter).to.be.gt(
-                userPurseBalanceBefore + userClaimableRewardBefore + (vaultClaimableRewardBefore) * BigInt("10") / BIPS_DIVISOR,
+                userPurseBalanceBefore + (vaultClaimableRewardBefore) * BigInt("10") / BIPS_DIVISOR,
             );
             expect(userPurseBalanceAfter).to.be.lt(
-                userPurseBalanceBefore + userClaimableRewardBefore + (vaultClaimableRewardBefore) * BigInt("20") / BIPS_DIVISOR,
+                userPurseBalanceBefore + (vaultClaimableRewardBefore) * BigInt("20") / BIPS_DIVISOR,
             );
+            expect(userVaultRewardTokenBalAfter).to.be.gt(userVaultRewardTokenBalBefore);
+            //-----------------------------------------------------
 
             expect(userStPurseBalanceAfter).to.be.lt(userStPurseBalanceBefore);
             expect(userStPurseBalanceAfter).to.equal(userStPurseBalanceBefore - unstakeAmount);
@@ -681,6 +718,7 @@ describe("StakePurseVault Tests", function () {
             const userClaimableRewardBefore = await stakePurseVault.claimable(userB.address);
             const userInfoBefore = await stakePurseVault.userInfo(userB.address);
             const userPrevCRPTBefore = userInfoBefore[1];
+            const userVaultRewardTokenBalBefore = await rewardDistributorRewardToken.balanceOf(userB.address);
 
             const stakeAmount = MIN_COMPOUND_AMOUNT;
             const tx1 = await stakePurseVault.connect(userB).stakePurse(stakeAmount);
@@ -697,6 +735,7 @@ describe("StakePurseVault Tests", function () {
             const userClaimableRewardAfter = await stakePurseVault.claimable(userB.address);
             const userInfoAfter = await stakePurseVault.userInfo(userB.address);
             const userPrevCRPTAfter = userInfoAfter[1];
+            const userVaultRewardTokenBalAfter = await rewardDistributorRewardToken.balanceOf(userB.address);
 
             expect(vaultTotalAssetAfter).to.be.gt(vaultTotalAssetBefore);
             expect(vaultTotalAssetAfter).to.be.gt(vaultTotalAssetBefore + stakeAmount);
@@ -725,6 +764,8 @@ describe("StakePurseVault Tests", function () {
 
             const userClaimableRewardForwarded = await stakePurseVault.claimable(userB.address);
             expect(userClaimableRewardForwarded).to.be.gt(userClaimableRewardAfter);
+
+            expect(userVaultRewardTokenBalAfter).to.be.equal(userVaultRewardTokenBalBefore);
         });
 
         it("unstakePurse unstakes all of first user's stake and updates contract correctly", async () => {
@@ -740,6 +781,7 @@ describe("StakePurseVault Tests", function () {
             const userClaimableRewardBefore = await stakePurseVault.claimable(owner.address);
             const userInfoBefore = await stakePurseVault.userInfo(owner.address);
             const userPrevCRPTBefore = userInfoBefore[1];
+            const userVaultRewardTokenBalBefore = await rewardDistributorRewardToken.balanceOf(owner.address);
 
             const unstakeAmount = userStPurseBalanceBefore; //unstake ALL PURSE shares
             const returnedAssetAmount = await stakePurseVault.previewRedeem(unstakeAmount);
@@ -757,6 +799,7 @@ describe("StakePurseVault Tests", function () {
             const userClaimableRewardAfter = await stakePurseVault.claimable(owner.address);
             const userInfoAfter = await stakePurseVault.userInfo(owner.address);
             const userPrevCRPTAfter = userInfoAfter[1];
+            const userVaultRewardTokenBalAfter = await rewardDistributorRewardToken.balanceOf(owner.address);
 
             expect(vaultTotalAssetAfter).to.be.lt(vaultTotalAssetBefore);
             expect(vaultTotalAssetAfter).to.be.gt(vaultTotalAssetBefore - returnedAssetAmount);
@@ -766,12 +809,23 @@ describe("StakePurseVault Tests", function () {
             expect(vaultClaimableRewardAfter).to.equal(BigInt(0));
 
             expect(userPurseBalanceAfter).to.be.gt(userPurseBalanceBefore);
+            //-----------------------------------------------------
+            //If vault reward token is PURSE, run the following:
+            // expect(userPurseBalanceAfter).to.be.gt(
+            //     userPurseBalanceBefore + userClaimableRewardBefore + (vaultClaimableRewardBefore) * BigInt("10") / BIPS_DIVISOR,
+            // );
+            // expect(userPurseBalanceAfter).to.be.lt(
+            //     userPurseBalanceBefore + userClaimableRewardBefore + (vaultClaimableRewardBefore) * BigInt("20") / BIPS_DIVISOR,
+            // );
+            //Otherwise:
             expect(userPurseBalanceAfter).to.be.gt(
-                userPurseBalanceBefore + userClaimableRewardBefore + (vaultClaimableRewardBefore) * BigInt("10") / BIPS_DIVISOR,
+                userPurseBalanceBefore + (vaultClaimableRewardBefore) * BigInt("10") / BIPS_DIVISOR,
             );
             expect(userPurseBalanceAfter).to.be.lt(
-                userPurseBalanceBefore + userClaimableRewardBefore + (vaultClaimableRewardBefore) * BigInt("20") / BIPS_DIVISOR,
+                userPurseBalanceBefore + (vaultClaimableRewardBefore) * BigInt("20") / BIPS_DIVISOR,
             );
+            expect(userVaultRewardTokenBalAfter).to.be.gt(userVaultRewardTokenBalBefore);
+            //-----------------------------------------------------
 
             expect(userStPurseBalanceAfter).to.be.lt(userStPurseBalanceBefore);
             expect(userStPurseBalanceAfter).to.equal(BigInt(0));
@@ -791,6 +845,7 @@ describe("StakePurseVault Tests", function () {
             const userInfoBefore = await stakePurseVault.userInfo(userB.address);
             const userPrevCRPTBefore = userInfoBefore[1];
             const vaultClaimableRewardBefore = await purseStaking.previewClaimableRewards(STAKEPURSEVAULT_ADDRESS)
+            const userVaultRewardTokenBalBefore = await rewardDistributorRewardToken.balanceOf(owner.address);
 
             expect(userClaimableRewardBefore).to.equal(BigInt(0));
             expect(userStPurseBalanceBefore).to.equal(BigInt(0));
@@ -802,8 +857,10 @@ describe("StakePurseVault Tests", function () {
             const userInfoAfter = await stakePurseVault.userInfo(userB.address);
             const userPrevCRPTAfter = userInfoAfter[1];
             const vaultClaimableRewardAfter = await purseStaking.previewClaimableRewards(STAKEPURSEVAULT_ADDRESS)
+            const userVaultRewardTokenBalAfter = await rewardDistributorRewardToken.balanceOf(owner.address);
 
             expect(userClaimableRewardAfter).to.equal(BigInt(0));
+            expect(userVaultRewardTokenBalAfter).to.equal(userVaultRewardTokenBalBefore);
             expect(userStPurseBalanceAfter).to.equal(BigInt(0));
             expect(userPrevCRPTAfter).to.equal(userPrevCRPTBefore);
             expect(vaultClaimableRewardAfter).to.be.gt(vaultClaimableRewardBefore);
