@@ -13,6 +13,7 @@ import {IStakePurseVaultVesting} from "../interfaces/IStakePurseVaultVesting.sol
 import {IVaultRewardDistributor} from "../interfaces/IVaultRewardDistributor.sol";
 import {ITreasury} from "../interfaces/ITreasury.sol";
 import {IPurseStakingV3} from "../interfaces/IPurseStakingV3.sol";
+import {IPurseStakingVesting} from "../interfaces/IPurseStakingVesting.sol";
 
 contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgradeable, BaseVault {
     using SafeERC20Upgradeable for IERC20Upgradeable;
@@ -57,6 +58,8 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
         uint256 previousCumulatedRewardPerToken;
     }
 
+    address public purseStakingVesting; //PurseStakingVesting contract
+
     event Stake(address indexed user, uint256 amount, uint256 shares);
     event Unstake(address indexed user, uint256 amount, uint256 shared);
     event Compound(address indexed user, uint256 compoundAmount);
@@ -70,6 +73,8 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
     event ConfigsUpdated(uint256 minCompound, uint256 capStakePurse);
     event FeesUpdated(uint256 feeOnReward, uint256 feeOnCompounder, uint256 feeOnWithdrawal);
     event VestDurationUpdated(uint256 vestDuration);
+    event PurseStakingVestingChanged(address indexed newAddress);
+    event VaultVestedAmount(uint256 amount);
 
     modifier onlyVestedPurse() {
         require(msg.sender == stakePurseVaultVesting, "Only VestedPurse can call");
@@ -156,16 +161,10 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
      */
     function compound() public nonReentrant whenNotPaused {
         uint256 rewardsToCompound;
-        // if (IPurseStakingV3(purseStaking).previewClaimableRewards(address(this)) > 0) {
-        //     rewardsToCompound = ITreasury(purseStakingTreasury).claimRewards(address(this)) + pendingPurseRewards;
-        // } else {
-        //     rewardsToCompound = pendingPurseRewards;
-        // }
-
         if (IPurseStakingV3(purseStaking).previewClaimableRewards(address(this)) == 0) {
             return;
         } else {
-            rewardsToCompound = ITreasury(purseStakingTreasury).claimRewardsV2(address(this));
+            rewardsToCompound = ITreasury(purseStakingTreasury).claimRewards(address(this));
         }
         if (rewardsToCompound == 0) {
             return;
@@ -189,7 +188,11 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
      * @dev Sends Vested PURSE to the StakePurseVaultVesting contract.
      * Only callable by StakePurseVaultVesting contract. 
      */
-    function sendVestedPurse(uint256 safeAmount) external onlyVestedPurse { 
+    function sendVestedPurse(uint256 safeAmount) external onlyVestedPurse {
+        uint256 vaultBalance = IERC20Upgradeable(PURSE).balanceOf(address(this));
+        if (vaultBalance < safeAmount) {
+           revert("StakePurseVault: Insufficient balance in StakePurseVault");
+        }
         IERC20Upgradeable(PURSE).safeTransfer(msg.sender, safeAmount);
         emit SendVestedPurse(safeAmount);
     }
@@ -198,6 +201,16 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
     function updateRewards() external nonReentrant {
         _updateRewards(address(0));
     }
+
+    /**
+     * @dev Vest all of the vault's vesting schedule(s) in PurseStakingVesting
+     */
+    function vestFromPSV() external onlyVestedPurse returns (uint256) {
+        uint256 totalVested = IPurseStakingVesting(purseStakingVesting).vestCompletedSchedules();
+        emit VaultVestedAmount(totalVested);
+        return totalVested;
+    }
+
 
     /**************************************** Internal and Private Functions ****************************************/
 
@@ -210,8 +223,6 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
         IERC20Upgradeable(PURSE).safeIncreaseAllowance(purseStaking, amount);
         bool success = IPurseStakingV3(purseStaking).enter(amount);
         require(success, "StakePurseVault: Stake to PurseStaking failed");
-        // uint256 purseStakingRewards = ITreasury(purseStakingTreasury).claimRewards(address(this));
-        // pendingPurseRewards += purseStakingRewards;
     }
 
     /**
@@ -225,15 +236,12 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
         bool success = IPurseStakingV3(purseStaking).leave(amount);
         require(success, "StakePurseVault: Unstake from PurseStaking failed");
 
-        // uint256 purseStakingRewards = ITreasury(purseStakingTreasury).claimRewards(address(this));
-        // pendingPurseRewards += purseStakingRewards;
-
         IStakePurseVaultVesting(stakePurseVaultVesting).lockWithEndTime(
             msg.sender,
             amount,
             block.timestamp + vestDuration //endTime
         );
-     }
+    }
 
     /**
      * @dev Claims vault rewards for the user who is staking in the vault.
@@ -389,6 +397,11 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
     function updatePurseStakingTreasury(address newAddress) external onlyRole(OWNER_ROLE) {
         purseStakingTreasury = newAddress;
         emit PurseStakingTreasuryChanged(newAddress);
+    }
+
+    function updatePurseStakingVesting(address newAddress) external onlyRole(OWNER_ROLE) {
+        purseStakingVesting = newAddress;
+        emit PurseStakingVestingChanged(newAddress);
     }
 
     function updateVestDuration(uint256 _vestDuration) external onlyRole(OWNER_ROLE) {
