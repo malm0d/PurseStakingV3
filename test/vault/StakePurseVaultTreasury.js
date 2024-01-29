@@ -8,6 +8,7 @@ const helpers = require("@nomicfoundation/hardhat-network-helpers");
 //Tests for StakePurseVaultTreasury contract
 
 //Testnet: npx hardhat test test/vault/StakePurseVaultTreasury.js --network bsctestnet
+//Forked: npx hardhat test test/vault/StakePurseVaultTreasury.js --network hardhat
 describe("StakePurseVaultTreasury Tests", function () {
     const PURSE_ADDRESS = "0xC1ba0436DACDa5aF5A061a57687c60eE478c4141";
     const STAKEPURSEVAULTTREASURY_ADDRESS = "0xA95B5650c6D525a8d82E6Ec766d1c6DF7eC0c4e7";
