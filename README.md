@@ -28,15 +28,15 @@ There are also other files under the `scripts` directory used to perform some an
 ### BSC Testnet
 #### Purse Staking
 - Purse: 0xC1ba0436DACDa5aF5A061a57687c60eE478c4141
-- PurseStakingV3:0x8A6aFc7D27cDFf9FDC6b4efa63a757333eB58508
-- RewardDistributor:0xdb307306ae74EefaCf26afdca25C5A11D5b7e09e
+- PurseStakingV3: 0x8A6aFc7D27cDFf9FDC6b4efa63a757333eB58508
+- RewardDistributor: 0xdb307306ae74EefaCf26afdca25C5A11D5b7e09e
 - Treasury: 0x774029863759eEd41B6f7Fe12dc5D44Ec9eD4bCB
-- PurseStakingVesting:0x74019d73c9E4d6FE5610C20df6b0FFCe365c4053
+- PurseStakingVesting: 0x74019d73c9E4d6FE5610C20df6b0FFCe365c4053
 
 #### Stake Purse Vault
 - StakePurseVault: 0x2be6B3045A772A9C3EcC776450D09e06040F8ED7
-- StakePurseVaultVesting:0x1cddE3BB0DaF9Def56F7e5e5B8BfDFd6689160A7
-- StakePurseVaultTreasury:0xA95B5650c6D525a8d82E6Ec766d1c6DF7eC0c4e7
+- StakePurseVaultVesting: 0x1cddE3BB0DaF9Def56F7e5e5B8BfDFd6689160A7
+- StakePurseVaultTreasury: 0xA95B5650c6D525a8d82E6Ec766d1c6DF7eC0c4e7
 - Vault Ecosystem Reward Distributor: 0x8C3c57c0424F1744115DEaE10ED89815B6b86e5C
 
 
