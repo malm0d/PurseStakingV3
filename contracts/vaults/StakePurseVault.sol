@@ -211,6 +211,9 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
         return totalVested;
     }
 
+    function claimReward(address receiver) external nonReentrant returns (uint256) {
+        return _claim(msg.sender, receiver);
+    }
 
     /**************************************** Internal and Private Functions ****************************************/
 
