@@ -37,7 +37,7 @@ There are also other files under the `scripts` directory used to perform some an
 - StakePurseVault: 0x2be6B3045A772A9C3EcC776450D09e06040F8ED7
 - StakePurseVaultVesting: 0x1cddE3BB0DaF9Def56F7e5e5B8BfDFd6689160A7
 - StakePurseVaultTreasury: 0xA95B5650c6D525a8d82E6Ec766d1c6DF7eC0c4e7
-- Vault Ecosystem Reward Distributor: 0x8C3c57c0424F1744115DEaE10ED89815B6b86e5C
+- Vault Ecosystem Reward Distributor: 0xD9fab2a4C31030a76298db1F3Cc65afbFE4006B0
 
 
 ## Utility scripts
