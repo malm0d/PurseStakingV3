@@ -141,6 +141,7 @@ contract StakePurseVaultVesting is Initializable, UUPSUpgradeable, OwnableUpgrad
         accountEscrowedBalance[msg.sender] = accountEscrowedBalance[msg.sender] - totalVesting;
         accountVestedBalance[msg.sender] = accountVestedBalance[msg.sender] + totalVesting;
 
+        IStakePurseVault(stakePurseVault).vestFromPSV();
         uint256 vaultLiquidity = IERC20Upgradeable(PURSE).balanceOf(stakePurseVault);
 
         //if vault liquidity is less than total vesting, then we need to pull from treasury
