@@ -74,7 +74,7 @@ contract PurseStakingV3v is Initializable, UUPSUpgradeable, OwnableUpgradeable, 
     event VestingChanged(address indexed _address);
     event SendVestedPurse(uint256 safeAmount);
 
-    function enter(uint256 purseAmount) external whenNotPaused returns (bool success) {
+    function enter(uint256 purseAmount) external whenNotPaused returns (uint256) {
         require(purseToken.balanceOf(msg.sender) >= purseAmount, "Insufficient Purse Token");
 
         uint256 totalXPurse = totalReceiptSupply();
@@ -83,23 +83,24 @@ contract PurseStakingV3v is Initializable, UUPSUpgradeable, OwnableUpgradeable, 
         _updateRewards(msg.sender);
 
         purseToken.transferFrom(msg.sender, address(this), purseAmount);
-
+        uint256 receiptAmount;
         if (totalXPurse <= 0 || totalPurse <= 0) {
             require(totalXPurse <= 0, "Total Receipt > 0");
             userInfo[msg.sender].newReceiptToken = purseAmount;
             _totalReceiptSupply += purseAmount;
+            receiptAmount = purseAmount;
         }
         else {
-            uint256 newReceipt = purseAmount.mul(totalXPurse).div(totalPurse);
-            userInfo[msg.sender].newReceiptToken += newReceipt;
-            _totalReceiptSupply += newReceipt;
+            receiptAmount = purseAmount.mul(totalXPurse).div(totalPurse);
+            userInfo[msg.sender].newReceiptToken += receiptAmount;
+            _totalReceiptSupply += receiptAmount;
         }
 
         emit Deposit(msg.sender, purseAmount);
-        return true;
+        return receiptAmount;
     }
 
-    function leave(uint256 xPurseAmount) external whenNotPaused returns (bool success){
+    function leave(uint256 xPurseAmount) external whenNotPaused returns (uint256){
         UserInfo storage user = userInfo[msg.sender];
         uint256 userReceipt = userReceiptToken(msg.sender);
         uint256 totalXPurse = totalReceiptSupply();
@@ -135,7 +136,7 @@ contract PurseStakingV3v is Initializable, UUPSUpgradeable, OwnableUpgradeable, 
         }
         _totalReceiptSupply -= xPurseAmount;
 
-        return true;
+        return purseReward;
     }
 
     function handleReceipt(uint256 _purseReward) internal {
