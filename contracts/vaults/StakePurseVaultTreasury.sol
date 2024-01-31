@@ -8,6 +8,8 @@ import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Ini
 import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import {IStakePurseVaultVesting} from "../interfaces/IStakePurseVaultVesting.sol";
 
+//IMPORTANT: This contract has been deprecated. DO NOT USE.
+//Fee Treasury for StakePurseVault is the universal treasury for all vaults.
 ///@dev FeeTreasury for StakePurseVault
 
 contract StakePurseVaultTreasury is Initializable, OwnableUpgradeable, UUPSUpgradeable {
