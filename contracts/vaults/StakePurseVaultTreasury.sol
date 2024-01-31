@@ -14,7 +14,7 @@ contract StakePurseVaultTreasury is Initializable, OwnableUpgradeable, UUPSUpgra
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     //0x29a63F4B209C29B4DC47f06FFA896F32667DAD2C
-    address public constant PURSE = 0x29a63F4B209C29B4DC47f06FFA896F32667DAD2C;
+    address public constant PURSE = 0xC1ba0436DACDa5aF5A061a57687c60eE478c4141;
     address public stakePurseVaultVesting;
 
     event SendVestedPurse(uint256 safeAmount);
@@ -32,6 +32,11 @@ contract StakePurseVaultTreasury is Initializable, OwnableUpgradeable, UUPSUpgra
     }
 
     function _authorizeUpgrade(address) internal override onlyOwner {}
+
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
 
     /**
      * @dev Sends PURSE to StakePurseVaultVesting contract.
