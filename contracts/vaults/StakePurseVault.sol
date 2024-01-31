@@ -23,7 +23,7 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
     //mainnet: 0x29a63F4B209C29B4DC47f06FFA896F32667DAD2C
     uint256 internal constant BIPS_DIVISOR = 10_000; //Basis points divisor (100%)
     uint256 internal constant PRECISION = 1e30; 
-    address constant PURSE = 0x29a63F4B209C29B4DC47f06FFA896F32667DAD2C;
+    address constant PURSE = 0xC1ba0436DACDa5aF5A061a57687c60eE478c4141;
 
     uint256 public vestDuration;
     address public stakePurseVaultVesting; //Vesting for StakePurseVault
@@ -33,23 +33,16 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
     address public purseStaking; //PurseStaking contract
     address public purseStakingTreasury; //PurseStaking Treasury
 
-    uint256 public pendingPurseRewards; //Bal of Purse rewards in the contract pending compound
-
     uint256 public feeOnReward; //Compound reward: protocol fee
     uint256 public feeOnCompounder; //Compound reward: compounder fee
     uint256 public feeOnWithdrawal; //Withdrawal fee
 
     uint256 private MIN_COMPOUND_AMOUNT; //Minimum stake amount for compound to happen
-    uint256 private CAP_STAKE_PURSE_TARGET; //Cap amount of staked Purse by Vault
 
     VaultInfo public vaultInfo;
     mapping(address => UserInfo) public userInfo;
 
     struct VaultInfo {
-        uint256 stakeId;
-        uint256 unstakeId;
-        uint256 length;
-        uint256 totalAllocPoint;
         uint256 cumulativeRewardPerToken;
     }
 
@@ -68,7 +61,7 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
     event VaultRewardDistributorChanged(address indexed newAddress);
     event PurseStakingChanged(address indexed newAddress);
     event PurseStakingTreasuryChanged(address indexed newAddress);
-    event ConfigsUpdated(uint256 minCompound, uint256 capStakePurse);
+    event ConfigsUpdated(uint256 minCompound);
     event FeesUpdated(uint256 feeOnReward, uint256 feeOnCompounder, uint256 feeOnWithdrawal);
     event VestDurationUpdated(uint256 vestDuration);
     event PurseStakingVestingChanged(address indexed newAddress);
@@ -86,8 +79,8 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
     ) public initializer {
         __BaseVaultInit(
             _assetToken,    //PURSE
-            "Staked PURSE Token",
-            "StPURSE",
+            "BRT2:StakePurseVault",
+            "BRT2",
             _owner,
             _governor
         );
@@ -97,6 +90,11 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
     }
 
     function _authorizeUpgrade(address) internal override onlyRole(OWNER_ROLE) {}
+
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
 
     /****************************************** Core External Functions ******************************************/
 
@@ -111,8 +109,6 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
         address _receiver
     ) public override whenNotPaused returns (uint256) {
         require(_asset > 0, "StakePurseVault: Cannot stake 0");
-        uint256 _totalAssets = totalAssets(); //overriden impl of totalAssets (below)
-        require(_asset + _totalAssets <= CAP_STAKE_PURSE_TARGET, "StakePurseVault: Cap exceeded");
 
          //Compound rewards before stake
         if (_asset >= MIN_COMPOUND_AMOUNT) {
@@ -360,8 +356,8 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
     }
 
     ///@dev Get config parameters for the vault.
-    function getVaultConfigs() public view returns (uint256, uint256) {
-        return (MIN_COMPOUND_AMOUNT, CAP_STAKE_PURSE_TARGET);
+    function getVaultConfigs() public view returns (uint256) {
+        return (MIN_COMPOUND_AMOUNT);
     }
 
     ///@dev View claimable vault staking reward amount for account.
@@ -387,10 +383,9 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
 
     /************************************* Only Governor Functions *************************************/
     
-    function updateVaultConfigs(uint256 newMinCompound, uint256 newCapStakePurse) external onlyRole(GOVERNOR_ROLE) {
+    function updateVaultConfigs(uint256 newMinCompound) external onlyRole(GOVERNOR_ROLE) {
         MIN_COMPOUND_AMOUNT = newMinCompound;
-        CAP_STAKE_PURSE_TARGET = newCapStakePurse;
-        emit ConfigsUpdated(newMinCompound, newCapStakePurse);
+        emit ConfigsUpdated(newMinCompound);
     }
 
     function updateVaultFees(uint256 newFeeOnReward, uint256 newFeeOnCompounder, uint256 newFeeOnWithdrawal) external onlyRole(GOVERNOR_ROLE) {
