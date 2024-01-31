@@ -109,9 +109,9 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
         address _receiver
     ) public override whenNotPaused returns (uint256) {
         require(_asset > 0, "StakePurseVault: Cannot stake 0");
-
+        uint256 claimableAmount = IPurseStakingV3(purseStaking).previewClaimableRewards(msg.sender);
          //Compound rewards before stake
-        if (_asset >= MIN_COMPOUND_AMOUNT) {
+        if (claimableAmount >= MIN_COMPOUND_AMOUNT) {
             compound();
         }
 
@@ -137,8 +137,11 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
         require(_shares > 0, "StakePurseVault: Cannot unstake 0");
         uint256 userSharesPreBurn = balanceOf(msg.sender);
         require(userSharesPreBurn >= _shares, "StakePurseVault: Amount exceeds shares");
-
-        compound();
+        
+        uint256 claimableAmount = IPurseStakingV3(purseStaking).previewClaimableRewards(msg.sender);
+        if (claimableAmount >= MIN_COMPOUND_AMOUNT) {
+            compound();
+        }
 
         _claim(msg.sender); //Claim vault rewards (BAVA) for user
         
