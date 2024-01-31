@@ -144,15 +144,14 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
 
         _claim(msg.sender, msg.sender); //Claim vault rewards (BAVA) for user
         
-        //Expected Purse amount to withdraw
-        //BRT2 shares -> Purse token amount
+        //Expected Purse amount to withdraw: BRT2 shares -> Purse token amount
+        //Note that `previewRedeem` is overriden (below)
         uint256 withdrawAssetAmount = previewRedeem(amount);
-        uint256 withdrawAssetAmountAfterFee = withdrawAssetAmount * (BIPS_DIVISOR - feeOnWithdrawal) / BIPS_DIVISOR;
 
         _burn(msg.sender, amount);
 
-        if(withdrawAssetAmountAfterFee > 0) {
-            _unstake(withdrawAssetAmountAfterFee);
+        if(withdrawAssetAmount > 0) {
+            _unstake(withdrawAssetAmount);
         }
 
         emit Unstake(msg.sender, withdrawAssetAmount, amount);
@@ -341,6 +340,16 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
         uint256 totalPurse = IPurseStakingV3(purseStaking).availablePurseSupply();
 
         return IPurseStakingV3(purseStaking).userReceiptToken(address(this))* totalPurse / totalXPurse;
+    }
+
+    /**
+     * @dev IMPORTANT: Override ERC4626's implementation of `previewRedeem`.
+     * See {IERC4626-previewRedeem}
+     */
+    function previewRedeem(uint256 shares) public view virtual override returns (uint256) {
+        uint256 assets = _convertToAssets(shares, MathUpgradeable.Rounding.Down);
+        assets -= (assets * feeOnWithdrawal / BIPS_DIVISOR);
+        return assets;
     }
 
     ///@dev Returns the address of the reward token for staking in this vault.
