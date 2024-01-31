@@ -118,11 +118,12 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
             compound();
         }
 
-        _claim(msg.sender, msg.sender); //Claim vault rewards for user
+        _claim(msg.sender, msg.sender); //Claim vault rewards (BAVA) for user
 
         IERC20Upgradeable(PURSE).safeTransferFrom(msg.sender, address(this), amount);
 
-        uint256 shares = previewDeposit(amount); //BRT2 shares
+        //Purse token -> BRT2 shares
+        uint256 shares = previewDeposit(amount);
         _mint(msg.sender, shares);
         _stake(amount); //stake to PurseStaking
 
@@ -141,9 +142,10 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
 
         compound();
 
-        _claim(msg.sender, msg.sender); //Claim vault rewards for user
+        _claim(msg.sender, msg.sender); //Claim vault rewards (BAVA) for user
         
         //Expected Purse amount to withdraw
+        //BRT2 shares -> Purse token amount
         uint256 withdrawAssetAmount = previewRedeem(amount);
         uint256 withdrawAssetAmountAfterFee = withdrawAssetAmount * (BIPS_DIVISOR - feeOnWithdrawal) / BIPS_DIVISOR;
 
@@ -237,10 +239,12 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
      * which is called by the VestedPurse contract.
      */
     function _unstake(uint256 amount) internal {
-        //Take expected amount to withdraw and convert to receiptTokens (purseStakingShareAmount)
+        //Expected Purse amount to withdraw -> receiptTokens (purseStakingShareAmount)
         uint256 totalXPurse = IPurseStakingV3(purseStaking).totalReceiptSupply();
         uint256 totalPurse = IPurseStakingV3(purseStaking).availablePurseSupply();
         uint256 purseStakingShareAmount = amount * totalXPurse / totalPurse;
+
+        //Withdraw actual Purse amount from PurseStaking with receiptTokens
         uint256 purseAmount = IPurseStakingV3(purseStaking).leave(purseStakingShareAmount);
 
         IStakePurseVaultVesting(stakePurseVaultVesting).lockWithEndTime(
@@ -328,6 +332,7 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
      * Users' stake in this vault is staked to PurseStaking, so `_asset.balanceOf` with this vault
      * will not be accurate in terms of the asset tokens it holds. The `totalAssets` should
      * be the total amount of PURSE tokens that this vault has staked to PurseStaking.
+     * 
      * From the number of receipts tokens this vault has, we can calculate the actual amount of PURSE
      * the vault has staked to PurseStaking by: `receiptTokens * availablePurseSupply / totalReceiptSupply`.
      */
