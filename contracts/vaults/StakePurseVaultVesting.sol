@@ -147,17 +147,8 @@ contract StakePurseVaultVesting is Initializable, UUPSUpgradeable, OwnableUpgrad
         accountVestedBalance[msg.sender] = accountVestedBalance[msg.sender] + totalVesting;
 
         IStakePurseVault(stakePurseVault).vestFromPSV();
-        uint256 vaultLiquidity = IERC20Upgradeable(PURSE).balanceOf(stakePurseVault);
+        IStakePurseVault(stakePurseVault).sendVestedPurse(totalVesting);
 
-        //if vault liquidity is less than total vesting, then we need to pull from treasury
-        if (vaultLiquidity < totalVesting) {
-            uint256 treasuryLiquidity = IERC20Upgradeable(PURSE).balanceOf(stakePurseVaultTreasury);
-            require(vaultLiquidity + treasuryLiquidity >= totalVesting, "Insufficient liquidity in system");
-            IStakePurseVaultTreasury(stakePurseVaultTreasury).sendVestedPurse(totalVesting - vaultLiquidity);
-            IStakePurseVault(stakePurseVault).sendVestedPurse(vaultLiquidity);
-        } else {
-            IStakePurseVault(stakePurseVault).sendVestedPurse(totalVesting);
-        }
         IERC20Upgradeable(PURSE).safeTransfer(msg.sender, totalVesting);
         emit CompleteVesting(msg.sender, totalVesting);
     }
