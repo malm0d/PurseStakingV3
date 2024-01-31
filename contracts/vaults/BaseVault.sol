@@ -55,7 +55,7 @@ abstract contract BaseVault is Governable, PausableUpgradeable, ERC4626Upgradeab
     /**
      * @dev See {openzeppelin-IERC4626-redeem}.
      */
-    function redeem(uint256, address, address) public override returns (uint256) {
+    function redeem(uint256, address, address) public virtual override returns (uint256) {
         revert("disabled");
     }
 

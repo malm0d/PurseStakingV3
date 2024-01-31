@@ -60,8 +60,6 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
 
     address public purseStakingVesting; //PurseStakingVesting contract
 
-    event Stake(address indexed user, uint256 amount, uint256 shares);
-    event Unstake(address indexed user, uint256 amount, uint256 shared);
     event Compound(address indexed user, uint256 compoundAmount);
     event Claim(address indexed receiver, uint256 amount);
     event SendVestedPurse(uint256 safeAmount);
@@ -104,59 +102,61 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
 
     /**
      * @notice Stake PURSE tokens to the vault
-     * @param amount The amount of PURSE tokens to stake to vault
+     * @param _asset The amount of PURSE tokens to stake to vault
      * @dev Vault will stake to PurseStaking.
-     * For compound to happen, `amount` must be greater than or equal to `MIN_COMPOUND_AMOUNT`
+     * For compound to happen, `_asset` must be greater than or equal to `MIN_COMPOUND_AMOUNT`
      */
-    function stakePurse(uint256 amount) external whenNotPaused {
-        require(amount > 0, "StakePurseVault: Cannot stake 0");
+    function deposit(
+        uint256 _asset, 
+        address _receiver
+    ) public override whenNotPaused returns (uint256) {
+        require(_asset > 0, "StakePurseVault: Cannot stake 0");
         uint256 _totalAssets = totalAssets(); //overriden impl of totalAssets (below)
-        require(amount + _totalAssets <= CAP_STAKE_PURSE_TARGET, "StakePurseVault: Cap exceeded");
+        require(_asset + _totalAssets <= CAP_STAKE_PURSE_TARGET, "StakePurseVault: Cap exceeded");
 
          //Compound rewards before stake
-        if (amount >= MIN_COMPOUND_AMOUNT) {
+        if (_asset >= MIN_COMPOUND_AMOUNT) {
             compound();
         }
 
-        _claim(msg.sender, msg.sender); //Claim vault rewards (BAVA) for user
-
-        // IERC20Upgradeable(PURSE).safeTransferFrom(msg.sender, address(this), amount);
-
-        // uint256 shares = previewDeposit(amount);
-        // _mint(msg.sender, shares);
+        _claim(msg.sender); //Claim vault rewards (BAVA) for user
 
         //Purse token -> BRT2 shares (use BaseVault(4626) `deposit`)
-        uint256 shares = super.deposit(amount, msg.sender);
-        _stake(amount); //stake to PurseStaking
+        uint256 shares = super.deposit(_asset, msg.sender);
+        _stake(_asset); //stake to PurseStaking
 
-        emit Stake(msg.sender, amount, shares);
+        return shares;
     }
 
     /**
      * @notice Unstake PURSE tokens from the vault
-     * @param amount The amount of PURSE tokens to unstake from vault
+     * @param _shares The amount of PURSE tokens to unstake from vault
      * @dev After unstake, the withdrawn PURSE will be vested
      */
-    function unstakePurse(uint256 amount) external whenNotPaused {
-        require(amount > 0, "StakePurseVault: Cannot unstake 0");
+    function redeem(
+        uint256 _shares, 
+        address _receiver, 
+        address _owner
+    ) public override whenNotPaused returns (uint256){
+        require(_shares > 0, "StakePurseVault: Cannot unstake 0");
         uint256 userSharesPreBurn = balanceOf(msg.sender);
-        require(userSharesPreBurn >= amount, "StakePurseVault: Amount exceeds shares");
+        require(userSharesPreBurn >= _shares, "StakePurseVault: Amount exceeds shares");
 
         compound();
 
-        _claim(msg.sender, msg.sender); //Claim vault rewards (BAVA) for user
+        _claim(msg.sender); //Claim vault rewards (BAVA) for user
         
         //Expected Purse amount to withdraw: BRT2 shares -> Purse token amount
         //Note that `previewRedeem` is overriden (below)
-        uint256 withdrawAssetAmount = previewRedeem(amount);
+        uint256 withdrawAssetAmount = previewRedeem(_shares);
 
-        _burn(msg.sender, amount);
+        _burn(msg.sender, _shares);
 
         if(withdrawAssetAmount > 0) {
             _unstake(withdrawAssetAmount);
         }
-
-        emit Unstake(msg.sender, withdrawAssetAmount, amount);
+        emit Withdraw(msg.sender, msg.sender, msg.sender, withdrawAssetAmount, _shares);
+        return withdrawAssetAmount;
     }
 
     /**
@@ -215,8 +215,8 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
         return totalVested;
     }
 
-    function claimReward(address receiver) external nonReentrant returns (uint256) {
-        return _claim(msg.sender, receiver);
+    function claimReward() external nonReentrant returns (uint256) {
+        return _claim(msg.sender);
     }
 
     /**************************************** Internal and Private Functions ****************************************/
@@ -257,18 +257,18 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
 
     /**
      * @dev Claims vault rewards for the user who is staking in the vault.
-     * Called when `stakePurse` or `unstakePurse` is called. Note that this is
+     * Called when `deposit` or `redeem` is called. Note that this is
      * not claiming the rewards from PurseStaking Treasury, so reward token is
      * dependent on the multi vault reward distributor token.
      */
-    function _claim(address _account, address _receiver) private returns (uint256) {
+    function _claim(address _account) private returns (uint256) {
         _updateRewards(_account);
         UserInfo storage user = userInfo[_account];
         uint256 claimableTokenAmount = user.claimableReward;
         user.claimableReward = 0;
 
         if (claimableTokenAmount > 0) {
-            IERC20Upgradeable(rewardToken()).safeTransfer(_receiver, claimableTokenAmount);
+            IERC20Upgradeable(rewardToken()).safeTransfer(_account, claimableTokenAmount);
             emit Claim(_account, claimableTokenAmount);
         }
 
