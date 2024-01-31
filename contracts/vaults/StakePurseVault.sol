@@ -120,11 +120,13 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
 
         _claim(msg.sender, msg.sender); //Claim vault rewards (BAVA) for user
 
-        IERC20Upgradeable(PURSE).safeTransferFrom(msg.sender, address(this), amount);
+        // IERC20Upgradeable(PURSE).safeTransferFrom(msg.sender, address(this), amount);
 
-        //Purse token -> BRT2 shares
-        uint256 shares = previewDeposit(amount);
-        _mint(msg.sender, shares);
+        // uint256 shares = previewDeposit(amount);
+        // _mint(msg.sender, shares);
+
+        //Purse token -> BRT2 shares (use BaseVault(4626) `deposit`)
+        uint256 shares = super.deposit(amount, msg.sender);
         _stake(amount); //stake to PurseStaking
 
         emit Stake(msg.sender, amount, shares);

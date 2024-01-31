@@ -25,14 +25,18 @@ abstract contract BaseVault is Governable, PausableUpgradeable, ERC4626Upgradeab
         __Governable_init(_owner, _governor);
     }
 
-    // ============================= Revert functions ================================ //
-    // The following functions are disabled.
     /**
      * @dev See {openzeppelin-IERC4626-deposit}.
      */
-    function deposit(uint256, address) public override returns (uint256) {
-        revert("disabled");
+    function deposit(
+        uint256 _asset, 
+        address _receiver
+    ) public virtual override whenNotPaused returns (uint256) {
+        return super.deposit(_asset, _receiver);
     }
+
+    // ============================= Revert functions ================================ //
+    // The following functions are disabled.
 
     /**
      * @dev See {openzeppelin-IERC4626-mint}.
