@@ -27,8 +27,8 @@ describe("StakePurseVault Tests", function () {
     const VEST_DURATION_AMOUNT = BigInt("1814400"); //21 days
     const MIN_COMPOUND_AMOUNT = BigInt("500000000000000000000") //500 ETHER
     const CAP_STAKE_PURSE_AMOUNT = BigInt("100000000000000000000000000") //100,000,000 ETHER
-    const FEEONCOMPOUNDER_AMOUNT = BigInt("10");
-    const FEEONREWARD_AMOUNT = BigInt("500");
+    const FEEONCOMPOUNDER_AMOUNT = BigInt("500");
+    const FEEONREWARD_AMOUNT = BigInt("100");
     const FEEONWITHDRAWAL_AMOUNT = BigInt("50");
     const BIPS_DIVISOR = BigInt("10000");
 
