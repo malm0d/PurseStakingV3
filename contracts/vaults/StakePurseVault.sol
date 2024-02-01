@@ -23,7 +23,7 @@ contract StakePurseVault is Initializable, UUPSUpgradeable, ReentrancyGuardUpgra
     //mainnet: 0x29a63F4B209C29B4DC47f06FFA896F32667DAD2C
     uint256 internal constant BIPS_DIVISOR = 10_000; //Basis points divisor (100%)
     uint256 internal constant PRECISION = 1e30; 
-    address constant PURSE = 0xC1ba0436DACDa5aF5A061a57687c60eE478c4141;
+    address constant PURSE = 0x29a63F4B209C29B4DC47f06FFA896F32667DAD2C;
 
     uint256 public vestDuration;
     address public stakePurseVaultVesting; //Vesting for StakePurseVault
