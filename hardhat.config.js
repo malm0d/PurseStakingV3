@@ -6,8 +6,8 @@ require("@nomicfoundation/hardhat-network-helpers");
 
 
 const MNEMONIC = process.env.MNEMONIC;
-const testnetArchiveNodeFork = process.env.BSC_TESTNET_ARCHIVE_NODE;//Chainstack node
-const mainnetArchiveNodeFork = process.env.BSC_MAINNENT_ARCHIVE_NODE;//Chainstack node
+const testnetArchiveNodeFork = process.env.BSC_TESTNET_ARCHIVE_NODE;//Chainstack node (BSC)
+const mainnetArchiveNodeFork = process.env.BSC_MAINNENT_ARCHIVE_NODE;//Chainstack node (BSC)
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -66,7 +66,9 @@ module.exports = {
     }
   },
   etherscan: {
-    apiKey: process.env.BSCSCANAPI
+    apiKey: {
+      bsc: process.env.BSCSCANAPI
+    }
   },
   mocha: {
     timeout: 300000
