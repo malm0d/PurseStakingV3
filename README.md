@@ -35,6 +35,15 @@ There are also other files under the `scripts` directory used to perform some an
 - StakePurseVaultTreasury (Fee Treasury): 0xb45D05ed99168c7BC21C5120642cC235b5331da8
 - Vault Ecosystem Reward Distributor: 0xD9fab2a4C31030a76298db1F3Cc65afbFE4006B0
 
+--------------------------------------------------------------------------------------------
+
+## Sepolia
+- Purse: 0x1b6d1D232c35F3534EDeB9A989DB62831Ff87A40
+- PurseStakingV3v: 0x6935a78b5ff92435662FB365085e5E490cC032C5
+- RewardDistributor: 0x7B49F36d18c309fc4B26b529BA4433B3116049Ce
+- TreasuryV2: 0x3a8d6d7cc712bF99140440Db813E8EEd5D7DEC1F
+- PurseStakingVesting: 0x6e752c65dfE3A96d0E2d5B962a496ae3184a1C27
+
 
 ## Utility scripts
 - purseUsdtAPRCalc: Calculates parameters to set to achieve specified APR for PURSE-USDT Pool
