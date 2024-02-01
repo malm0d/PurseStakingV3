@@ -8,6 +8,7 @@ require("@nomicfoundation/hardhat-network-helpers");
 const MNEMONIC = process.env.MNEMONIC;
 const testnetArchiveNodeFork = process.env.BSC_TESTNET_ARCHIVE_NODE;//Chainstack node (BSC)
 const mainnetArchiveNodeFork = process.env.BSC_MAINNENT_ARCHIVE_NODE;//Chainstack node (BSC)
+const SEPOLIA_ENDPOINT = process.env.SEPOLIA_ENDPOINT
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -25,6 +26,13 @@ module.exports = {
       forking: {
         url: testnetArchiveNodeFork,
       },
+      accounts: {
+        mnemonic: MNEMONIC
+      }
+    },
+    sepolia: {
+      url: SEPOLIA_ENDPOINT,
+      chainId: 11155111,
       accounts: {
         mnemonic: MNEMONIC
       }
@@ -67,6 +75,7 @@ module.exports = {
   },
   etherscan: {
     apiKey: {
+      sepolia: process.env.ETHERSCANAPI,
       bsc: process.env.BSCSCANAPI
     }
   },
