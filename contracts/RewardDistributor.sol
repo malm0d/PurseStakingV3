@@ -45,6 +45,11 @@ contract RewardDistributor is Initializable, UUPSUpgradeable, IRewardDistributor
 
     function _authorizeUpgrade(address) internal override onlyRole(OWNER_ROLE) {} 
 
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+
     /**
      * @notice Distribute block rewards to the treasury contract.
      * @dev Only callable by the rewardTracker. Also returns the amount distributed.
