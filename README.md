@@ -37,6 +37,14 @@ There are also other files under the `scripts` directory used to perform some an
 
 --------------------------------------------------------------------------------------------
 
+## Ethereum Mainnet
+- Purse: 0x95987b0cdC7F65d989A30B3B7132a38388c548Eb
+- PurseStakingV3v: 0x1b6d1D232c35F3534EDeB9A989DB62831Ff87A40
+- RewardDistributor: 0x6e752c65dfE3A96d0E2d5B962a496ae3184a1C27
+- TreasuryV2: 0x7B49F36d18c309fc4B26b529BA4433B3116049Ce
+- PurseStakingVesting: 0x6935a78b5ff92435662FB365085e5E490cC032C5
+
+
 ## Sepolia
 - Purse: 0x1b6d1D232c35F3534EDeB9A989DB62831Ff87A40
 - PurseStakingV3v: 0x6935a78b5ff92435662FB365085e5E490cC032C5
