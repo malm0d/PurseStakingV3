@@ -50,18 +50,22 @@ async function main() {
     //Total supply of PURSE-USDT LP tokens (BigInt)
     const purseUsdtTotalSupply = await purseUsdtContract.totalSupply();
     console.log("TotalSupply of PurseUsdt LP tokens: ", purseUsdtTotalSupply.toString());
+    console.log()
 
     //Total staked PURSE-USDT in Restaking Pool (BigInt)
     const purseUsdtTotalStaked = await purseUsdtContract.balanceOf(poolAddress);
     console.log("TotalStaked in pool (LP tokens in pool contract: ", purseUsdtTotalStaked.toString());
+    console.log()
 
     //Balance of PURSE token in Pair contract (BigInt)
     const purseBalanceInPair = await purseTokenContract.balanceOf(purseUsdtAddress);
     console.log("Purse balance in Pair contract: ", purseBalanceInPair.toString());
+    console.log();
 
     //Balance of USDT token in Pair contract (BigInt)
     const usdtBalanceInPair = await usdtTokenContract.balanceOf(purseUsdtAddress);
     console.log("USDT balance in Pair contract: ", usdtBalanceInPair.toString());
+    console.log();
 
     //Purse per block and bonus multiplier (BigInt)
     const poolInfo = await poolContract.poolInfo(purseUsdtAddress);
@@ -69,6 +73,7 @@ async function main() {
     const bonusMultiplier = poolInfo[2];
     console.log("Current Purse per block: ", pursePerBlock.toString());
     console.log('Current bonus multiplier: ', bonusMultiplier.toString());
+    console.log();
 
     //Latest price of PURSE and USDT tokens
     const jsonPrices = await queryPricesApi();
@@ -77,6 +82,7 @@ async function main() {
     let usdtPrice = jsonPrices["tether"]["usd"];
     console.log("Purse price: ", pursePrice);
     console.log("USDT price: ", usdtPrice);
+    console.log();
 
     //Get LP token value
     const lpTokenValNumerator =
@@ -85,22 +91,27 @@ async function main() {
     console.log("LP token value numerator: ", lpTokenValNumerator);
     const lpTokenValue = lpTokenValNumerator / (Number(purseUsdtTotalSupply) / 10 ** 18);
     console.log("LP token value: ", lpTokenValue);
+    console.log();
 
     //Get TVL
     const tvl = (Number(purseUsdtTotalStaked) / 10 ** 18) * lpTokenValue;
     console.log("Total Value Locked: ", tvl.toString());
+    console.log();
 
     //Get APR
     //Ensure that formula here achieves almost the same result as the APR from the mongo endpoint for PURSE-USDT
     //https://ap-southeast-1.aws.data.mongodb-api.com/app/data-rjjms/endpoint/PundiX
     const apr = ((28000 * 365 * (Number(pursePerBlock * bonusMultiplier) / 10 ** 18) * pursePrice)) / tvl * 100;
     console.log("Current APR: " + apr);
+    console.log();
 
     //Adjust target APR here, this will calculate how much pursePerBlock to set to achieve the targetted APR.
-    const targetAPR = 36;
+    const targetAPR = 30;
     const targetPursePerBlock = (targetAPR * tvl / 100) / (28000 * 365 * (Number(bonusMultiplier) / 10 ** 18) * pursePrice)
+    console.log("Target APR: ", targetAPR);
     console.log("Target Purse per block (WEI): ", targetPursePerBlock);
     console.log("Target Purse per block (ETHER): ", targetPursePerBlock / 10 ** 18);
+    console.log();
 }
 
 main().catch((error) => {
